@@ -1,0 +1,58 @@
+# This file is being maintained by Puppet.
+# DO NOT EDIT
+
+Listen 8140
+NameVirtualHost *:8140
+ProxyRequests Off
+<Proxy balancer://puppetmaster>
+    <% real_puppetmaster_ports.each do |port| %>
+    BalancerMember http://127.0.0.1:<%= port %> keepalive=on max=2 retry=30
+    <% end %>
+</Proxy>
+
+<VirtualHost *:8140>
+    ServerName <%= fqdn %>
+    ServerAlias puppet.<%= domain %> puppet.<%= pop %> puppet
+    ServerAdmin <%= contactEmail %>
+
+    DocumentRoot /var/www/html
+    ErrorLog logs/puppetmaster_error_log
+    TransferLog logs/puppetmaster_access_log
+    LogLevel warn
+    SSLEngine on
+    SSLProtocol all -SSLv2
+    SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+    SSLCertificateFile /var/lib/puppet/ssl/certs/<%= fqdn %>.pem
+    SSLCertificateKeyFile /var/lib/puppet/ssl/private_keys/<%= fqdn %>.pem
+
+    SSLCertificateChainFile /var/lib/puppet/ssl/certs/ca.pem
+    SSLCACertificateFile /var/lib/puppet/ssl/certs/ca.pem
+
+    SSLVerifyClient optional
+    SSLVerifyDepth 3
+
+    RequestHeader set X-SSL-Subject %{SSL_CLIENT_S_DN}e
+    RequestHeader set X-Client-DN %{SSL_CLIENT_S_DN}e
+    RequestHeader set X-Client-Verify %{SSL_CLIENT_VERIFY}e
+    SSLOptions +StdEnvVars
+
+    CustomLog logs/puppetmaster_request_log \
+        "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+
+    <Location />
+        SetHandler balancer-manager
+        Order allow,deny
+        Allow from all
+    </Location>
+
+    ProxyPass / balancer://puppetmaster:8140/ timeout=180
+    ProxyPassReverse / balancer://puppetmaster:8140/
+    ProxyPreserveHost on
+    SetEnv force-proxy-request-1.0 1
+    SetEnv proxy-nokeepalive 1
+
+     <Location /balancer-manager>
+         SetHandler balancer-manager
+     </Location>
+
+</VirtualHost>

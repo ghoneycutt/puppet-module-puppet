@@ -1,0 +1,9 @@
+#!/bin/bash
+# This file is being maintained by Puppet.
+# DO NOT EDIT
+
+puppetmasters="<%= puppetmasters %>"
+
+for puppetmaster in ${puppetmasters}; do
+    /usr/bin/ssh -q -i /home/puppetreposvn/.ssh/id_rsa -oConnectTimeout=5 puppetreposvn@${puppetmaster};
+done
