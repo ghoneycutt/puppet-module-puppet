@@ -38,7 +38,7 @@ class puppet::server inherits puppet {
     # home directory of the puppet user
     $puppetuserhome = "/var/lib/${puppetuser}"
 
-    # branch is defined using get_branch function 
+    # branch is defined using get_branch function
     $repoconfurl = "http://${primary_puppet_server}/puppet/conf/branch.conf"
     $puppetmaster_branch = get_branch($pop,$repoconfurl)
 

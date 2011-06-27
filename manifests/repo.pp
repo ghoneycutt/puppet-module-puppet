@@ -37,7 +37,7 @@ class puppet::repo {
     # ensure the user is created
     realize Generic::Mkuser[puppetreposvn]
 
-    file { 
+    file {
         "/opt/$lsbProvider/bin/puppet-svn-push":
             content => template("puppet/puppet-svn-push.erb"),
             mode    => "750";

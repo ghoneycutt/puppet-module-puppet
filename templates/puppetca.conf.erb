@@ -6,7 +6,7 @@ NameVirtualHost <% if defined? puppetca_listen_ip %><%= puppetca_listen_ip %><% 
     ServerName puppetca.<%= domain %>
     ServerAlias puppetca.<%= pop %> puppetca
     ServerAdmin <%= contactEmail %>
-    
+
     DocumentRoot /var/www/puppetca
 
     <Directory /var/www/puppetca>

@@ -20,7 +20,7 @@ class puppet::ca inherits puppet {
         content => template("puppet/puppetca.conf.erb"),
     } # apache::vhost
 
-    file { 
+    file {
         "/var/www/puppetca":
             ensure => directory;
         "/var/www/puppetca/index.php":

@@ -22,7 +22,7 @@ class puppet {
         default => "yum",
     }
 
-    package { 
+    package {
         "puppet":
             ensure => latest,
             notify => Service["puppet"];

@@ -5,7 +5,7 @@
   $gencert = "/usr/sbin/puppetca -g";
   $tar     = "/bin/tar";
   $sudo    = "/usr/bin/sudo";
-  
+
   # set some paths up.
   $cabase  = "/var/lib/puppet/ssl/";
   $certdir = "$cabase/certs";
@@ -13,7 +13,7 @@
 
   # yeah, its reverse DNS, but don't assume its safe.
   $host    = escapeshellarg(gethostbyaddr($_SERVER['REMOTE_ADDR']));
-  
+
   # create the certs
   exec("$sudo $gencert $host", $out, $ret);
   $ret && error_log("Error creating cert for $host: $out\n");
