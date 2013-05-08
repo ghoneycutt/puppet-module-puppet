@@ -1,18 +1,2 @@
-puppet
-
-Released 20100709 - Garrett Honeycutt - GPLv2
-
-class puppet         - sets up puppet client - used on all hosts
-
-class puppet::server - sets up puppetmasters
-    Monitors a config file that maps your POP to a directory (trunk/tag/branch) in your SVN repo
-    which makes it really easy to update your puppet code
-
-class puppet::repo   - sets up a puppet code repository using SVN
-
-class puppet::ca     - sets up puppet CA's which will generate certs for all your clients
-    this can be done with the following snippet in your kickstart file (or whatever provisioning
-    software you use)
-
-    # setup puppet cert
-    curl -k https://puppetca | tar xC /
+Only puppet::agent has been modified to be fit for usage. Do *NOT* include any
+other classes from this module.
