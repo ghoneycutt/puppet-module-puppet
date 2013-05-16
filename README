@@ -1,2 +1,0 @@
-Only puppet::agent has been modified to be fit for usage. Do *NOT* include any
-other classes from this module.
