@@ -35,11 +35,11 @@ class puppet::master (
     content => template('puppet/puppetmaster_sysconfig.erb'),
   }
 
-#  service { 'puppetmaster':
-#    ensure => stopped,
-#    enable => false,
-#    before => File['puppetmaster_vhost'],
-#  }
+  # Puppetmaster service cannot be stopped as that would likely break the boot
+  # strap process.
+  service { 'puppetmaster':
+    enable => false,
+  }
 
   # Passenger
   common::mkdir_p { $rack_dir: }
