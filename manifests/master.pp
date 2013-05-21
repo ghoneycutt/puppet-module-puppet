@@ -35,7 +35,8 @@ class puppet::master (
     content => template('puppet/puppetmaster_sysconfig.erb'),
   }
 
-  # This cannot be stopped, would break bootstrapping.
+  # Puppetmaster service cannot be stopped as that would likely break the boot
+  # strap process.
   service { 'puppetmaster':
     enable => false,
   }
