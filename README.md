@@ -1,5 +1,5 @@
 # puppet-module-puppet #
-========================
+===
 
 This module handles the various parts of puppet on a given machine.
 
@@ -15,8 +15,8 @@ Master
 
 Dashboard
 ---------
-- Manages [dashboard](https://puppetlabs.com/puppet/related-projects/dashboard/)
-- Configures the dashboard mySQL settings
+- Manages [Puppet Dashboard](https://puppetlabs.com/puppet/related-projects/dashboard/)
+- Configures the Dashboard MySQL settings
 - Calls the `puppet::dashboard::maintenance` class
 
 Lint
