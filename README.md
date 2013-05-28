@@ -12,12 +12,14 @@ Master
 - Manages apache with passenger
 - Calls the `puppet::lint` class
 - Calls the `puppet::master::maintenance` class
+- Depends on modules apache, common and passenger
 
 Dashboard
 ---------
 - Manages [Puppet Dashboard](https://puppetlabs.com/puppet/related-projects/dashboard/)
 - Configures the Dashboard MySQL settings
 - Calls the `puppet::dashboard::maintenance` class
+- Depends on modules command and passenger
 
 Lint
 ----
@@ -399,7 +401,7 @@ filebucket_cleanup_command
 --------------------------
 Command used to cleanup the clientbuckets.
 
-- *Default*: /usr/bin/find /var/lib/puppet/clientbucket/     -type f -mtime +30 -exec /bin/rm -fr {} \;
+- *Default*: /usr/bin/find ${clientbucket_path} -type f -mtime +30 -exec /bin/rm -fr {} \;
 
 filebucket_cleanup_user
 -----------------------
