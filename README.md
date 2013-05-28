@@ -3,21 +3,31 @@
 
 This module handles the various parts of puppet on a given machine.
 
+Depencies for this module are: apache, common, mysql and passenger
+
 Agent
 -----
 - Manages the puppet agent on a client
+- Setup of configuration files
+- Setup of service or crontask to run the agent periodically
+- Ensure puppet agent is run at boottime
 
 Master
 ------
 - Manages apache with passenger
+- Setup of config files needed to run master
 - Calls the `puppet::lint` class
 - Calls the `puppet::master::maintenance` class
+- Manages firewall rule for puppet if needed
+- Maintenance to cleanup Client bucket files
 
 Dashboard
 ---------
 - Manages [Puppet Dashboard](https://puppetlabs.com/puppet/related-projects/dashboard/)
 - Configures the Dashboard MySQL settings
 - Calls the `puppet::dashboard::maintenance` class
+- Creates database for puppet with mysql module
+- Maintenance to clean up old reports, optimize database and dump database
 
 Lint
 ----
@@ -399,7 +409,7 @@ filebucket_cleanup_command
 --------------------------
 Command used to cleanup the clientbuckets.
 
-- *Default*: /usr/bin/find /var/lib/puppet/clientbucket/     -type f -mtime +30 -exec /bin/rm -fr {} \;
+- *Default*: /usr/bin/find ${clientbucket_path} -type f -mtime +30 -exec /bin/rm -fr {} \;
 
 filebucket_cleanup_user
 -----------------------
