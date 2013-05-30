@@ -1,0 +1,23 @@
+fixtures:
+  repositories:
+    "firewall":
+      repo: "git://github.com/puppetlabs/puppetlabs-firewall.git"
+      ref: "0.2.1"
+    "stdlib":
+      repo: "git://github.com/puppetlabs/puppetlabs-stdlib.git"
+      ref: "3.2.0"
+    "mysql":
+      repo: "git://github.com/ghoneycutt/puppetlabs-mysql.git"
+      ref: "origin/set_max_allowed_packet"
+# Waiting for puppetlabs to merge GH's pull request
+#      repo: "git://github.com/puppetlabs/puppetlabs-mysql.git"
+#      ref: "0.6.1"
+    "passenger":
+      repo: "git://github.com/puppetlabs/puppetlabs-passenger.git"
+      ref: "0.0.4"
+    "apache":
+      repo: "git://github.com/puppetlabs/puppetlabs-apache.git"
+    "concat":
+      repo: "git://github.com/ripienaar/puppet-concat.git"
+    "common":
+      repo: "git://github.com/ghoneycutt/puppet-module-common.git"
