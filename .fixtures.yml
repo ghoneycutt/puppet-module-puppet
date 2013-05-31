@@ -21,3 +21,5 @@ fixtures:
       repo: "git://github.com/ripienaar/puppet-concat.git"
     "common":
       repo: "git://github.com/ghoneycutt/puppet-module-common.git"
+  symlinks:
+    "puppet": "#{source_dir}"
