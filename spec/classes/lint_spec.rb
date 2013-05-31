@@ -3,7 +3,7 @@ describe 'puppet::lint' do
 
   describe 'class puppet::lint' do
 
-    context 'package installation' do
+    context 'Puppet Lint package' do
       let(:params) { {:provider => 'gem' } }
       it {
         should include_class('puppet::lint')
@@ -13,7 +13,7 @@ describe 'puppet::lint' do
       }
     end
 
-    context 'config file location' do
+    context 'Puppet Lint configuration file' do
       let(:params) { {:lintrc_path => '/root/.puppet-lint.rc',
                       :lintrc_owner => 'root'} }
       it {
