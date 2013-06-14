@@ -2,6 +2,80 @@ require 'spec_helper'
 describe 'puppet::dashboard' do
 
   describe 'class puppet::dashboard' do
+    describe 'security settings' do
+      context 'when htpasswd_path is invalid it should fail' do
+        let(:params) { { :htpasswd_path => 'not/a/valid/path' } }
+        let(:facts) { {:osfamily => 'redhat',
+                       :operatingsystemrelease => '6.4',
+                       :ports_file => '/etc/httpd/ports.conf"',
+                       :concat_basedir => '/tmp',
+                       :domain => 'example.com'
+        } }
+        it do
+          expect {
+            should include_class('puppet::dashboard')
+          }.to raise_error(Puppet::Error)
+        end
+      end
+
+      context 'when security is invalid it should fail' do
+        let(:params) { { :security => 'invalid' } }
+        let(:facts) { {:osfamily => 'redhat',
+                       :operatingsystemrelease => '6.4',
+                       :ports_file => '/etc/httpd/ports.conf"',
+                       :concat_basedir => '/tmp',
+                       :domain => 'example.com'
+        } }
+        it do
+          expect {
+            should include_class('puppet::dashboard')
+          }.to raise_error(Puppet::Error,/Security is <invalid> which does not match regex. Valid values are none and htpasswd./)
+        end
+      end
+    end
+
+    describe 'Dashboard vhost configuration file content' do
+      context 'with default settings' do
+        let(:facts) { {:osfamily => 'redhat',
+                       :operatingsystemrelease => '6.4',
+                       :ports_file => '/etc/httpd/ports.conf"',
+                       :concat_basedir => '/tmp',
+                       :domain => 'example.com' } }
+        it {
+          should include_class('puppet::dashboard')
+          should contain_file('dashboard_vhost') \
+                    .with_content(/^\s*ServerName puppet.example.com$/)
+        }
+      end
+
+      context 'with security set to none' do
+        let(:params) { { :security => 'none' } }
+        let(:facts) { {:osfamily               => 'redhat',
+                       :operatingsystemrelease => '6.4',
+                       :ports_file             => '/etc/httpd/ports.conf"',
+                       :concat_basedir         => '/tmp',
+        } }
+        it {
+          should include_class('puppet::dashboard')
+          should_not contain_file('dashboard_vhost').with_content(/(\s+|)AuthType(\s+)basic(\s*)/)
+        }
+      end
+
+      context 'with security set to htpasswd' do
+        let(:params) { { :security => 'htpasswd' } }
+        let(:facts) { {:osfamily               => 'redhat',
+                       :operatingsystemrelease => '6.4',
+                       :ports_file             => '/etc/httpd/ports.conf"',
+                       :concat_basedir         => '/tmp',
+        } }
+        it {
+          should include_class('puppet::dashboard')
+          should contain_file('dashboard_vhost').with_content(/(\s+|)AuthType(\s+)basic(\s*)/)
+        }
+      end
+    end
+
+    describe 'need to refactor contexts' do
 
     context 'Dashboard package' do
       let(:params) { {:dashboard_package => 'puppet-dashboard' } }
@@ -63,18 +137,6 @@ describe 'puppet::dashboard' do
       }
     end
 
-    context 'Dashboard vhost configuration file content' do
-      let(:facts) { {:osfamily => 'redhat',
-                     :operatingsystemrelease => '6.4',
-                     :ports_file => '/etc/httpd/ports.conf"',
-                     :concat_basedir => '/tmp',
-                     :domain => 'example.com' } }
-      it {
-        should include_class('puppet::dashboard')
-        should contain_file('dashboard_vhost') \
-                  .with_content(/^\s*ServerName puppet.example.com$/)
-      }
-    end
 
     context 'Dashboard sysconfig file' do
       let(:facts) { {:osfamily => 'redhat',
@@ -161,6 +223,7 @@ describe 'puppet::dashboard' do
           'enable'    => true,
         })
       }
+    end
     end
   end
 end

@@ -7,12 +7,18 @@ class puppet::dashboard (
   $database_config_group = 'puppet-dashboard',
   $database_config_mode  = '0640',
   $dashboard_fqdn        = "puppet.${::domain}",
+  $htpasswd              = undef,
+  $htpasswd_path         = '/etc/puppet/dashboard.htpasswd',
   $port                  = '3000',
   $log_dir               = '/var/log/puppet',
   $mysql_user            = 'dashboard',
   $mysql_password        = 'puppet',
   $mysql_max_packet_size = '32M',
+  $security              = 'none',
 ) {
+
+  validate_absolute_path($htpasswd_path)
+  validate_re($security, '^(none|htpasswd)$', "Security is <${security}> which does not match regex. Valid values are none and htpasswd.")
 
   require 'passenger'
   include puppet::dashboard::maintenance
@@ -24,6 +30,15 @@ class puppet::dashboard (
   package { 'puppet_dashboard':
     ensure => present,
     name   => $dashboard_package,
+  }
+
+  if $security == 'htpasswd' and $htpasswd != undef {
+
+    Htpasswd {
+      target => $htpasswd_path,
+    }
+
+    create_resources('htpasswd',$htpasswd)
   }
 
   file { 'database_config':
