@@ -38,6 +38,8 @@ Compatibility
 
 * EL 6
 
+===
+
 ## Parameters for class `puppet::agent` ##
 
 certname
@@ -136,7 +138,23 @@ The name the puppet agent daemon should run as.
 
 - *Default*: puppet
 
-## Parameters for class `puppet::dashboard` ##
+===
+
+## class `puppet::dashboard` ##
+
+### Usage ###
+You can optionally specify a hash of htpasswd entries in Hiera.
+
+<pre>
+---
+puppet::dashboard::htpasswd:
+  admin:
+    cryptpasswd: $apr1$kVPL28B8$1LggacK2dvrOf4SkOCxyO0
+  puppet:
+    cryptpasswd: $apr1$F2redFE9$FCyxK2cJuHXphfeQugXBi1
+</pre>
+
+### Parameters ###
 
 dashboard_package
 -----------------
@@ -174,6 +192,18 @@ The dashboard server FQDN.
 
 - *Default*: puppet.${::domain}
 
+htpasswd
+--------
+Hash of htpasswd entries. See leinaddm/htpasswd module for more information. Only used if security is set to 'htpasswd'.
+
+- *Default*: undef
+
+htpasswd_path
+-------------
+String of path to htpasswd file to be used by Dashboard. Only used if security is set to 'htpasswd'.
+
+- *Default*: `/etc/puppet/dashboard.htpasswd`
+
 port
 ----
 The port the web server will respond to.
@@ -203,6 +233,14 @@ mysql_max_packet_size
 The mysql max packet size.
 
 - *Default*: 32M
+
+security
+--------
+String to indicate security type used. Valid values are 'none' and 'htpasswd'. Using 'htpasswd' will use Apache basic auth with a htpasswd file. See htpasswd and htpasswd_path parameters.
+
+- *Default*: 'none'
+
+===
 
 ## Parameters for class `puppet::dashboard::maintenance` ##
 
@@ -320,6 +358,8 @@ At which minute to purge old database dumps.
 
 - *Default*: 0
 
+===
+
 ## Parameters for class `puppet::lint` ##
 
 ensure
@@ -371,6 +411,8 @@ The mode of the lint config file.
 
 - *Default*: 0644
 
+===
+
 ## Parameters for class `puppet::master` ##
 
 rack_dir
@@ -390,6 +432,8 @@ manage_firewall
 Whether to manage the firewall settings on the client
 
 - *Default*: undef
+
+===
 
 ## Parameters for class `puppet::master::maintenance` ##
 
