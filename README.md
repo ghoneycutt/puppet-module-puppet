@@ -5,15 +5,17 @@ This module handles the various parts of puppet on a given machine.
 
 Dependencies for this module are: apache, common, mysql and passenger
 
-Agent
------
+## Components ##
+
+### Agent
+---------
 - Manages the puppet agent on a client
 - Setup of configuration files
 - Setup of service or crontask to run the agent periodically
 - Ensure puppet agent is run at boottime
 
-Master
-------
+### Master
+----------
 - Manages apache with passenger
 - Setup of config files needed to run master
 - Calls the `puppet::lint` class
@@ -21,13 +23,13 @@ Master
 - Manages firewall rule for puppet if needed
 - Maintenance to cleanup Client bucket files
 
-Dashboard
----------
+### Dashboard
+-------------
 - Manages [Puppet Dashboard](https://puppetlabs.com/puppet/related-projects/dashboard/)
 - This installation is used by puppet systems, that need access to the dashboard
 
-Dashboard Server
-----------------
+### Dashboard Server
+--------------------
 - Manages [Puppet Dashboard](https://puppetlabs.com/puppet/related-projects/dashboard/)
 - This is the actual server running the Dashboard
 - Configures the Dashboard MySQL settings
@@ -35,18 +37,21 @@ Dashboard Server
 - Calls the `puppet::dashboard::maintenance` class
 - Maintenance to clean up old reports, optimize database and dump database
 
-Lint
-----
+### Lint
+--------
 - Manages [puppet-lint](http://github.com/rodjek/puppet-lint)
 
-Compatibility
--------------
+
+## Compatibility ##
+-------------------
 
 * EL 6
 
 ===
 
-## Parameters for class `puppet::agent` ##
+## Class `puppet::agent` ##
+
+### Parameters ###
 
 certname
 --------
@@ -146,7 +151,7 @@ The name the puppet agent daemon should run as.
 
 ===
 
-## class `puppet::dashboard` ##
+## Class `puppet::dashboard` ##
 
 ### Parameters ###
 
@@ -188,7 +193,7 @@ The port the web server will respond to.
 
 ===
 
-## Parameters for class `puppet::dashboard::server` ##
+## Class `puppet::dashboard::server` ##
 
 ### Usage ###
 You can optionally specify a hash of htpasswd entries in Hiera.
@@ -272,7 +277,9 @@ String to indicate security type used. Valid values are 'none' and 'htpasswd'. U
 
 ===
 
-## Parameters for class `puppet::dashboard::maintenance` ##
+## Class `puppet::dashboard::maintenance` ##
+
+### Parameters ###
 
 db_optimization_command
 -----------------------
@@ -390,7 +397,9 @@ At which minute to purge old database dumps.
 
 ===
 
-## Parameters for class `puppet::lint` ##
+## Class `puppet::lint` ##
+
+### Parameters ###
 
 ensure
 ------
@@ -443,7 +452,17 @@ The mode of the lint config file.
 
 ===
 
-## Parameters for class `puppet::master` ##
+## Class `puppet::master` ##
+
+### Usage ###
+
+In Hiera you will need to specify the following.
+
+<pre>
+puppet::agent::is_puppet_master: 'true'
+</pre>
+
+### Parameters ###
 
 rack_dir
 --------
@@ -465,7 +484,9 @@ Whether to manage the firewall settings on the client
 
 ===
 
-## Parameters for class `puppet::master::maintenance` ##
+## Class `puppet::master::maintenance` ##
+
+### Parameters ###
 
 clientbucket_path
 -----------------
