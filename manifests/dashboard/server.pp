@@ -1,6 +1,21 @@
 # == Class: puppet::dashboard::server
 #
-class puppet::dashboard::server inherits puppet::dashboard {
+class puppet::dashboard::server (
+  $database_config_path      = '/usr/share/puppet-dashboard/config/database.yml',
+  $database_config_owner     = 'puppet-dashboard',
+  $database_config_group     = 'puppet-dashboard',
+  $database_config_mode      = '0640',
+  $htpasswd                  = undef,
+  $htpasswd_path             = '/etc/puppet/dashboard.htpasswd',
+  $log_dir                   = '/var/log/puppet',
+  $mysql_user                = 'dashboard',
+  $mysql_password            = 'puppet',
+  $mysql_max_packet_size     = '32M',
+  $security                  = 'none',
+) inherits puppet::dashboard {
+
+  validate_absolute_path($htpasswd_path)
+  validate_re($security, '^(none|htpasswd)$', "Security is <${security}> which does not match regex. Valid values are none and htpasswd.")
 
   require 'passenger'
   include puppet::dashboard::maintenance
