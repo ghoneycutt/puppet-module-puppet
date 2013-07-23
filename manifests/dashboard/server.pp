@@ -7,6 +7,9 @@ class puppet::dashboard::server (
   $database_config_mode      = '0640',
   $htpasswd                  = undef,
   $htpasswd_path             = '/etc/puppet/dashboard.htpasswd',
+  $htpasswd_owner            = 'root',
+  $htpasswd_group            = 'apache',
+  $htpasswd_mode             = '0640',
   $log_dir                   = '/var/log/puppet',
   $mysql_user                = 'dashboard',
   $mysql_password            = 'puppet',
@@ -31,6 +34,13 @@ class puppet::dashboard::server (
     }
 
     create_resources('htpasswd',$htpasswd)
+
+    file { $htpasswd_path:
+      ensure => file,
+      owner  => $htpasswd_owner,
+      group  => $htpasswd_group,
+      mode   => $htpasswd_mode,
+    }
   }
 
   file { 'database_config':
