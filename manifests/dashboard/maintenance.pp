@@ -12,7 +12,7 @@ class puppet::dashboard::maintenance (
   $purge_old_reports_hour      = '0',
   $purge_old_reports_minute    = '30',
   $dump_dir                    = '/var/local',
-  $dump_database_command       = 'sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log',
+  $dump_database_command       = 'cd ~puppet-dashboard && sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log',
   $dump_database_user          = 'root',
   $dump_database_hour          = '1',
   $dump_database_minute        = '0',
@@ -34,7 +34,7 @@ class puppet::dashboard::maintenance (
   if $dump_dir == '/var/local' {
     $my_dump_database_command = $dump_database_command
   } else {
-    $my_dump_database_command = "sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=${dump_dir}/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log && bzip2 -v9 ${dump_dir}/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log"
+    $my_dump_database_command = "cd ~puppet-dashboard && sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=${dump_dir}/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log && bzip2 -v9 ${dump_dir}/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log"
   }
 
   common::mkdir_p { $dump_dir: }
