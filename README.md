@@ -1,6 +1,8 @@
 # puppet-module-puppet #
 ===
 
+[![Build Status](https://travis-ci.org/ghoneycutt/puppet-module-puppet.png?branch=secure_dashboard)](https://travis-ci.org/ghoneycutt/puppet-module-puppet)
+
 This module handles the various parts of puppet on a given machine.
 
 Dependencies for this module are: apache, common, mysql and passenger
