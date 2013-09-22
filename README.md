@@ -30,6 +30,10 @@ Dashboard
 - Calls the `puppet::dashboard::maintenance` class
 - Creates database for puppet with mysql module
 - Maintenance to clean up old reports, optimize database and dump database
+- For the maintenance cron jobs, you should have the following line in your `/etc/sudoers` which is not managed with this module.
+<pre>
+Defaults:root !requiretty
+</pre>
 
 Lint
 ----
