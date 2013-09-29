@@ -1,5 +1,5 @@
 name    'ghoneycutt-puppet'
-version '2.1.2'
+version '2.1.3'
 source 'git://github.com/ghoneycutt/puppet-module-puppet.git'
 author 'ghoneycutt'
 license 'Apache License, Version 2.0'
@@ -8,7 +8,7 @@ description 'Manages Puppet, including Master, Agent, Dashboard and maintenance 
 project_page 'https://github.com/ghoneycutt/puppet-module-puppet'
 
 dependency 'leinaddm/htpasswd', '>= 0.0.1'
-dependency 'puppetlabs/stdlib', '>= 3.2.x'
+dependency 'puppetlabs/stdlib', '3.2.x'
 dependency 'puppetlabs/mysql', '>= 0.6.1'
 dependency 'puppetlabs/passenger', '>= 0.0.4'
 dependency 'puppetlabs/apache', '>= 0.5.0'
