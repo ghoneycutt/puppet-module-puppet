@@ -145,9 +145,9 @@ Whether the client should run right after boot
 
 agent_sysconfig
 ---------------
-The location of the /etc/sysconfig/puppet file.
+The location of the /etc/sysconfig/puppet file. If set to undef, this file will not be managed.
 
-- *Default*: /etc/sysconfig/puppet
+- *Default*: DEFAULT
 
 daemon_name
 -----------

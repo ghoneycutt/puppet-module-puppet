@@ -20,7 +20,7 @@ class puppet::agent (
   $run_in_noop      = 'false',
   $cron_command     = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
   $run_at_boot      = 'true',
-  $agent_sysconfig  = '/etc/sysconfig/puppet',
+  $agent_sysconfig  = 'DEFAULT',
   $daemon_name      = 'puppet',
 ) {
 
@@ -89,6 +89,19 @@ class puppet::agent (
     }
   }
 
+  if $agent_sysconfig == 'DEFAULT' {
+    case $::osfamily {
+      'Solaris': {
+        $my_agent_sysconfig = undef
+      }
+      default: {
+        $my_agent_sysconfig = '/etc/sysconfig/puppet'
+      }
+    }
+  } elsif $agent_sysconfig == undef {
+    $my_agent_sysconfig = undef
+  }
+
   file { 'puppet_config':
     path    => $config_path,
     content => $config_content,
@@ -97,13 +110,15 @@ class puppet::agent (
     mode    => $config_mode,
   }
 
-  file { 'puppet_agent_sysconfig':
-    ensure  => file,
-    path    => $agent_sysconfig,
-    content => template('puppet/agent_sysconfig.erb'),
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
+  if $my_agent_sysconfig != undef {
+    file { 'puppet_agent_sysconfig':
+      ensure  => file,
+      path    => $my_agent_sysconfig,
+      content => template('puppet/agent_sysconfig.erb'),
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+    }
   }
 
   service { 'puppet_agent_daemon':
