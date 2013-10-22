@@ -16,17 +16,25 @@ describe 'puppet::agent' do
       }
     end
 
-    context 'Puppet agent sysconfig' do
-      let(:params) { {:env => 'production' } }
-      it {
-        should include_class('puppet::agent')
-        should contain_file('puppet_agent_sysconfig').with({
-          'path'    => '/etc/sysconfig/puppet',
-          'owner'   => 'root',
-          'group'   => 'root',
-          'mode'    => '0644',
-        })
-      }
+    describe 'Puppet agent sysconfig' do
+
+      context 'on Linux' do
+        let(:facts) { {:osfamily => 'RedHat' } }
+        let(:params) {
+          {:env => 'production',
+           :agent_sysconfig => 'DEFAULT'}
+        }
+        it {
+          should include_class('puppet::agent')
+          should contain_file('puppet_agent_sysconfig').with({
+            'path'    => '/etc/sysconfig/puppet',
+            'owner'   => 'root',
+            'group'   => 'root',
+            'mode'    => '0644',
+          })
+        }
+      end
+
     end
 
     context 'Puppet agent sysconfig content' do
