@@ -51,6 +51,7 @@ Defaults:root !requiretty
 ## Compatibility ##
 -------------------
 
+* Debian 7
 * EL 6
 
 ===
@@ -145,9 +146,9 @@ Whether the client should run right after boot
 
 agent_sysconfig
 ---------------
-The location of the /etc/sysconfig/puppet file.
+The location of puppet agent sysconfig file.
 
-- *Default*: /etc/sysconfig/puppet
+- *Default*: use defaults based on osfamily
 
 daemon_name
 -----------
@@ -178,6 +179,12 @@ dashboard_group
 The group for dashboard installation.
 
 - *Default*: puppet-dashboard
+
+sysconfig_path
+-------------------
+The location of puppet dashboard sysconfig file.
+
+- *Default*: use defaults based on osfamily
 
 external_node_script_path
 -------------------------
@@ -469,6 +476,12 @@ puppet::agent::is_puppet_master: 'true'
 </pre>
 
 ### Parameters ###
+
+sysconfig_path
+--------------
+The location of puppet master sysconfig file.
+
+- *Default*: use defaults based on osfamily
 
 rack_dir
 --------
