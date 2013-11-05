@@ -9,7 +9,7 @@ project_page 'https://github.com/ghoneycutt/puppet-module-puppet'
 
 dependency 'leinaddm/htpasswd', '>= 0.0.1'
 dependency 'puppetlabs/stdlib', '3.2.x'
-dependency 'puppetlabs/mysql', '>= 0.6.1'
+dependency 'puppetlabs/mysql', '>= 2.0.0'
 dependency 'puppetlabs/passenger', '>= 0.0.4'
 dependency 'puppetlabs/apache', '>= 0.5.0'
 dependency 'puppetlabs/firewall', '>= 0.2.1'
