@@ -347,6 +347,40 @@ At which minute to purge old reports.
 
 - *Default*: 30
 
+remove_old_reports_spool
+------------------------
+Whether we should remove old dashboard reports that have not been imported
+
+- *Default*: 'True'
+
+reports_spool_dir
+-----------------
+Path to reports in dashboard spool
+
+- *Default*: '/usr/share/puppet-dashboard/spool'
+
+reports_spool_days_to_keep
+--------------------------
+How many days to keep the unimported reports.
+
+remove_reports_spool_user
+-------------------------
+User to remove unimported reports.
+
+- *Default*: root
+
+remove_reports_spool_hour
+-------------------------
+On which hour to remove unimported reports.
+
+- *Default*: 0
+
+remove_reports_spool_minute
+---------------------------
+At which minute to remove unimported reports
+
+- *Default*: 45
+
 dump_dir
 --------
 The directory to use for dumps.
@@ -360,19 +394,19 @@ The command to run to dump the database.
 - *Default*: sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log
 
 dump_database_user
-----------------------
+------------------
 User to dump database as.
 
 - *Default*: root
 
 dump_database_hour
-----------------------
+------------------
 On which hour to dump database.
 
 - *Default*: 1
 
 dump_database_minute
-------------------------
+--------------------
 At which minute to purge old reports.
 
 - *Default*: 0
@@ -396,7 +430,7 @@ On which hour to purge old database dumps.
 - *Default*: 2
 
 purge_old_db_backups_minute
-------------------------
+---------------------------
 At which minute to purge old database dumps.
 
 - *Default*: 0
