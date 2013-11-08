@@ -93,13 +93,18 @@ class puppet::agent (
   }
 
   if type($symlink_puppet_binary) == 'string' {
-    $real_symlink_puppet_binary = str2bool($symlink_puppet_binary)
+    $symlink_puppet_binary_real = str2bool($symlink_puppet_binary)
   } else {
-    $real_symlink_puppet_binary = $symlink_puppet_binary
+    $symlink_puppet_binary_real = $symlink_puppet_binary
   }
-  if $real_symlink_puppet_binary == true {
+
+  # optionally create symlinks to puppet binary
+  if $symlink_puppet_binary_real == true {
+
+    # validate params
     validate_absolute_path($symlink_puppet_binary_target)
     validate_absolute_path($puppet_binary)
+
     file { 'puppet_symlink':
       ensure => link,
       path   => $symlink_puppet_binary_target,

@@ -29,11 +29,31 @@ describe 'puppet::agent' do
       }
     end
 
-    context 'Puppet agent symlink' do
-      let(:params) { {:env => 'production',
-                      :symlink_puppet_binary => 'true',
-                      :puppet_binary => '/foo/bar',
-                      :symlink_puppet_binary_target => '/bar' } }
+    context 'with symlink_puppet_binary enabled with defaults' do
+      let(:params) do
+        { :env                          => 'production',
+          :symlink_puppet_binary        => 'true',
+        }
+      end
+
+      it {
+        should contain_file('puppet_symlink').with({
+          'path'    => '/usr/local/bin/puppet',
+          'target'  => '/usr/bin/puppet',
+          'ensure'  => 'link',
+        })
+      }
+    end
+
+    context 'with symlink_puppet_binary enabled with all params specified' do
+      let(:params) do
+        { :env                          => 'production',
+          :symlink_puppet_binary        => 'true',
+          :puppet_binary                => '/foo/bar',
+          :symlink_puppet_binary_target => '/bar',
+        }
+      end
+
       it {
         should contain_file('puppet_symlink').with({
           'path'    => '/bar',
@@ -42,6 +62,7 @@ describe 'puppet::agent' do
         })
       }
     end
+
     context 'Puppet agent symlink with invalid puppet_binary' do
       let(:params) { {:env => 'production',
                       :symlink_puppet_binary => 'true',
@@ -51,6 +72,7 @@ describe 'puppet::agent' do
         expect { should }.to raise_error(Puppet::Error, /#{Regexp.escape('is not an absolute path')}/)
       end
     end
+
     context 'Puppet agent symlink with invalid symlink_puppet_binary_target' do
       let(:params) { {:env => 'production',
                       :symlink_puppet_binary => 'true',
