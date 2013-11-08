@@ -21,7 +21,11 @@ class puppet::dashboard::server (
   include puppet::dashboard::maintenance
 
   class { 'mysql::server':
-    config_hash => { 'max_allowed_packet' => $mysql_max_packet_size }
+    override_options => {
+      'mysqld' => {
+        'max_allowed_packet' => $mysql_max_packet_size
+      }
+    }
   }
 
   if $security == 'htpasswd' and $htpasswd != undef {
