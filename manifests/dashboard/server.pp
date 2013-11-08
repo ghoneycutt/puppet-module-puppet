@@ -23,7 +23,7 @@ class puppet::dashboard::server (
   class { 'mysql::server':
     override_options => {
       'mysqld' => {
-        'max_allowed_packet' => $mysql_max_packet_size
+        'max_allowed_packet' => $mysql_max_packet_size,
       }
     }
   }
