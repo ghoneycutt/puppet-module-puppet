@@ -51,7 +51,9 @@ Defaults:root !requiretty
 ## Compatibility ##
 -------------------
 
+* Debian 7
 * EL 6
+* Ubuntu 12.04 LTS
 
 ===
 
@@ -143,11 +145,29 @@ Whether the client should run right after boot
 
 - *Default*: true
 
+puppet_binary
+-------------
+Path to puppet binary to create symlink from
+
+- *Default*: '/usr/bin/puppet'
+
+symlink_puppet_binary_target
+----------------------------
+Path to where the symlink should be created
+
+- *Default*: '/usr/local/bin/puppet'
+
+symlink_puppet_binary
+---------------------
+Boolean for ensuring a symlink for puppet_binary to symlink_puppet_binary_target. This is useful if you install puppet in a non-standard location that is not in your $PATH.
+
+- *Default*: false
+
 agent_sysconfig
 ---------------
-The location of the /etc/sysconfig/puppet file.
+The location of puppet agent sysconfig file.
 
-- *Default*: /etc/sysconfig/puppet
+- *Default*: use defaults based on osfamily
 
 daemon_name
 -----------
@@ -178,6 +198,12 @@ dashboard_group
 The group for dashboard installation.
 
 - *Default*: puppet-dashboard
+
+sysconfig_path
+-------------------
+The location of puppet dashboard sysconfig file.
+
+- *Default*: use defaults based on osfamily
 
 external_node_script_path
 -------------------------
@@ -503,6 +529,12 @@ puppet::agent::is_puppet_master: 'true'
 </pre>
 
 ### Parameters ###
+
+sysconfig_path
+--------------
+The location of puppet master sysconfig file.
+
+- *Default*: use defaults based on osfamily
 
 rack_dir
 --------

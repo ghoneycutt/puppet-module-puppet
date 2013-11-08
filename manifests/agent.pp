@@ -6,27 +6,48 @@
 # puppet from cron or as a daemon.
 #
 class puppet::agent (
-  $certname         = $::fqdn,
-  $config_path      = '/etc/puppet/puppet.conf',
-  $config_owner     = 'root',
-  $config_group     = 'root',
-  $config_mode      = '0644',
-  $env              = $::env,
-  $puppet_server    = 'puppet',
-  $puppet_ca_server = 'UNSET',
-  $is_puppet_master = 'false',
-  $run_method       = 'service',
-  $run_interval     = '30',
-  $run_in_noop      = 'false',
-  $cron_command     = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
-  $run_at_boot      = 'true',
-  $agent_sysconfig  = '/etc/sysconfig/puppet',
-  $daemon_name      = 'puppet',
+  $certname                     = $::fqdn,
+  $config_path                  = '/etc/puppet/puppet.conf',
+  $config_owner                 = 'root',
+  $config_group                 = 'root',
+  $config_mode                  = '0644',
+  $env                          = $::env,
+  $puppet_server                = 'puppet',
+  $puppet_ca_server             = 'UNSET',
+  $is_puppet_master             = 'false',
+  $run_method                   = 'service',
+  $run_interval                 = '30',
+  $run_in_noop                  = 'false',
+  $cron_command                 = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
+  $run_at_boot                  = 'true',
+  $puppet_binary                = '/usr/bin/puppet',
+  $symlink_puppet_binary_target = '/usr/local/bin/puppet',
+  $symlink_puppet_binary        = 'false',
+  $agent_sysconfig              = 'USE_DEFAULTS',
+  $daemon_name                  = 'puppet',
 ) {
 
   # env must be set, else fail, since we use it in the puppet_config template
   if ! $env {
     fail('puppet::agent::env must be set')
+  }
+
+  case $::osfamily {
+    'RedHat': {
+      $default_agent_sysconfig = '/etc/sysconfig/puppet'
+    }
+    'Debian': {
+      $default_agent_sysconfig = '/etc/default/puppet'
+    }
+    default: {
+      fail("puppet::agent supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")
+    }
+  }
+
+  if $agent_sysconfig == 'USE_DEFAULTS' {
+    $agent_sysconfig_real = $default_agent_sysconfig
+  } else {
+    $agent_sysconfig_real = $agent_sysconfig
   }
 
   case $is_puppet_master {
@@ -89,6 +110,26 @@ class puppet::agent (
     }
   }
 
+  if type($symlink_puppet_binary) == 'string' {
+    $symlink_puppet_binary_real = str2bool($symlink_puppet_binary)
+  } else {
+    $symlink_puppet_binary_real = $symlink_puppet_binary
+  }
+
+  # optionally create symlinks to puppet binary
+  if $symlink_puppet_binary_real == true {
+
+    # validate params
+    validate_absolute_path($symlink_puppet_binary_target)
+    validate_absolute_path($puppet_binary)
+
+    file { 'puppet_symlink':
+      ensure => link,
+      path   => $symlink_puppet_binary_target,
+      target => $puppet_binary,
+    }
+  }
+
   file { 'puppet_config':
     path    => $config_path,
     content => $config_content,
@@ -99,7 +140,7 @@ class puppet::agent (
 
   file { 'puppet_agent_sysconfig':
     ensure  => file,
-    path    => $agent_sysconfig,
+    path    => $agent_sysconfig_real,
     content => template('puppet/agent_sysconfig.erb'),
     owner   => 'root',
     group   => 'root',
