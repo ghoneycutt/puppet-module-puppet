@@ -51,7 +51,18 @@ Defaults:root !requiretty
 ## Compatibility ##
 -------------------
 
+### Puppet Master
+-----------------
+* Debian 7
 * EL 6
+* Ubuntu 12.04 LTS
+
+### Puppet Agent
+----------------
+* Debian 7
+* EL 6
+* Solaris
+* Ubuntu 12.04 LTS
 
 ===
 
@@ -143,11 +154,36 @@ Whether the client should run right after boot
 
 - *Default*: true
 
+puppet_binary
+-------------
+Path to puppet binary to create symlink from
+
+- *Default*: '/usr/bin/puppet'
+
+symlink_puppet_binary_target
+----------------------------
+Path to where the symlink should be created
+
+- *Default*: '/usr/local/bin/puppet'
+
+symlink_puppet_binary
+---------------------
+Boolean for ensuring a symlink for puppet_binary to symlink_puppet_binary_target. This is useful if you install puppet in a non-standard location that is not in your $PATH.
+
+- *Default*: false
+
 agent_sysconfig
 ---------------
-The location of the /etc/sysconfig/puppet file.
+The location of puppet agent sysconfig file.
 
-- *Default*: /etc/sysconfig/puppet
+- *Default*: use defaults based on osfamily
+
+agent_sysconfig_ensure
+----------------------
+String for 'file' or 'present'. Allows you to not manage the sysconfig file.
+
+- *Default*: use defaults based on osfamily
+
 
 daemon_name
 -----------
@@ -178,6 +214,12 @@ dashboard_group
 The group for dashboard installation.
 
 - *Default*: puppet-dashboard
+
+sysconfig_path
+-------------------
+The location of puppet dashboard sysconfig file.
+
+- *Default*: use defaults based on osfamily
 
 external_node_script_path
 -------------------------
@@ -347,6 +389,40 @@ At which minute to purge old reports.
 
 - *Default*: 30
 
+remove_old_reports_spool
+------------------------
+Whether we should remove old dashboard reports that have not been imported
+
+- *Default*: 'True'
+
+reports_spool_dir
+-----------------
+Path to reports in dashboard spool
+
+- *Default*: '/usr/share/puppet-dashboard/spool'
+
+reports_spool_days_to_keep
+--------------------------
+How many days to keep the unimported reports.
+
+remove_reports_spool_user
+-------------------------
+User to remove unimported reports.
+
+- *Default*: root
+
+remove_reports_spool_hour
+-------------------------
+On which hour to remove unimported reports.
+
+- *Default*: 0
+
+remove_reports_spool_minute
+---------------------------
+At which minute to remove unimported reports
+
+- *Default*: 45
+
 dump_dir
 --------
 The directory to use for dumps.
@@ -360,19 +436,19 @@ The command to run to dump the database.
 - *Default*: sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log
 
 dump_database_user
-----------------------
+------------------
 User to dump database as.
 
 - *Default*: root
 
 dump_database_hour
-----------------------
+------------------
 On which hour to dump database.
 
 - *Default*: 1
 
 dump_database_minute
-------------------------
+--------------------
 At which minute to purge old reports.
 
 - *Default*: 0
@@ -396,7 +472,7 @@ On which hour to purge old database dumps.
 - *Default*: 2
 
 purge_old_db_backups_minute
-------------------------
+---------------------------
 At which minute to purge old database dumps.
 
 - *Default*: 0
@@ -469,6 +545,12 @@ puppet::agent::is_puppet_master: 'true'
 </pre>
 
 ### Parameters ###
+
+sysconfig_path
+--------------
+The location of puppet master sysconfig file.
+
+- *Default*: use defaults based on osfamily
 
 rack_dir
 --------

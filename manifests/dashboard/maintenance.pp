@@ -11,6 +11,12 @@ class puppet::dashboard::maintenance (
   $purge_old_reports_user      = 'root',
   $purge_old_reports_hour      = '0',
   $purge_old_reports_minute    = '30',
+  $remove_old_reports_spool    = 'true',
+  $reports_spool_dir           = '/usr/share/puppet-dashboard/spool',
+  $reports_spool_days_to_keep  = '7',
+  $remove_reports_spool_user   = 'root',
+  $remove_reports_spool_hour   = '0',
+  $remove_reports_spool_minute = '45',
   $dump_dir                    = '/var/local',
   $dump_database_command       = 'cd ~puppet-dashboard && sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1',
   $dump_database_user          = 'root',
@@ -24,6 +30,8 @@ class puppet::dashboard::maintenance (
 
   include common
   require 'puppet::dashboard'
+
+  validate_absolute_path($reports_spool_dir)
 
   if $reports_days_to_keep == '30' {
     $my_purge_old_reports_command = $purge_old_reports_command
@@ -61,6 +69,24 @@ class puppet::dashboard::maintenance (
     user    => $purge_old_reports_user,
     hour    => $purge_old_reports_hour,
     minute  => $purge_old_reports_minute,
+  }
+
+  if type($remove_old_reports_spool) == 'string' {
+    $enable_remove_old_reports_spool = str2bool($remove_old_reports_spool)
+  } else {
+    $enable_remove_old_reports_spool = $remove_old_reports_spool
+  }
+  if $enable_remove_old_reports_spool == true {
+    $remove_old_reports_spool_enable = 'present'
+  } else {
+    $remove_old_reports_spool_enable = 'absent'
+  }
+  cron { 'remove_old_reports_spool':
+    ensure  => $remove_old_reports_spool_enable,
+    command => "/bin/find ${reports_spool_dir} -type f -name \"*.yaml\" -mtime +${$reports_spool_days_to_keep } -exec /bin/rm -f {} \\;",
+    user    => $remove_reports_spool_user,
+    hour    => $remove_reports_spool_hour,
+    minute  => $remove_reports_spool_minute,
   }
 
   cron { 'dump_dashboard_database':
