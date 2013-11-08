@@ -157,7 +157,7 @@ Path to where the symlink should be created
 
 symlink_puppet_binary
 ---------------------
-Whether a symlink should be created for puppet_binary to symlink_puppet_binary_target
+Boolean for ensuring a symlink for puppet_binary to symlink_puppet_binary_target. This is useful if you install puppet in a non-standard location that is not in your $PATH.
 
 - *Default*: false
 
