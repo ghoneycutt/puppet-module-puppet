@@ -143,6 +143,24 @@ Whether the client should run right after boot
 
 - *Default*: true
 
+puppet_binary
+-------------
+Path to puppet binary to create symlink from
+
+- *Default*: '/usr/bin/puppet'
+
+symlink_puppet_binary_target
+----------------------------
+Path to where the symlink should be created
+
+- *Default*: '/usr/local/bin/puppet'
+
+symlink_puppet_binary
+---------------------
+Boolean for ensuring a symlink for puppet_binary to symlink_puppet_binary_target. This is useful if you install puppet in a non-standard location that is not in your $PATH.
+
+- *Default*: false
+
 agent_sysconfig
 ---------------
 The location of the /etc/sysconfig/puppet file.
