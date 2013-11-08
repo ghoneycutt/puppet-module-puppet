@@ -48,6 +48,15 @@ describe 'puppet::agent' do
       }
     end
 
+    context 'Puppet agent sysconfig file on osfamily Solaris' do
+      let(:facts) { { :osfamily => 'Solaris' } }
+      let(:params) { { :env => 'production' } }
+
+      it { should include_class('puppet::agent') }
+
+      it { should_not contain_file('puppet_agent_sysconfig') }
+    end
+
     context 'with symlink_puppet_binary enabled with defaults' do
       let(:facts) { { :osfamily => 'Debian' } }
       let(:params) do
