@@ -48,6 +48,70 @@ describe 'puppet::agent' do
       }
     end
 
+    context 'with symlink_puppet_binary enabled with defaults' do
+      let(:facts) { { :osfamily => 'Debian' } }
+      let(:params) do
+        { :env                          => 'production',
+          :symlink_puppet_binary        => 'true',
+        }
+      end
+
+      it {
+        should contain_file('puppet_symlink').with({
+          'path'    => '/usr/local/bin/puppet',
+          'target'  => '/usr/bin/puppet',
+          'ensure'  => 'link',
+        })
+      }
+    end
+
+    context 'with symlink_puppet_binary enabled with all params specified' do
+      let(:facts) { { :osfamily => 'Debian' } }
+      let(:params) do
+        { :env                          => 'production',
+          :symlink_puppet_binary        => 'true',
+          :puppet_binary                => '/foo/bar',
+          :symlink_puppet_binary_target => '/bar',
+        }
+      end
+
+      it {
+        should contain_file('puppet_symlink').with({
+          'path'    => '/bar',
+          'target'  => '/foo/bar',
+          'ensure'  => 'link',
+        })
+      }
+    end
+
+    context 'Puppet agent symlink with invalid puppet_binary' do
+      let(:params) { {:env => 'production',
+                      :symlink_puppet_binary => 'true',
+                      :puppet_binary => 'true',
+                      :symlink_puppet_binary_target => '/bar' } }
+      it do
+        expect { should }.to raise_error(Puppet::Error)
+      end
+    end
+
+    context 'Puppet agent symlink with invalid symlink_puppet_binary_target' do
+      let(:params) { {:env => 'production',
+                      :symlink_puppet_binary => 'true',
+                      :puppet_binary => '/foo/bar',
+                      :symlink_puppet_binary_target => 'undef' } }
+      it do
+        expect { should }.to raise_error(Puppet::Error)
+      end
+    end
+
+    context 'Puppet agent sysconfig content' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) { {:env => 'production' } }
+
+      it { should include_class('puppet::agent') }
+      it { should contain_file('puppet_agent_sysconfig').with_content(/^#PUPPET_SERVER=puppet$/) }
+    end
+
     context 'Puppet agent sysconfig file on invalid osfamily' do
       let(:facts) { { :osfamily => 'invalid' } }
       let(:params) { { :env => 'production' } }
