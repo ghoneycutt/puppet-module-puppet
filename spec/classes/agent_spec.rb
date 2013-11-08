@@ -40,7 +40,7 @@ describe 'puppet::agent' do
       it { should include_class('puppet::agent') }
 
       it { should contain_file('puppet_agent_sysconfig').with({
-          'path'    => '/etc/defaults/puppet',
+          'path'    => '/etc/default/puppet',
           'owner'   => 'root',
           'group'   => 'root',
           'mode'    => '0644',

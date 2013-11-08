@@ -53,6 +53,7 @@ Defaults:root !requiretty
 
 * Debian 7
 * EL 6
+* Ubuntu 12.04 LTS
 
 ===
 

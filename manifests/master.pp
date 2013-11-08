@@ -12,7 +12,7 @@ class puppet::master (
       $default_sysconfig_path = '/etc/sysconfig/puppetmaster'
     }
     'Debian': {
-      $default_sysconfig_path = '/etc/defaults/puppetmaster'
+      $default_sysconfig_path = '/etc/default/puppetmaster'
     }
     default: {
       fail("puppet::master supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")

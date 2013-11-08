@@ -17,7 +17,7 @@ class puppet::dashboard (
       $default_sysconfig_path = '/etc/sysconfig/puppet-dashboard'
     }
     'Debian': {
-      $default_sysconfig_path = '/etc/defaults/puppet-dashboard'
+      $default_sysconfig_path = '/etc/default/puppet-dashboard'
     }
     default: {
       fail("puppet::dashboard supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")

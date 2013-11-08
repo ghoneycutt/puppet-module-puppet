@@ -53,7 +53,7 @@ describe 'puppet::dashboard' do
       it { should include_class('puppet::dashboard') }
 
       it { should contain_file('dashboard_sysconfig').with({
-          'path'    => '/etc/defaults/puppet-dashboard',
+          'path'    => '/etc/default/puppet-dashboard',
           'owner'   => 'root',
           'group'   => 'root',
           'mode'    => '0644',

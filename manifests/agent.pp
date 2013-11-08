@@ -34,7 +34,7 @@ class puppet::agent (
       $default_agent_sysconfig = '/etc/sysconfig/puppet'
     }
     'Debian': {
-      $default_agent_sysconfig = '/etc/defaults/puppet'
+      $default_agent_sysconfig = '/etc/default/puppet'
     }
     default: {
       fail("puppet::agent supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")
