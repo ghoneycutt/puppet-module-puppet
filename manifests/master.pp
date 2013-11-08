@@ -1,16 +1,35 @@
 # == Class: puppet::master
 #
 class puppet::master (
+  $sysconfig_path  = 'USE_DEFAULTS',
   $rack_dir        = '/usr/share/puppet/rack/puppetmasterd',
   $puppet_user     = 'puppet',
   $manage_firewall = undef,
 ) {
+
+  case $::osfamily {
+    'RedHat': {
+      $default_sysconfig_path = '/etc/sysconfig/puppetmaster'
+    }
+    'Debian': {
+      $default_sysconfig_path = '/etc/default/puppetmaster'
+    }
+    default: {
+      fail("puppet::master supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")
+    }
+  }
 
   include apache::mod::ssl
   include common
   include passenger
   include puppet::lint
   include puppet::master::maintenance
+
+  if $sysconfig_path == 'USE_DEFAULTS' {
+    $sysconfig_path_real = $default_sysconfig_path
+  } else {
+    $sysconfig_path_real = $sysconfig_path
+  }
 
   if $manage_firewall == true {
     firewall { '8140 open port 8140 for Puppet Master':
@@ -30,8 +49,9 @@ class puppet::master (
 
   file { '/etc/puppet/fileserver.conf': }
 
-  file { '/etc/sysconfig/puppetmaster':
+  file { 'puppetmaster_sysconfig':
     ensure  => file,
+    path    => $sysconfig_path_real,
     content => template('puppet/puppetmaster_sysconfig.erb'),
   }
 

@@ -20,13 +20,31 @@ class puppet::agent (
   $run_in_noop      = 'false',
   $cron_command     = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
   $run_at_boot      = 'true',
-  $agent_sysconfig  = '/etc/sysconfig/puppet',
+  $agent_sysconfig  = 'USE_DEFAULTS',
   $daemon_name      = 'puppet',
 ) {
 
   # env must be set, else fail, since we use it in the puppet_config template
   if ! $env {
     fail('puppet::agent::env must be set')
+  }
+
+  case $::osfamily {
+    'RedHat': {
+      $default_agent_sysconfig = '/etc/sysconfig/puppet'
+    }
+    'Debian': {
+      $default_agent_sysconfig = '/etc/default/puppet'
+    }
+    default: {
+      fail("puppet::agent supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")
+    }
+  }
+
+  if $agent_sysconfig == 'USE_DEFAULTS' {
+    $agent_sysconfig_real = $default_agent_sysconfig
+  } else {
+    $agent_sysconfig_real = $agent_sysconfig
   }
 
   case $is_puppet_master {
@@ -99,7 +117,7 @@ class puppet::agent (
 
   file { 'puppet_agent_sysconfig':
     ensure  => file,
-    path    => $agent_sysconfig,
+    path    => $agent_sysconfig_real,
     content => template('puppet/agent_sysconfig.erb'),
     owner   => 'root',
     group   => 'root',
