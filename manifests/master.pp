@@ -51,6 +51,7 @@ class puppet::master (
 
   file { 'puppetmaster_sysconfig':
     ensure  => file,
+    path    => $sysconfig_path_real,
     content => template('puppet/puppetmaster_sysconfig.erb'),
   }
 
