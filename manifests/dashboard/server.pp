@@ -64,7 +64,7 @@ class puppet::dashboard::server (
     user     => $mysql_user,
     password => $mysql_password,
     host     => 'localhost',
-    grant    => ['all'],
+    grant    => ['ALL'],
     require  => [ Class['mysql::server'],
                   File['database_config'],
                 ],
