@@ -34,6 +34,7 @@ describe 'puppet::dashboard::maintenance' do
         })
       }
     end
+
     context 'Dashboard database purge reports' do
       let(:params) { {:purge_old_reports_command => '/foo/bar' }}
       let(:facts) { {:osfamily => 'RedHat',
@@ -50,6 +51,7 @@ describe 'puppet::dashboard::maintenance' do
         })
       }
     end
+
     context 'Dashboard spool remove reports with default params' do
       let(:params) { {:remove_old_reports_spool => 'true' }}
       let(:facts) { {:osfamily => 'RedHat',
@@ -67,6 +69,7 @@ describe 'puppet::dashboard::maintenance' do
         })
       }
     end
+
     context 'Dashboard spool remove reports with params set' do
       let(:params) { {:remove_old_reports_spool => 'true',
                       :remove_reports_spool_user => 'user',
@@ -89,6 +92,7 @@ describe 'puppet::dashboard::maintenance' do
         })
       }
     end
+
     context 'Dashboard spool remove reports with remove_old_reports_spool set to false' do
       let(:params) { {:remove_old_reports_spool => 'false' }}
       let(:facts) { {:osfamily => 'RedHat',
@@ -102,6 +106,24 @@ describe 'puppet::dashboard::maintenance' do
         })
       }
     end
+
+    context 'with reports_spool_dir set to an invalid path' do
+      let(:params) { {:reports_spool_dir=> 'invalid/path/param' }}
+      let(:facts) do
+        { :osfamily => 'RedHat',
+          :concat_basedir => '/tmp',
+          :max_allowed_packet => 32,
+          :operatingsystemrelease => '6.4',
+        }
+      end
+
+      it do
+        expect {
+          should include_class('puppet::dashboard::maintenance')
+        }.to raise_error(Puppet::Error)
+      end
+    end
+
     context 'Dashboard database dump' do
       let(:params) { {:dump_database_command => '/foo/bar' } }
       let(:facts) { {:osfamily => 'RedHat',
@@ -118,6 +140,7 @@ describe 'puppet::dashboard::maintenance' do
         })
       }
     end
+
     context 'Dashboard database backup cleanup' do
       let(:facts) { {:osfamily => 'RedHat',
                      :concat_basedir => '/tmp',

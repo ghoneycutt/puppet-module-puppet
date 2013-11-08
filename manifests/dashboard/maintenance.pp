@@ -31,6 +31,8 @@ class puppet::dashboard::maintenance (
   include common
   require 'puppet::dashboard'
 
+  validate_absolute_path($reports_spool_dir)
+
   if $reports_days_to_keep == '30' {
     $my_purge_old_reports_command = $purge_old_reports_command
   } else {
