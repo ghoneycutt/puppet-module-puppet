@@ -24,6 +24,7 @@ class puppet::agent (
   $symlink_puppet_binary_target = '/usr/local/bin/puppet',
   $symlink_puppet_binary        = 'false',
   $agent_sysconfig              = 'USE_DEFAULTS',
+  $agent_sysconfig_ensure       = 'USE_DEFAULTS',
   $daemon_name                  = 'puppet',
 ) {
 
@@ -34,10 +35,16 @@ class puppet::agent (
 
   case $::osfamily {
     'RedHat': {
-      $default_agent_sysconfig = '/etc/sysconfig/puppet'
+      $default_agent_sysconfig        = '/etc/sysconfig/puppet'
+      $default_agent_sysconfig_ensure = 'file'
     }
     'Debian': {
-      $default_agent_sysconfig = '/etc/default/puppet'
+      $default_agent_sysconfig        = '/etc/default/puppet'
+      $default_agent_sysconfig_ensure = 'file'
+    }
+    'Solaris': {
+      $default_agent_sysconfig        = undef
+      $default_agent_sysconfig_ensure = 'absent'
     }
     default: {
       fail("puppet::agent supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")
@@ -48,6 +55,12 @@ class puppet::agent (
     $agent_sysconfig_real = $default_agent_sysconfig
   } else {
     $agent_sysconfig_real = $agent_sysconfig
+  }
+
+  if $agent_sysconfig_ensure == 'USE_DEFAULTS' {
+    $agent_sysconfig_ensure_real = $default_agent_sysconfig_ensure
+  } else {
+    $agent_sysconfig_ensure_real = $agent_sysconfig_ensure
   }
 
   case $is_puppet_master {
@@ -138,13 +151,15 @@ class puppet::agent (
     mode    => $config_mode,
   }
 
-  file { 'puppet_agent_sysconfig':
-    ensure  => file,
-    path    => $agent_sysconfig_real,
-    content => template('puppet/agent_sysconfig.erb'),
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
+  if $default_agent_sysconfig_ensure =~ /(present)|(file)/ {
+    file { 'puppet_agent_sysconfig':
+      ensure  => $agent_sysconfig_ensure_real,
+      path    => $agent_sysconfig_real,
+      content => template('puppet/agent_sysconfig.erb'),
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+    }
   }
 
   service { 'puppet_agent_daemon':

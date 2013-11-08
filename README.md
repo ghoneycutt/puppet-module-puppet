@@ -51,8 +51,17 @@ Defaults:root !requiretty
 ## Compatibility ##
 -------------------
 
+### Puppet Master
+-----------------
 * Debian 7
 * EL 6
+* Ubuntu 12.04 LTS
+
+### Puppet Agent
+----------------
+* Debian 7
+* EL 6
+* Solaris
 * Ubuntu 12.04 LTS
 
 ===
@@ -168,6 +177,13 @@ agent_sysconfig
 The location of puppet agent sysconfig file.
 
 - *Default*: use defaults based on osfamily
+
+agent_sysconfig_ensure
+----------------------
+String for 'file' or 'present'. Allows you to not manage the sysconfig file.
+
+- *Default*: use defaults based on osfamily
+
 
 daemon_name
 -----------
