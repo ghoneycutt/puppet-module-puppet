@@ -552,6 +552,12 @@ The location of puppet master sysconfig file.
 
 - *Default*: use defaults based on osfamily
 
+vhost_path
+----------
+The location of puppet master vhost file for apache.
+
+- *Default*: use defaults based on osfamily
+
 rack_dir
 --------
 The rack directory path.
