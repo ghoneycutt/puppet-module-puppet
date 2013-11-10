@@ -32,6 +32,7 @@ class puppet::dashboard::maintenance (
   require 'puppet::dashboard'
 
   validate_absolute_path($reports_spool_dir)
+  validate_absolute_path($dump_dir)
 
   if $reports_days_to_keep == '30' {
     $my_purge_old_reports_command = $purge_old_reports_command
@@ -39,17 +40,17 @@ class puppet::dashboard::maintenance (
     $my_purge_old_reports_command = "/usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production reports:prune upto=${reports_days_to_keep} unit=day >> /var/log/puppet/dashboard_maintenance.log"
   }
 
-  if $dump_dir == '/var/local' {
+  if $dump_dir == '/var/local' and $::osfamily == 'RedHat' {
     $my_dump_database_command = $dump_database_command
   } else {
-    $my_dump_database_command = "cd ~puppet-dashboard && sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=${dump_dir}/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 ${dump_dir}/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1"
+    $my_dump_database_command = "cd ~puppet-dashboard && sudo -u ${puppet::dashboard::dashboard_user_real} /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=${dump_dir}/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 ${dump_dir}/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1"
   }
 
   common::mkdir_p { $dump_dir: }
 
   file { $dump_dir:
     ensure  => directory,
-    group   => 'puppet-dashboard',
+    group   => $puppet::dashboard::dashboard_group_real,
     mode    => '0775',
     require => Common::Mkdir_p[$dump_dir],
   }
