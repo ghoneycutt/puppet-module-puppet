@@ -5,14 +5,19 @@ class puppet::master (
   $rack_dir        = '/usr/share/puppet/rack/puppetmasterd',
   $puppet_user     = 'puppet',
   $manage_firewall = undef,
+  $vhost_path      = 'USE_DEFAULTS',
 ) {
 
   case $::osfamily {
     'RedHat': {
       $default_sysconfig_path = '/etc/sysconfig/puppetmaster'
+      $sysconfig_template     = 'puppetmaster_sysconfig.erb'
+      $default_vhost_path     = '/etc/httpd/conf.d/puppetmaster.conf'
     }
     'Debian': {
       $default_sysconfig_path = '/etc/default/puppetmaster'
+      $sysconfig_template     = 'puppetmaster_default.erb'
+      $default_vhost_path     = '/etc/apache2/sites-enabled/puppetmaster'
     }
     default: {
       fail("puppet::master supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")
@@ -30,6 +35,14 @@ class puppet::master (
   } else {
     $sysconfig_path_real = $sysconfig_path
   }
+  validate_absolute_path($sysconfig_path_real)
+
+  if $vhost_path == 'USE_DEFAULTS' {
+    $vhost_path_real = $default_vhost_path
+  } else {
+    $vhost_path_real = $vhost_path
+  }
+  validate_absolute_path($vhost_path_real)
 
   if $manage_firewall == true {
     firewall { '8140 open port 8140 for Puppet Master':
@@ -52,7 +65,7 @@ class puppet::master (
   file { 'puppetmaster_sysconfig':
     ensure  => file,
     path    => $sysconfig_path_real,
-    content => template('puppet/puppetmaster_sysconfig.erb'),
+    content => template("puppet/${sysconfig_template}"),
   }
 
   # Puppetmaster service cannot be stopped as that would likely break the boot
@@ -91,7 +104,7 @@ class puppet::master (
 
   file { 'puppetmaster_vhost':
     ensure  => file,
-    path    => '/etc/httpd/conf.d/puppetmaster.conf',
+    path    => $vhost_path_real,
     content => template('puppet/puppetmaster-vhost.conf.erb'),
     owner   => 'root',
     group   => 'root',

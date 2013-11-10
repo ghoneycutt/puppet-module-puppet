@@ -58,7 +58,9 @@ describe 'puppet::master' do
 
       it { should include_class('puppet::master') }
 
-      it { should contain_file('puppetmaster_sysconfig').with_content(/^#PUPPETMASTER_LOG=syslog$/) }
+      it { should contain_file('puppetmaster_sysconfig').with_content(/^START=no$/) }
+      it { should contain_file('puppetmaster_sysconfig').with_content(/^DAEMON_OPTS=""$/) }
+      it { should contain_file('puppetmaster_sysconfig').with_content(/^PORT=8140$/) }
     end
 
     context 'Puppetmaster sysconfig file on invalid osfmaily' do
@@ -73,6 +75,22 @@ describe 'puppet::master' do
         expect {
           should include_class('puppet::master')
         }.to raise_error(Puppet::Error,/puppet::master supports osfamilies Debian and RedHat. Detected osfamily is <invalid>./)
+      end
+    end
+
+    context 'Puppetmaster sysconfig file specified as invalid path' do
+      let(:params) { { :sysconfig_path => 'invalid/path/statement' } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :concat_basedir         => '/tmp',
+        }
+      end
+
+      it 'should fail' do
+        expect {
+          should include_class('puppet::master')
+        }.to raise_error(Puppet::Error)
       end
     end
 
@@ -112,7 +130,7 @@ describe 'puppet::master' do
       }
     end
 
-    context 'Puppetmaster vhost configuration file' do
+    context 'Puppetmaster vhost configuration file on osfamily RedHat' do
       let(:facts) do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
@@ -123,11 +141,70 @@ describe 'puppet::master' do
       it { should include_class('puppet::master') }
 
       it { should contain_file('puppetmaster_vhost').with({
+          'ensure'  => 'file',
+          'path'    => '/etc/httpd/conf.d/puppetmaster.conf',
           'owner'   => 'root',
           'group'   => 'root',
           'mode'    => '0644',
         })
       }
+    end
+
+    context 'Puppetmaster vhost configuration file on osfamily Debian' do
+      let(:facts) do
+        { :osfamily               => 'Debian',
+          :operatingsystemrelease => '6.0.8',
+          :concat_basedir         => '/tmp',
+        }
+      end
+
+      it { should include_class('puppet::master') }
+
+      it { should contain_file('puppetmaster_vhost').with({
+          'ensure'  => 'file',
+          'path'    => '/etc/apache2/sites-enabled/puppetmaster',
+          'owner'   => 'root',
+          'group'   => 'root',
+          'mode'    => '0644',
+        })
+      }
+    end
+
+    context 'Puppetmaster vhost configuration file specified as param' do
+      let(:params) { { :vhost_path => '/usr/local/apache/conf.d/puppetmaster.conf' } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :concat_basedir         => '/tmp',
+        }
+      end
+
+      it { should include_class('puppet::master') }
+
+      it { should contain_file('puppetmaster_vhost').with({
+          'ensure'  => 'file',
+          'path'    => '/usr/local/apache/conf.d/puppetmaster.conf',
+          'owner'   => 'root',
+          'group'   => 'root',
+          'mode'    => '0644',
+        })
+      }
+    end
+
+    context 'Puppetmaster vhost configuration file specified as invalid path' do
+      let(:params) { { :vhost_path => 'invalid/path/statement' } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :concat_basedir         => '/tmp',
+        }
+      end
+
+      it 'should fail' do
+        expect {
+          should include_class('puppet::master')
+        }.to raise_error(Puppet::Error)
+      end
     end
 
     context 'Puppetmaster vhost configuration file content' do
