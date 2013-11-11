@@ -179,10 +179,12 @@ class puppet::agent (
     minute  => $cron_minute,
   }
 
-  cron { 'puppet_agent_once_at_boot':
-    ensure  => $at_boot_ensure,
-    command => $my_cron_command,
-    user    => $cron_user,
-    special => 'reboot',
+  if $run_method == 'cron' {
+    cron { 'puppet_agent_once_at_boot':
+      ensure  => $at_boot_ensure,
+      command => $my_cron_command,
+      user    => $cron_user,
+      special => 'reboot',
+    }
   }
 }
