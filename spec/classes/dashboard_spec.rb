@@ -21,6 +21,87 @@ describe 'puppet::dashboard' do
       }
     end
 
+    context 'external_node_script on osfamily RedHat with default options' do
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :ports_file             => '/etc/httpd/ports.conf"',
+          :concat_basedir         => '/tmp',
+        }
+      end
+
+      it { should include_class('puppet::dashboard') }
+
+      it { should contain_file('external_node_script').with({
+          'ensure' => 'file',
+          'path'   => '/usr/share/puppet-dashboard/bin/external_node',
+          'owner'  => 'puppet-dashboard',
+          'group'  => 'puppet-dashboard',
+          'mode'   => '0755',
+        })
+      }
+    end
+
+    context 'external_node_script on osfamily Debian with default options' do
+      let(:facts) do
+        { :osfamily               => 'Debian',
+          :operatingsystemrelease => '6.0.8',
+          :ports_file             => '/etc/httpd/ports.conf"',
+          :concat_basedir         => '/tmp',
+        }
+      end
+
+      it { should include_class('puppet::dashboard') }
+
+      it { should contain_file('external_node_script').with({
+          'ensure' => 'file',
+          'path'   => '/usr/share/puppet-dashboard/bin/external_node',
+          'owner'  => 'puppet',
+          'group'  => 'puppet',
+          'mode'   => '0755',
+        })
+      }
+    end
+
+    context 'external_node_script with non-default external_node_script specified' do
+      let(:params) { { :external_node_script_path => '/opt/local/puppet-dashboard/bin/external_node' } }
+      let(:facts) do
+        { :osfamily               => 'Debian',
+          :operatingsystemrelease => '6.0.8',
+          :ports_file             => '/etc/httpd/ports.conf"',
+          :concat_basedir         => '/tmp',
+        }
+      end
+
+      it { should include_class('puppet::dashboard') }
+
+      it { should contain_file('external_node_script').with({
+          'ensure' => 'file',
+          'path'   => '/opt/local/puppet-dashboard/bin/external_node',
+          'owner'  => 'puppet',
+          'group'  => 'puppet',
+          'mode'   => '0755',
+        })
+      }
+    end
+
+    context 'external_node_script with invalid path specified' do
+      let(:params) { { :external_node_script_path => 'invalid/path/statement' } }
+      let(:facts) do
+        { :osfamily               => 'Debian',
+          :operatingsystemrelease => '6.0.8',
+          :ports_file             => '/etc/httpd/ports.conf"',
+          :concat_basedir         => '/tmp',
+        }
+      end
+
+      it 'should fail' do
+        expect {
+          should include_class('puppet::dashboard')
+        }.to raise_error(Puppet::Error)
+      end
+    end
+
     context 'Dashboard sysconfig file on osfamily RedHat' do
       let(:facts) do
         { :osfamily               => 'RedHat',
@@ -33,12 +114,15 @@ describe 'puppet::dashboard' do
       it { should include_class('puppet::dashboard') }
 
       it { should contain_file('dashboard_sysconfig').with({
-          'path'    => '/etc/sysconfig/puppet-dashboard',
-          'owner'   => 'root',
-          'group'   => 'root',
-          'mode'    => '0644',
+          'ensure' => 'file',
+          'path'   => '/etc/sysconfig/puppet-dashboard',
+          'owner'  => 'root',
+          'group'  => 'root',
+          'mode'   => '0644',
         })
       }
+
+      it { should contain_file('dashboard_sysconfig').with_content(/^DASHBOARD_PORT=3000$/) }
     end
 
     context 'Dashboard sysconfig file on osfamily Debian' do
@@ -53,12 +137,21 @@ describe 'puppet::dashboard' do
       it { should include_class('puppet::dashboard') }
 
       it { should contain_file('dashboard_sysconfig').with({
-          'path'    => '/etc/default/puppet-dashboard',
-          'owner'   => 'root',
-          'group'   => 'root',
-          'mode'    => '0644',
+          'ensure' => 'file',
+          'path'   => '/etc/default/puppet-dashboard',
+          'owner'  => 'root',
+          'group'  => 'root',
+          'mode'   => '0644',
         })
       }
+
+      it { should_not contain_file('dashboard_sysconfig').with_content(/^START=yes$/) }
+      it { should contain_file('dashboard_sysconfig').with_content(/^DASHBOARD_HOME=\/usr\/share\/puppet-dashboard$/) }
+      it { should contain_file('dashboard_sysconfig').with_content(/^DASHBOARD_USER=www-data$/) }
+      it { should contain_file('dashboard_sysconfig').with_content(/^DASHBOARD_RUBY=\/usr\/bin\/ruby$/) }
+      it { should contain_file('dashboard_sysconfig').with_content(/^DASHBOARD_ENVIRONMENT=production$/) }
+      it { should contain_file('dashboard_sysconfig').with_content(/^DASHBOARD_IFACE=0.0.0.0$/) }
+      it { should contain_file('dashboard_sysconfig').with_content(/^DASHBOARD_PORT=3000$/) }
     end
 
     context 'Dashboard sysconfig file on invalid osfamily' do
@@ -77,21 +170,8 @@ describe 'puppet::dashboard' do
       end
     end
 
-    context 'Dashboard sysconfig file content on osfamily RedHat' do
-      let(:facts) do
-        { :osfamily               => 'RedHat',
-          :operatingsystemrelease => '6.4',
-          :ports_file             => '/etc/httpd/ports.conf"',
-          :concat_basedir         => '/tmp',
-        }
-      end
-
-      it { should include_class('puppet::dashboard') }
-
-      it { should contain_file('dashboard_sysconfig').with_content(/^DASHBOARD_PORT=3000$/) }
-    end
-
-    context 'Dashboard sysconfig file content on osfamily Debian' do
+    context 'Dashboard sysconfig specified with invalid path' do
+      let(:params) { { :sysconfig_path => 'invalid/path/statement' } }
       let(:facts) do
         { :osfamily               => 'Debian',
           :operatingsystemrelease => '7',
@@ -100,9 +180,11 @@ describe 'puppet::dashboard' do
         }
       end
 
-      it { should include_class('puppet::dashboard') }
-
-      it { should contain_file('dashboard_sysconfig').with_content(/^DASHBOARD_PORT=3000$/) }
+      it 'should fail' do
+        expect {
+          should include_class('puppet::dashboard')
+        }.to raise_error(Puppet::Error)
+      end
     end
 
     context 'Dashboard service' do

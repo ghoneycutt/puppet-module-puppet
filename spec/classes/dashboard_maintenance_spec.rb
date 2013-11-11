@@ -3,7 +3,45 @@ describe 'puppet::dashboard::maintenance' do
 
   describe 'class puppet::dashboard::maintenance' do
 
-    context 'Dashboard database dump dir' do
+    context 'with database dump dir as default value on osfamily RedHat' do
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+        }
+      end
+
+      it { should include_class('puppet::dashboard::maintenance') }
+
+      it { should contain_file('/var/local').with({
+          'ensure' => 'directory',
+          'group'  => 'puppet-dashboard',
+          'mode'   => '0775',
+        })
+      }
+    end
+
+    context 'with database dump dir as default value on osfamily Debian' do
+      let(:facts) do
+        { :osfamily               => 'Debian',
+          :operatingsystemrelease => '6.0.8',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+        }
+      end
+
+      it { should include_class('puppet::dashboard::maintenance') }
+
+      it { should contain_file('/var/local').with({
+          'ensure' => 'directory',
+          'group'  => 'puppet',
+          'mode'   => '0775',
+        })
+      }
+    end
+
+    context 'with database dump dir specified' do
       let(:params) { {:dump_dir => '/foo/bar'} }
       let(:facts) do
         { :osfamily               => 'RedHat',
@@ -17,8 +55,26 @@ describe 'puppet::dashboard::maintenance' do
 
       it { should contain_file('/foo/bar').with({
           'ensure' => 'directory',
+          'mode'   => '0775',
         })
       }
+    end
+
+    context 'with database dump dir specified as invalid value' do
+      let(:params) { {:dump_dir => 'invalid/path/statement'} }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+        }
+      end
+
+      it do
+        expect {
+          should include_class('puppet::dashboard::maintenance')
+        }.to raise_error(Puppet::Error)
+      end
     end
 
     context 'Dashboard database optimization' do
@@ -70,9 +126,9 @@ describe 'puppet::dashboard::maintenance' do
                      :concat_basedir => '/tmp',
                      :max_allowed_packet => 32,
                      :operatingsystemrelease => '6.4' } }
-      it {
-        should include_class('puppet::dashboard::maintenance')
-        should contain_cron('remove_old_reports_spool').with({
+
+      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_cron('remove_old_reports_spool').with({
           'command'  => '/bin/find /usr/share/puppet-dashboard/spool -type f -name "*.yaml" -mtime +7 -exec /bin/rm -f {} \;',
           'ensure'   => 'present',
           'user'     => 'root',
@@ -93,9 +149,9 @@ describe 'puppet::dashboard::maintenance' do
                      :concat_basedir => '/tmp',
                      :max_allowed_packet => 32,
                      :operatingsystemrelease => '6.4' } }
-      it {
-        should include_class('puppet::dashboard::maintenance')
-        should contain_cron('remove_old_reports_spool').with({
+
+      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_cron('remove_old_reports_spool').with({
           'ensure'   => 'present',
           'command'  => '/bin/find /tmp/foo -type f -name "*.yaml" -mtime +10 -exec /bin/rm -f {} \;',
           'user'     => 'user',
@@ -111,9 +167,9 @@ describe 'puppet::dashboard::maintenance' do
                      :concat_basedir => '/tmp',
                      :max_allowed_packet => 32,
                      :operatingsystemrelease => '6.4' } }
-      it {
-        should include_class('puppet::dashboard::maintenance')
-        should contain_cron('remove_old_reports_spool').with({
+
+      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_cron('remove_old_reports_spool').with({
           'ensure'   => 'absent',
         })
       }
@@ -136,15 +192,47 @@ describe 'puppet::dashboard::maintenance' do
       end
     end
 
-    context 'Dashboard database dump' do
-      let(:params) { {:dump_database_command => '/foo/bar' } }
-      let(:facts) { {:osfamily => 'RedHat',
-                     :concat_basedir => '/tmp',
-                     :max_allowed_packet => 32,
+    context 'with dump_database_command set to default value on osfamily RedHat' do
+      let(:facts) { {:osfamily               => 'RedHat',
+                     :concat_basedir         => '/tmp',
+                     :max_allowed_packet     => 32,
                      :operatingsystemrelease => '6.4' } }
-      it {
-        should include_class('puppet::dashboard::maintenance')
-        should contain_cron('dump_dashboard_database').with({
+
+      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_cron('dump_dashboard_database').with({
+          'command'  => 'cd ~puppet-dashboard && sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1',
+          'user'     => 'root',
+          'hour'     => '1',
+          'minute'   => '0',
+        })
+      }
+    end
+
+    context 'with dump_database_command set to default value on osfamily Debian' do
+      let(:facts) { {:osfamily               => 'Debian',
+                     :concat_basedir         => '/tmp',
+                     :max_allowed_packet     => 32,
+                     :operatingsystemrelease => '6.0.8' } }
+
+      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_cron('dump_dashboard_database').with({
+          'command'  => 'cd ~puppet-dashboard && sudo -u puppet /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1',
+          'user'     => 'root',
+          'hour'     => '1',
+          'minute'   => '0',
+        })
+      }
+    end
+
+    context 'with dump_database_command specified' do
+      let(:params) { {:dump_database_command => '/foo/bar' } }
+      let(:facts) { {:osfamily               => 'RedHat',
+                     :concat_basedir         => '/tmp',
+                     :max_allowed_packet     => 32,
+                     :operatingsystemrelease => '6.4' } }
+
+      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_cron('dump_dashboard_database').with({
           'command'  => '/foo/bar',
           'user'     => 'root',
           'hour'     => '1',

@@ -53,12 +53,14 @@ Defaults:root !requiretty
 
 ### Puppet Master
 -----------------
+* Debian 6
 * Debian 7
 * EL 6
 * Ubuntu 12.04 LTS
 
 ### Puppet Agent
 ----------------
+* Debian 6
 * Debian 7
 * EL 6
 * Solaris
@@ -207,13 +209,13 @@ dashboard_user
 --------------
 The user for dashboard installation.
 
-- *Default*: puppet-dashboard
+- *Default*: use defaults based on osfamily
 
 dashboard_group
 --------------
 The group for dashboard installation.
 
-- *Default*: puppet-dashboard
+- *Default*: use defaults based on osfamily
 
 sysconfig_path
 -------------------
@@ -257,6 +259,12 @@ puppet::dashboard::htpasswd:
 
 ### Parameters ###
 
+dashboard_workers
+-----------------
+Number of dashboard workers to start. Only used on osfamily Debian.
+
+- *Default*: $::processorcount
+
 database_config_path
 --------------------
 The path to the database config file.
@@ -293,6 +301,24 @@ String of path to htpasswd file to be used by Dashboard. Only used if security i
 
 - *Default*: `/etc/puppet/dashboard.htpasswd`
 
+htpasswd_owner
+--------------
+Owner of htpasswd file.
+
+- *Default*: root
+
+htpasswd_group
+--------------
+Group of htpasswd file.
+
+- *Default*: use defaults based on osfamily
+
+htpasswd_mode
+-------------
+Mode of htpasswd file.
+
+- *Default*: 0640
+
 log_dir
 -------
 The location for the puppet log files.
@@ -322,6 +348,12 @@ security
 String to indicate security type used. Valid values are 'none' and 'htpasswd'. Using 'htpasswd' will use Apache basic auth with a htpasswd file. See htpasswd and htpasswd_path parameters.
 
 - *Default*: 'none'
+
+vhost_path
+----------
+The location of puppet dashboard vhost file for apache.
+
+- *Default*: use defaults based on osfamily
 
 ===
 
@@ -497,8 +529,7 @@ Which provider should supply lint.
 
 version
 -------
-If you do not want to use the default version of lint, specify which 
-version you want to use here.
+If you do not want to use the default version of lint, specify which version you want to use here.
 
 - *Default*: undef
 

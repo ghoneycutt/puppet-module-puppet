@@ -2,8 +2,8 @@
 #
 class puppet::dashboard (
   $dashboard_package         = 'puppet-dashboard',
-  $dashboard_user            = 'puppet-dashboard',
-  $dashboard_group           = 'puppet-dashboard',
+  $dashboard_user            = 'USE_DEFAULTS',
+  $dashboard_group           = 'USE_DEFAULTS',
   $sysconfig_path            = 'USE_DEFAULTS',
   $external_node_script_path = '/usr/share/puppet-dashboard/bin/external_node',
   $dashboard_fqdn            = "puppet.${::domain}",
@@ -14,10 +14,16 @@ class puppet::dashboard (
 
   case $::osfamily {
     'RedHat': {
-      $default_sysconfig_path = '/etc/sysconfig/puppet-dashboard'
+      $default_sysconfig_path  = '/etc/sysconfig/puppet-dashboard'
+      $sysconfig_template      = 'dashboard_sysconfig.erb'
+      $default_dashboard_user  = 'puppet-dashboard'
+      $default_dashboard_group = 'puppet-dashboard'
     }
     'Debian': {
-      $default_sysconfig_path = '/etc/default/puppet-dashboard'
+      $default_sysconfig_path  = '/etc/default/puppet-dashboard'
+      $sysconfig_template      = 'dashboard_default.erb'
+      $default_dashboard_user  = 'puppet'
+      $default_dashboard_group = 'puppet'
     }
     default: {
       fail("puppet::dashboard supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")
@@ -29,6 +35,19 @@ class puppet::dashboard (
   } else {
     $sysconfig_path_real = $sysconfig_path
   }
+  validate_absolute_path($sysconfig_path_real)
+
+  if $dashboard_user == 'USE_DEFAULTS' {
+    $dashboard_user_real = $default_dashboard_user
+  } else {
+    $dashboard_user_real = $dashboard_user
+  }
+
+  if $dashboard_group == 'USE_DEFAULTS' {
+    $dashboard_group_real = $default_dashboard_group
+  } else {
+    $dashboard_group_real = $dashboard_group
+  }
 
   package { 'puppet_dashboard':
     ensure => present,
@@ -39,8 +58,8 @@ class puppet::dashboard (
     ensure  => file,
     content => template('puppet/external_node.erb'),
     path    => $external_node_script_path,
-    owner   => $dashboard_user,
-    group   => $dashboard_group,
+    owner   => $dashboard_user_real,
+    group   => $dashboard_group_real,
     mode    => '0755',
     require => Package['puppet_dashboard'],
   }
@@ -48,7 +67,7 @@ class puppet::dashboard (
   file { 'dashboard_sysconfig':
     ensure  => file,
     path    => $sysconfig_path_real,
-    content => template('puppet/dashboard_sysconfig.erb'),
+    content => template("puppet/${sysconfig_template}"),
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
