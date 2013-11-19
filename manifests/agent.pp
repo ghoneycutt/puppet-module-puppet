@@ -84,6 +84,10 @@ class puppet::agent (
       $cron_user     = undef
       $cron_hour     = undef
       $cron_minute   = undef
+      $puppet_agent_ensure             = 'absent'
+      $puppet_agent_noop_ensure        = 'absent'
+      $puppet_agent_reboot_ensure      = 'absent'
+      $puppet_agent_reboot_noop_ensure = 'absent'
     }
     'cron': {
       $daemon_ensure = 'stopped'
@@ -91,35 +95,57 @@ class puppet::agent (
       $cron_run_one = fqdn_rand($run_interval)
       $cron_run_two = fqdn_rand($run_interval) + 30
       $cron_ensure   = 'present'
-      case $run_in_noop {
-        'true': {
-          $my_cron_command = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop'
-        }
-        'false': {
-          $my_cron_command = $cron_command
-        }
-        default: {
-          fail("run_in_noop is ${run_in_noop} must be 'true' or 'false'.")
-        }
-      }
       $cron_user     = 'root'
       $cron_hour     = '*'
       $cron_minute   = [$cron_run_one, $cron_run_two]
+      case $run_at_boot {
+        'false': {
+          $puppet_agent_reboot_ensure          = 'absent'
+          $puppet_agent_reboot_noop_ensure     = 'absent'
+          case $run_in_noop {
+            'false': {
+              $puppet_agent_ensure             = 'present'
+              $puppet_agent_noop_ensure        = 'absent'
+              $cron_command_real               = $cron_command
+            }
+            'true': {
+              $puppet_agent_ensure             = 'absent'
+              $puppet_agent_noop_ensure        = 'present'
+              $cron_command_real               = "${cron_command} --noop"
+            }
+            default: {
+              fail("run_in_noop is ${run_in_noop} must be 'true' or 'false'.")
+            }
+          }
+        }
+        'true': {
+          case $run_in_noop {
+            'false': {
+              $puppet_agent_ensure             = 'present'
+              $puppet_agent_noop_ensure        = 'absent'
+              $puppet_agent_reboot_ensure      = 'present'
+              $puppet_agent_reboot_noop_ensure = 'absent'
+              $cron_command_real               = $cron_command
+            }
+            'true': {
+              $puppet_agent_ensure             = 'absent'
+              $puppet_agent_noop_ensure        = 'present'
+              $puppet_agent_reboot_ensure      = 'absent'
+              $puppet_agent_reboot_noop_ensure = 'present'
+              $cron_command_real               = "${cron_command} --noop"
+            }
+            default: {
+              fail("run_in_noop is ${run_in_noop} must be 'true' or 'false'.")
+            }
+          }
+        }
+        default: {
+          fail("puppet::agent::run_at_boot is ${run_at_boot} and must be 'true' or 'false'.")
+        }
+      }
     }
     default: {
       fail("puppet::agent::run_method is ${run_method} and must be 'service' or 'cron'.")
-    }
-  }
-
-  case $run_at_boot {
-    'true': {
-      $at_boot_ensure = 'present'
-    }
-    'false': {
-      $at_boot_ensure = 'absent'
-    }
-    default: {
-      fail("puppet::agent::run_at_boot is ${run_at_boot} and must be 'true' or 'false'.")
     }
   }
 
@@ -171,20 +197,37 @@ class puppet::agent (
     enable     => $daemon_enable,
   }
 
+  # PF: when changing $run_in_noop from 'true' to 'false' the reboot job was not
+  # getting deleted propably. A workaround is to create and controll all four
+  # different cron job as seperate resources.
   cron { 'puppet_agent':
-    ensure  => $cron_ensure,
-    command => $my_cron_command,
+    ensure  => $puppet_agent_ensure,
+    command => $cron_command_real,
     user    => $cron_user,
     hour    => $cron_hour,
     minute  => $cron_minute,
   }
 
-  if $run_method == 'cron' {
-    cron { 'puppet_agent_once_at_boot':
-      ensure  => $at_boot_ensure,
-      command => $my_cron_command,
-      user    => $cron_user,
-      special => 'reboot',
-    }
+  cron { 'puppet_agent_noop':
+    ensure  => $puppet_agent_noop_ensure,
+    command => $cron_command_real,
+    user    => $cron_user,
+    hour    => $cron_hour,
+    minute  => $cron_minute,
   }
+
+  cron { 'puppet_agent_reboot':
+    ensure  => $puppet_agent_reboot_ensure,
+    command => $cron_command_real,
+    user    => $cron_user,
+    special => 'reboot',
+  }
+
+  cron { 'puppet_agent_reboot_noop':
+    ensure  => $puppet_agent_reboot_noop_ensure,
+    command => $cron_command_real,
+    user    => $cron_user,
+    special => 'reboot',
+  }
+
 }
