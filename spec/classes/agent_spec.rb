@@ -166,6 +166,23 @@ describe 'puppet::agent' do
       }
     end
 
+    context 'Puppet agent cron for --noop' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :run_method => 'cron',
+          :run_in_noop => 'true',
+          :env => 'production',
+        }
+      end
+
+      it { should include_class('puppet::agent') }
+
+      it { should contain_cron('puppet_agent_noop').with({
+          'user' => 'root',
+        })
+      }
+    end
+
     context 'Puppet agent cron at boot' do
       let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) do
@@ -175,7 +192,24 @@ describe 'puppet::agent' do
       end
 
       it { should include_class('puppet::agent') }
-      it { should contain_cron('puppet_agent_once_at_boot').with({
+      it { should contain_cron('puppet_agent_reboot').with({
+          'user' => 'root',
+          'special' => 'reboot',
+        })
+      }
+    end
+
+    context 'Puppet agent cron at boot for --noop' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :run_method => 'cron',
+          :run_in_noop => 'true',
+          :env => 'production',
+        }
+      end
+
+      it { should include_class('puppet::agent') }
+      it { should contain_cron('puppet_agent_reboot_noop').with({
           'user' => 'root',
           'special' => 'reboot',
         })
