@@ -46,8 +46,12 @@ class puppet::agent (
       $default_agent_sysconfig        = undef
       $default_agent_sysconfig_ensure = 'absent'
     }
+    'Suse': {
+      $default_agent_sysconfig        = '/etc/sysconfig/puppet'
+      $default_agent_sysconfig_ensure = 'file'
+    }
     default: {
-      fail("puppet::agent supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")
+      fail("puppet::agent supports osfamilies Debian, RedHat and Suse. Detected osfamily is <${::osfamily}>.")
     }
   }
 
