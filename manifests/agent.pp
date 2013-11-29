@@ -26,6 +26,7 @@ class puppet::agent (
   $symlink_puppet_binary        = 'false',
   $agent_sysconfig              = 'USE_DEFAULTS',
   $agent_sysconfig_ensure       = 'USE_DEFAULTS',
+  $graph_agent			= 'UNSET',
   $daemon_name                  = 'puppet',
 ) {
 
