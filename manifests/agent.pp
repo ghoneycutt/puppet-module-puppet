@@ -20,11 +20,13 @@ class puppet::agent (
   $run_in_noop                  = 'false',
   $cron_command                 = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
   $run_at_boot                  = 'true',
+  $archive_files		= 'true',
   $puppet_binary                = '/usr/bin/puppet',
   $symlink_puppet_binary_target = '/usr/local/bin/puppet',
   $symlink_puppet_binary        = 'false',
   $agent_sysconfig              = 'USE_DEFAULTS',
   $agent_sysconfig_ensure       = 'USE_DEFAULTS',
+  $graph_agent			= 'UNSET',
   $daemon_name                  = 'puppet',
 ) {
 
