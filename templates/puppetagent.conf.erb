@@ -14,9 +14,11 @@
     # The default value is '$confdir/ssl'.
     ssldir = $vardir/ssl
 
+<% if @archive_files == 'true' %>
     archive_files = true
     archive_file_server = <%= @puppet_server %>
 
+<% end -%>
 [agent]
     # The file in which puppetd stores a list of the classes
     # associated with the retrieved configuratiion.  Can be loaded in
