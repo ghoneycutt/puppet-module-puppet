@@ -34,20 +34,24 @@ class puppet::agent (
   }
 
   case $::osfamily {
-    'RedHat': {
-      $default_agent_sysconfig        = '/etc/sysconfig/puppet'
-      $default_agent_sysconfig_ensure = 'file'
-    }
     'Debian': {
       $default_agent_sysconfig        = '/etc/default/puppet'
+      $default_agent_sysconfig_ensure = 'file'
+    }
+    'RedHat': {
+      $default_agent_sysconfig        = '/etc/sysconfig/puppet'
       $default_agent_sysconfig_ensure = 'file'
     }
     'Solaris': {
       $default_agent_sysconfig        = undef
       $default_agent_sysconfig_ensure = 'absent'
     }
+    'Suse': {
+      $default_agent_sysconfig        = '/etc/sysconfig/puppet'
+      $default_agent_sysconfig_ensure = 'file'
+    }
     default: {
-      fail("puppet::agent supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")
+      fail("puppet::agent supports osfamilies Debian, RedHat, Solaris, and Suse. Detected osfamily is <${::osfamily}>.")
     }
   }
 

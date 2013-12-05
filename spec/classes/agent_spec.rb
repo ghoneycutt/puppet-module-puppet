@@ -108,6 +108,23 @@ describe 'puppet::agent' do
       it { should_not contain_file('puppet_agent_sysconfig') }
     end
 
+    context "Puppet agent sysconfig file on osfamily Suse" do
+      let(:facts) { { :osfamily => 'Suse' } }
+      let(:params) { { :env => 'production' } }
+
+      it { should include_class('puppet::agent') }
+
+      it { should contain_file('puppet_agent_sysconfig').with({
+          'path'    => '/etc/sysconfig/puppet',
+          'owner'   => 'root',
+          'group'   => 'root',
+          'mode'    => '0644',
+        })
+      }
+
+      it { should contain_file('puppet_agent_sysconfig').with_content(/^#PUPPET_SERVER=puppet$/) }
+    end
+
     context 'Puppet agent sysconfig file on invalid osfamily' do
       let(:facts) { { :osfamily => 'invalid' } }
       let(:params) { { :env => 'production' } }
@@ -115,7 +132,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should include_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/puppet::agent supports osfamilies Debian and RedHat. Detected osfamily is <invalid>./)
+        }.to raise_error(Puppet::Error,/puppet::agent supports osfamilies Debian, RedHat, Solaris, and Suse. Detected osfamily is <invalid>./)
       end
     end
   end
