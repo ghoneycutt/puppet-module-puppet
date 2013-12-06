@@ -64,6 +64,7 @@ Defaults:root !requiretty
 * Debian 7
 * EL 6
 * Solaris
+* Suse 11
 * Ubuntu 12.04 LTS
 
 ===
