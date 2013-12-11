@@ -97,7 +97,7 @@ class puppet::agent (
       $cron_ensure   = 'present'
       case $run_in_noop {
         'true': {
-          $my_cron_command = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop'
+          $my_cron_command = "${cron_command} --noop"
         }
         'false': {
           $my_cron_command = $cron_command
