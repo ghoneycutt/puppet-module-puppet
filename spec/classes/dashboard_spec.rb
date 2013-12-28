@@ -12,7 +12,7 @@ describe 'puppet::dashboard' do
         }
       end
 
-      it { should include_class('puppet::dashboard') }
+      it { should contain_class('puppet::dashboard') }
 
       it { should contain_package('puppet_dashboard').with({
           'ensure' => 'present',
@@ -30,7 +30,7 @@ describe 'puppet::dashboard' do
         }
       end
 
-      it { should include_class('puppet::dashboard') }
+      it { should contain_class('puppet::dashboard') }
 
       it { should contain_file('external_node_script').with({
           'ensure' => 'file',
@@ -51,7 +51,7 @@ describe 'puppet::dashboard' do
         }
       end
 
-      it { should include_class('puppet::dashboard') }
+      it { should contain_class('puppet::dashboard') }
 
       it { should contain_file('external_node_script').with({
           'ensure' => 'file',
@@ -73,7 +73,7 @@ describe 'puppet::dashboard' do
         }
       end
 
-      it { should include_class('puppet::dashboard') }
+      it { should contain_class('puppet::dashboard') }
 
       it { should contain_file('external_node_script').with({
           'ensure' => 'file',
@@ -97,7 +97,7 @@ describe 'puppet::dashboard' do
 
       it 'should fail' do
         expect {
-          should include_class('puppet::dashboard')
+          should contain_class('puppet::dashboard')
         }.to raise_error(Puppet::Error)
       end
     end
@@ -111,7 +111,7 @@ describe 'puppet::dashboard' do
         }
       end
 
-      it { should include_class('puppet::dashboard') }
+      it { should contain_class('puppet::dashboard') }
 
       it { should contain_file('dashboard_sysconfig').with({
           'ensure' => 'file',
@@ -134,7 +134,7 @@ describe 'puppet::dashboard' do
         }
       end
 
-      it { should include_class('puppet::dashboard') }
+      it { should contain_class('puppet::dashboard') }
 
       it { should contain_file('dashboard_sysconfig').with({
           'ensure' => 'file',
@@ -165,7 +165,7 @@ describe 'puppet::dashboard' do
 
       it 'should fail' do
         expect {
-          should include_class('puppet::dashboard')
+          should contain_class('puppet::dashboard')
         }.to raise_error(Puppet::Error,/puppet::dashboard supports osfamilies Debian and RedHat. Detected osfamily is <invalid>./)
       end
     end
@@ -182,7 +182,7 @@ describe 'puppet::dashboard' do
 
       it 'should fail' do
         expect {
-          should include_class('puppet::dashboard')
+          should contain_class('puppet::dashboard')
         }.to raise_error(Puppet::Error)
       end
     end
@@ -196,7 +196,7 @@ describe 'puppet::dashboard' do
         }
       end
 
-      it { should include_class('puppet::dashboard') }
+      it { should contain_class('puppet::dashboard') }
 
       it { should contain_service('puppet-dashboard').with({
           'ensure'    => 'stopped',
@@ -214,7 +214,7 @@ describe 'puppet::dashboard' do
         }
       end
 
-      it { should include_class('puppet::dashboard') }
+      it { should contain_class('puppet::dashboard') }
 
       it { should contain_service('puppet-dashboard-workers').with({
           'ensure'    => 'stopped',

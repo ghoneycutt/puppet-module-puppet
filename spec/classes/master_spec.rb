@@ -11,7 +11,7 @@ describe 'puppet::master' do
         }
       end
 
-      it { should include_class('puppet::master') }
+      it { should contain_class('puppet::master') }
 
       it { should contain_file('/etc/puppet/auth.conf').with({
           'owner' => 'root',
@@ -27,7 +27,7 @@ describe 'puppet::master' do
         }
       end
 
-      it { should include_class('puppet::master') }
+      it { should contain_class('puppet::master') }
 
       it { should contain_file('/etc/puppet/fileserver.conf').with({
           'owner' => 'root',
@@ -43,7 +43,7 @@ describe 'puppet::master' do
         }
       end
 
-      it { should include_class('puppet::master') }
+      it { should contain_class('puppet::master') }
 
       it { should contain_file('puppetmaster_sysconfig').with_content(/^#PUPPETMASTER_LOG=syslog$/) }
     end
@@ -56,7 +56,7 @@ describe 'puppet::master' do
         }
       end
 
-      it { should include_class('puppet::master') }
+      it { should contain_class('puppet::master') }
 
       it { should contain_file('puppetmaster_sysconfig').with_content(/^START=no$/) }
       it { should contain_file('puppetmaster_sysconfig').with_content(/^DAEMON_OPTS=""$/) }
@@ -73,7 +73,7 @@ describe 'puppet::master' do
 
       it 'should fail' do
         expect {
-          should include_class('puppet::master')
+          should contain_class('puppet::master')
         }.to raise_error(Puppet::Error,/puppet::master supports osfamilies Debian and RedHat. Detected osfamily is <invalid>./)
       end
     end
@@ -89,7 +89,7 @@ describe 'puppet::master' do
 
       it 'should fail' do
         expect {
-          should include_class('puppet::master')
+          should contain_class('puppet::master')
         }.to raise_error(Puppet::Error)
       end
     end
@@ -103,7 +103,7 @@ describe 'puppet::master' do
         }
       end
 
-      it { should include_class('puppet::master') }
+      it { should contain_class('puppet::master') }
 
       it { should contain_file('/foo/bar').with({
           'ensure' => 'directory',
@@ -120,7 +120,7 @@ describe 'puppet::master' do
         }
       end
 
-      it { should include_class('puppet::master') }
+      it { should contain_class('puppet::master') }
 
       it { should contain_file('/foo/bar/config.ru').with({
           'owner'   => 'puppet',
@@ -138,7 +138,7 @@ describe 'puppet::master' do
         }
       end
 
-      it { should include_class('puppet::master') }
+      it { should contain_class('puppet::master') }
 
       it { should contain_file('puppetmaster_vhost').with({
           'ensure'  => 'file',
@@ -158,7 +158,7 @@ describe 'puppet::master' do
         }
       end
 
-      it { should include_class('puppet::master') }
+      it { should contain_class('puppet::master') }
 
       it { should contain_file('puppetmaster_vhost').with({
           'ensure'  => 'file',
@@ -179,7 +179,7 @@ describe 'puppet::master' do
         }
       end
 
-      it { should include_class('puppet::master') }
+      it { should contain_class('puppet::master') }
 
       it { should contain_file('puppetmaster_vhost').with({
           'ensure'  => 'file',
@@ -202,7 +202,7 @@ describe 'puppet::master' do
 
       it 'should fail' do
         expect {
-          should include_class('puppet::master')
+          should contain_class('puppet::master')
         }.to raise_error(Puppet::Error)
       end
     end
@@ -215,7 +215,7 @@ describe 'puppet::master' do
         }
       end
 
-      it { should include_class('puppet::master') }
+      it { should contain_class('puppet::master') }
 
       it { should contain_file('puppetmaster_vhost').with_content(/^\s*<Directory \/usr\/share\/puppet\/rack\/puppetmasterd\/>$/) }
     end

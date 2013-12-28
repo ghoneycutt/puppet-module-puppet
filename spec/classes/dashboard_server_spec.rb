@@ -12,7 +12,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should_not contain_file('dashboard_workers_default') }
   end
@@ -27,7 +27,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_file('dashboard_workers_default').with({
         'ensure' => 'file',
@@ -54,7 +54,7 @@ describe 'puppet::dashboard::server' do
 
     it do
       expect {
-        should include_class('puppet::dashboard')
+        should contain_class('puppet::dashboard')
       }.to raise_error(Puppet::Error,/puppet::dashboard::server::dashboard_workers must be a digit. Detected value is <8invalid>./)
     end
 
@@ -80,7 +80,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_file('dashboard_htpasswd_path').with({
         'ensure' => 'file',
@@ -111,7 +111,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_file('dashboard_htpasswd_path').with({
         'ensure' => 'file',
@@ -143,7 +143,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_file('dashboard_htpasswd_path').with({
         'ensure' => 'file',
@@ -178,7 +178,7 @@ describe 'puppet::dashboard::server' do
 
     it do
       expect {
-        should include_class('puppet::dashboard')
+        should contain_class('puppet::dashboard')
       }.to raise_error(Puppet::Error)
     end
   end
@@ -198,7 +198,7 @@ describe 'puppet::dashboard::server' do
 
       it do
         expect {
-          should include_class('puppet::dashboard')
+          should contain_class('puppet::dashboard')
         }.to raise_error(Puppet::Error)
       end
     end
@@ -217,7 +217,7 @@ describe 'puppet::dashboard::server' do
 
       it do
         expect {
-          should include_class('puppet::dashboard')
+          should contain_class('puppet::dashboard')
         }.to raise_error(Puppet::Error)
       end
     end
@@ -236,7 +236,7 @@ describe 'puppet::dashboard::server' do
 
       it do
         expect {
-          should include_class('puppet::dashboard')
+          should contain_class('puppet::dashboard')
         }.to raise_error(Puppet::Error,/Security is <invalid> which does not match regex. Valid values are none and htpasswd./)
       end
     end
@@ -252,7 +252,7 @@ describe 'puppet::dashboard::server' do
         }
       end
 
-      it { should include_class('puppet::dashboard::server') }
+      it { should contain_class('puppet::dashboard::server') }
 
       it { should contain_file('dashboard_vhost').with_content(/^\s*ServerName puppet.example.com$/) }
     end
@@ -268,7 +268,7 @@ describe 'puppet::dashboard::server' do
         }
       end
 
-      it { should include_class('puppet::dashboard::server') }
+      it { should contain_class('puppet::dashboard::server') }
 
       it { should contain_file('dashboard_vhost') }
 
@@ -286,7 +286,7 @@ describe 'puppet::dashboard::server' do
         }
       end
 
-      it { should include_class('puppet::dashboard::server') }
+      it { should contain_class('puppet::dashboard::server') }
 
       it { should contain_file('dashboard_vhost').with_content(/(\s+|)AuthType(\s+)basic(\s*)/) }
     end
@@ -302,7 +302,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_file('database_config').with({
         'path'    => '/usr/share/puppet-dashboard/config/database.yml',
@@ -323,7 +323,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_file('database_config').with({
         'path'    => '/usr/share/puppet-dashboard/config/database.yml',
@@ -344,7 +344,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_file('database_config').with_content(/^\s*username: dashboard$/) }
   end
@@ -360,7 +360,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_file('dashboard_vhost').with({
         'ensure'  => 'file',
@@ -383,7 +383,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_file('dashboard_vhost').with({
         'ensure'  => 'file',
@@ -405,7 +405,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_mysql__db('dashboard').with({
         'user'     => 'dashboard',
@@ -425,7 +425,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_exec('migrate_dashboard_database').with({
         'command'     => 'rake RAILS_ENV=production db:migrate',
@@ -446,7 +446,7 @@ describe 'puppet::dashboard::server' do
       }
     end
 
-    it { should include_class('puppet::dashboard::server') }
+    it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_service('puppet-dashboard-workers').with({
         'ensure'    => 'running',

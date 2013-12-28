@@ -7,7 +7,7 @@ describe 'puppet::lint' do
     context 'Puppet Lint package' do
       let(:params) { {:provider => 'gem' } }
 
-      it { should include_class('puppet::lint') }
+      it { should contain_class('puppet::lint') }
 
       it { should contain_package('puppet-lint').with({
           'provider' => 'gem',
@@ -22,7 +22,7 @@ describe 'puppet::lint' do
         }
       end
 
-      it { should include_class('puppet::lint') }
+      it { should contain_class('puppet::lint') }
 
       it { should contain_file('/root/.puppet-lint.rc').with({
           'owner' => 'root',
