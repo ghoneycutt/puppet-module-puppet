@@ -12,7 +12,7 @@ describe 'puppet::dashboard::maintenance' do
         }
       end
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
 
       it { should contain_file('/var/local').with({
           'ensure' => 'directory',
@@ -31,7 +31,7 @@ describe 'puppet::dashboard::maintenance' do
         }
       end
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
 
       it { should contain_file('/var/local').with({
           'ensure' => 'directory',
@@ -51,7 +51,7 @@ describe 'puppet::dashboard::maintenance' do
         }
       end
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
 
       it { should contain_file('/foo/bar').with({
           'ensure' => 'directory',
@@ -72,7 +72,7 @@ describe 'puppet::dashboard::maintenance' do
 
       it do
         expect {
-          should include_class('puppet::dashboard::maintenance')
+          should contain_class('puppet::dashboard::maintenance')
         }.to raise_error(Puppet::Error)
       end
     end
@@ -87,7 +87,7 @@ describe 'puppet::dashboard::maintenance' do
         }
       end
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
 
       it { should contain_cron('monthly_dashboard_database_optimization').with({
           'command'  => '/foo/bar',
@@ -109,7 +109,7 @@ describe 'puppet::dashboard::maintenance' do
         }
       end
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
 
       it { should contain_cron('purge_old_reports').with({
           'command'  => '/foo/bar',
@@ -127,7 +127,7 @@ describe 'puppet::dashboard::maintenance' do
                      :max_allowed_packet => 32,
                      :operatingsystemrelease => '6.4' } }
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
       it { should contain_cron('remove_old_reports_spool').with({
           'command'  => '/bin/find /usr/share/puppet-dashboard/spool -type f -name "*.yaml" -mtime +7 -exec /bin/rm -f {} \;',
           'ensure'   => 'present',
@@ -150,7 +150,7 @@ describe 'puppet::dashboard::maintenance' do
                      :max_allowed_packet => 32,
                      :operatingsystemrelease => '6.4' } }
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
       it { should contain_cron('remove_old_reports_spool').with({
           'ensure'   => 'present',
           'command'  => '/bin/find /tmp/foo -type f -name "*.yaml" -mtime +10 -exec /bin/rm -f {} \;',
@@ -168,7 +168,7 @@ describe 'puppet::dashboard::maintenance' do
                      :max_allowed_packet => 32,
                      :operatingsystemrelease => '6.4' } }
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
       it { should contain_cron('remove_old_reports_spool').with({
           'ensure'   => 'absent',
         })
@@ -187,7 +187,7 @@ describe 'puppet::dashboard::maintenance' do
 
       it do
         expect {
-          should include_class('puppet::dashboard::maintenance')
+          should contain_class('puppet::dashboard::maintenance')
         }.to raise_error(Puppet::Error)
       end
     end
@@ -198,7 +198,7 @@ describe 'puppet::dashboard::maintenance' do
                      :max_allowed_packet     => 32,
                      :operatingsystemrelease => '6.4' } }
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
       it { should contain_cron('dump_dashboard_database').with({
           'command'  => 'cd ~puppet-dashboard && sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1',
           'user'     => 'root',
@@ -214,7 +214,7 @@ describe 'puppet::dashboard::maintenance' do
                      :max_allowed_packet     => 32,
                      :operatingsystemrelease => '6.0.8' } }
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
       it { should contain_cron('dump_dashboard_database').with({
           'command'  => 'cd ~puppet-dashboard && sudo -u puppet /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1',
           'user'     => 'root',
@@ -231,7 +231,7 @@ describe 'puppet::dashboard::maintenance' do
                      :max_allowed_packet     => 32,
                      :operatingsystemrelease => '6.4' } }
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
       it { should contain_cron('dump_dashboard_database').with({
           'command'  => '/foo/bar',
           'user'     => 'root',
@@ -250,7 +250,7 @@ describe 'puppet::dashboard::maintenance' do
         }
       end
 
-      it { should include_class('puppet::dashboard::maintenance') }
+      it { should contain_class('puppet::dashboard::maintenance') }
 
       it { should contain_cron('purge_old_db_backups').with({
           'user'     => 'root',

@@ -11,7 +11,7 @@ describe 'puppet::agent' do
       end
       let(:params) { { :env => 'production' } }
 
-      it { should include_class('puppet::agent') }
+      it { should contain_class('puppet::agent') }
 
       it { should contain_file('puppet_config').with({
           'path'    => '/etc/puppet/puppet.conf',
@@ -44,7 +44,7 @@ describe 'puppet::agent' do
       let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) { { :env => 'production' } }
 
-      it { should include_class('puppet::agent') }
+      it { should contain_class('puppet::agent') }
 
       it { should contain_file('puppet_agent_sysconfig').with({
           'path'    => '/etc/sysconfig/puppet',
@@ -65,7 +65,7 @@ describe 'puppet::agent' do
       end
       let(:params) { { :env => 'production' } }
 
-      it { should include_class('puppet::agent') }
+      it { should contain_class('puppet::agent') }
 
       it { should contain_file('puppet_agent_sysconfig').with({
           'path'    => '/etc/default/puppet',
@@ -86,7 +86,7 @@ describe 'puppet::agent' do
       end
       let(:params) { { :env => 'production' } }
 
-      it { should include_class('puppet::agent') }
+      it { should contain_class('puppet::agent') }
 
       it { should contain_file('puppet_agent_sysconfig').with({
           'path'    => '/etc/default/puppet',
@@ -103,7 +103,7 @@ describe 'puppet::agent' do
       let(:facts) { { :osfamily => 'Solaris' } }
       let(:params) { { :env => 'production' } }
 
-      it { should include_class('puppet::agent') }
+      it { should contain_class('puppet::agent') }
 
       it { should_not contain_file('puppet_agent_sysconfig') }
     end
@@ -112,7 +112,7 @@ describe 'puppet::agent' do
       let(:facts) { { :osfamily => 'Suse' } }
       let(:params) { { :env => 'production' } }
 
-      it { should include_class('puppet::agent') }
+      it { should contain_class('puppet::agent') }
 
       it { should contain_file('puppet_agent_sysconfig').with({
           'path'    => '/etc/sysconfig/puppet',
@@ -131,7 +131,7 @@ describe 'puppet::agent' do
 
       it 'should fail' do
         expect {
-          should include_class('puppet::agent')
+          should contain_class('puppet::agent')
         }.to raise_error(Puppet::Error,/puppet::agent supports osfamilies Debian, RedHat, Solaris, and Suse. Detected osfamily is <invalid>./)
       end
     end
@@ -204,7 +204,7 @@ describe 'puppet::agent' do
         }
       end
 
-      it { should include_class('puppet::agent') }
+      it { should contain_class('puppet::agent') }
 
       it { should contain_cron('puppet_agent').with({
           'user' => 'root',
