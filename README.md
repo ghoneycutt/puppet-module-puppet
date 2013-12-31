@@ -129,7 +129,7 @@ Whether the machine is a puppet master or not.
 
 run_method
 ----------
-Whether to run as a service or in cron mode.
+Whether to run as a service or in cron mode. The value 'disable' disables automatic puppet runs.
 
 - *Default*: service
 
