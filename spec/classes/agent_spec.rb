@@ -195,6 +195,31 @@ describe 'puppet::agent' do
     end
   end
 
+  describe 'service' do
+    context 'with run_method set to service'
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :run_method => 'service',
+          :env        => 'production',
+        }
+      end
+
+      it { should contain_class('puppet::agent') }
+
+      it { should contain_cron('puppet_agent').with({
+          'ensure' => 'absent'
+        })
+      }
+
+      it { should_not contain_cron('puppet_agent_once_at_boot') }
+
+      it { should contain_service('puppet_agent_daemon').with({
+          'enable' => true,
+        })
+      }
+
+  end
+
   describe 'cron' do
     context 'with run_method set to cron' do
       let(:facts) { { :osfamily => 'RedHat' } }
@@ -218,4 +243,29 @@ describe 'puppet::agent' do
       }
     end
   end
+
+  describe 'disabled' do
+    context 'with run_method set to disbaled'
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :run_method => 'disabled',
+          :env        => 'production',
+        }
+      end
+
+      it { should contain_class('puppet::agent') }
+
+      it { should contain_cron('puppet_agent').with({
+          'ensure' => 'absent'
+        })
+      }
+
+      it { should_not contain_cron('puppet_agent_once_at_boot') }
+
+      it { should contain_service('puppet_agent_daemon').with({
+          'enable' => false,
+        })
+      }
+  end
+
 end
