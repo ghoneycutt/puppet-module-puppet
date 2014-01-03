@@ -195,8 +195,8 @@ describe 'puppet::agent' do
     end
   end
 
-  describe 'service' do
-    context 'with run_method set to service'
+  describe 'with run_method' do
+    context 'set to service' do
       let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) do
         { :run_method => 'service',
@@ -217,10 +217,8 @@ describe 'puppet::agent' do
           'enable' => true,
         })
       }
+    end
 
-  end
-
-  describe 'cron' do
     context 'with run_method set to cron' do
       let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) do
@@ -242,13 +240,11 @@ describe 'puppet::agent' do
         })
       }
     end
-  end
 
-  describe 'disabled' do
-    context 'with run_method set to disbaled'
+    context 'with run_method set to disable' do
       let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) do
-        { :run_method => 'disabled',
+        { :run_method => 'disable',
           :env        => 'production',
         }
       end
@@ -266,6 +262,6 @@ describe 'puppet::agent' do
           'enable' => false,
         })
       }
+    end
   end
-
 end
