@@ -110,8 +110,17 @@ class puppet::agent (
       $cron_hour     = '*'
       $cron_minute   = [$cron_run_one, $cron_run_two]
     }
+    'disable': {
+      $daemon_ensure    = 'stopped'
+      $daemon_enable    = false
+      $cron_ensure      = 'absent'
+      $my_cron_command  = undef
+      $cron_user        = undef
+      $cron_hour        = undef
+      $cron_minute      = undef
+    }
     default: {
-      fail("puppet::agent::run_method is ${run_method} and must be 'service' or 'cron'.")
+      fail("puppet::agent::run_method is ${run_method} and must be 'disable', 'service' or 'cron'.")
     }
   }
 
