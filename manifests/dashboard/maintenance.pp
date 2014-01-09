@@ -82,6 +82,7 @@ class puppet::dashboard::maintenance (
   } else {
     $remove_old_reports_spool_enable = 'absent'
   }
+
   cron { 'remove_old_reports_spool':
     ensure  => $remove_old_reports_spool_enable,
     command => "/bin/find ${reports_spool_dir} -type f -name \"*.yaml\" -mtime +${$reports_spool_days_to_keep } -exec /bin/rm -f {} \\;",
