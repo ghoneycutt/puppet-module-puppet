@@ -8,6 +8,7 @@ describe 'puppet::master' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -24,6 +25,7 @@ describe 'puppet::master' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -40,6 +42,7 @@ describe 'puppet::master' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -53,6 +56,7 @@ describe 'puppet::master' do
         { :osfamily               => 'Debian',
           :operatingsystemrelease => '7',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -68,6 +72,7 @@ describe 'puppet::master' do
         { :osfamily               => 'invalid',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -84,6 +89,7 @@ describe 'puppet::master' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -100,6 +106,7 @@ describe 'puppet::master' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -117,6 +124,7 @@ describe 'puppet::master' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -135,6 +143,7 @@ describe 'puppet::master' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -155,6 +164,7 @@ describe 'puppet::master' do
         { :osfamily               => 'Debian',
           :operatingsystemrelease => '6.0.8',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -176,6 +186,7 @@ describe 'puppet::master' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -197,6 +208,7 @@ describe 'puppet::master' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 
@@ -212,6 +224,7 @@ describe 'puppet::master' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
         }
       end
 

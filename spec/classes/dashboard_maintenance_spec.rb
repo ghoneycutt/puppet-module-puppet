@@ -122,10 +122,13 @@ describe 'puppet::dashboard::maintenance' do
 
     context 'Dashboard spool remove reports with default params' do
       let(:params) { {:remove_old_reports_spool => 'true' }}
-      let(:facts) { {:osfamily => 'RedHat',
-                     :concat_basedir => '/tmp',
-                     :max_allowed_packet => 32,
-                     :operatingsystemrelease => '6.4' } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+          :operatingsystemrelease => '6.4',
+        }
+      end
 
       it { should contain_class('puppet::dashboard::maintenance') }
       it { should contain_cron('remove_old_reports_spool').with({
@@ -145,12 +148,16 @@ describe 'puppet::dashboard::maintenance' do
                       :remove_reports_spool_minute => '6',
                       :reports_spool_dir => '/tmp/foo',
                       :reports_spool_days_to_keep => '10' } }
-      let(:facts) { {:osfamily => 'RedHat',
-                     :concat_basedir => '/tmp',
-                     :max_allowed_packet => 32,
-                     :operatingsystemrelease => '6.4' } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+          :operatingsystemrelease => '6.4',
+        }
+      end
 
       it { should contain_class('puppet::dashboard::maintenance') }
+
       it { should contain_cron('remove_old_reports_spool').with({
           'ensure'   => 'present',
           'command'  => '/bin/find /tmp/foo -type f -name "*.yaml" -mtime +10 -exec /bin/rm -f {} \;',
@@ -163,12 +170,16 @@ describe 'puppet::dashboard::maintenance' do
 
     context 'Dashboard spool remove reports with remove_old_reports_spool set to false' do
       let(:params) { {:remove_old_reports_spool => 'false' }}
-      let(:facts) { {:osfamily => 'RedHat',
-                     :concat_basedir => '/tmp',
-                     :max_allowed_packet => 32,
-                     :operatingsystemrelease => '6.4' } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+          :operatingsystemrelease => '6.4',
+        }
+      end
 
       it { should contain_class('puppet::dashboard::maintenance') }
+
       it { should contain_cron('remove_old_reports_spool').with({
           'ensure'   => 'absent',
         })
@@ -178,9 +189,9 @@ describe 'puppet::dashboard::maintenance' do
     context 'with reports_spool_dir set to an invalid path' do
       let(:params) { {:reports_spool_dir=> 'invalid/path/param' }}
       let(:facts) do
-        { :osfamily => 'RedHat',
-          :concat_basedir => '/tmp',
-          :max_allowed_packet => 32,
+        { :osfamily               => 'RedHat',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
           :operatingsystemrelease => '6.4',
         }
       end
@@ -193,12 +204,16 @@ describe 'puppet::dashboard::maintenance' do
     end
 
     context 'with dump_database_command set to default value on osfamily RedHat' do
-      let(:facts) { {:osfamily               => 'RedHat',
-                     :concat_basedir         => '/tmp',
-                     :max_allowed_packet     => 32,
-                     :operatingsystemrelease => '6.4' } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+          :operatingsystemrelease => '6.4',
+        }
+      end
 
       it { should contain_class('puppet::dashboard::maintenance') }
+
       it { should contain_cron('dump_dashboard_database').with({
           'command'  => 'cd ~puppet-dashboard && sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1',
           'user'     => 'root',
@@ -209,12 +224,16 @@ describe 'puppet::dashboard::maintenance' do
     end
 
     context 'with dump_database_command set to default value on osfamily Debian' do
-      let(:facts) { {:osfamily               => 'Debian',
-                     :concat_basedir         => '/tmp',
-                     :max_allowed_packet     => 32,
-                     :operatingsystemrelease => '6.0.8' } }
+      let(:facts) do
+        { :osfamily               => 'Debian',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+          :operatingsystemrelease => '6.0.8',
+        }
+      end
 
       it { should contain_class('puppet::dashboard::maintenance') }
+
       it { should contain_cron('dump_dashboard_database').with({
           'command'  => 'cd ~puppet-dashboard && sudo -u puppet /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1',
           'user'     => 'root',
@@ -226,12 +245,16 @@ describe 'puppet::dashboard::maintenance' do
 
     context 'with dump_database_command specified' do
       let(:params) { {:dump_database_command => '/foo/bar' } }
-      let(:facts) { {:osfamily               => 'RedHat',
-                     :concat_basedir         => '/tmp',
-                     :max_allowed_packet     => 32,
-                     :operatingsystemrelease => '6.4' } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+          :operatingsystemrelease => '6.4',
+        }
+      end
 
       it { should contain_class('puppet::dashboard::maintenance') }
+
       it { should contain_cron('dump_dashboard_database').with({
           'command'  => '/foo/bar',
           'user'     => 'root',

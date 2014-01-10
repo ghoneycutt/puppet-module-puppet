@@ -23,7 +23,7 @@ Dependencies for this module are: apache, common, mysql and passenger
 - Calls the `puppet::lint` class
 - Calls the `puppet::master::maintenance` class
 - Manages firewall rule for puppet if needed
-- Maintenance to cleanup Client bucket files
+- Maintenance to purge filebucket and reports
 
 ### Dashboard
 -------------
@@ -50,6 +50,7 @@ Defaults:root !requiretty
 
 ## Compatibility ##
 -------------------
+Ruby versions 1.8.7 and 1.9.3 on Puppet 3.x
 
 ### Puppet Master
 -----------------
@@ -649,3 +650,39 @@ filebucket_cleanup_minute
 Minute at which to run the filebucket cleanup.
 
 - *Default*: 0
+
+reportdir
+---------
+Directory that holds the reports. `$::puppet_reportdir` is a custom fact that reads the `reportdir` setting from Puppet's configuration. This is likely `/var/lib/puppet/reports/`.
+
+- *Default*: $::puppet_reportdir
+
+reportdir_days_to_key
+---------------------
+String for number of days of reports to keep. Must be a positive integer > 0.
+
+- *Default*: '30'
+
+reportdir_purge_command
+-----------------------
+Command ran by cron to purge old reports.
+
+- *Default*: /usr/bin/find /var/lib/puppet/reports/ -type f -mtime +30 -exec /bin/rm -fr {} \;'
+
+reportdir_purge_user
+--------------------
+User for the crontab entry to run the reportdir_purge_command.
+
+- *Default*: root
+
+reportdir_purge_hour
+--------------------
+Hour at which to run the reportdir_purge_command.
+
+- *Default*: 0
+
+reportdir_purge_minute
+----------------------
+Minute past the hour in which to run the reportdir_purge_command.
+
+- *Default*: 15
