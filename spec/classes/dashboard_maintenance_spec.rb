@@ -120,8 +120,8 @@ describe 'puppet::dashboard::maintenance' do
       }
     end
 
-    context 'Dashboard spool remove reports with default params' do
-      let(:params) { {:remove_old_reports_spool => 'true' }}
+    context 'Dashboard spool remove reports with remove_old_reports_spool set to invalid string' do
+      let(:params) { {:remove_old_reports_spool => 'invalid_string' } }
       let(:facts) do
         { :osfamily               => 'RedHat',
           :concat_basedir         => '/tmp',
@@ -130,15 +130,51 @@ describe 'puppet::dashboard::maintenance' do
         }
       end
 
-      it { should contain_class('puppet::dashboard::maintenance') }
-      it { should contain_cron('remove_old_reports_spool').with({
-          'command'  => '/bin/find /usr/share/puppet-dashboard/spool -type f -name "*.yaml" -mtime +7 -exec /bin/rm -f {} \;',
-          'ensure'   => 'present',
-          'user'     => 'root',
-          'hour'     => '0',
-          'minute'   => '45',
-        })
-      }
+      it do
+        expect {
+          should contain_class('puppet::dashboard::maintenance')
+        }.to raise_error(Puppet::Error)
+      end
+    end
+
+    context 'Dashboard spool remove reports with remove_old_reports_spool set to invalid type - non-boolean and non-string' do
+      let(:params) { {:remove_old_reports_spool => ['invalid_type','not_a_string','not_a_boolean'] } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+          :operatingsystemrelease => '6.4',
+        }
+      end
+
+      it do
+        expect {
+          should contain_class('puppet::dashboard::maintenance')
+        }.to raise_error(Puppet::Error)
+      end
+    end
+
+    [true,'true'].each do |value|
+      context "Dashboard spool remove reports with remove_old_reports_spool set to #{value}" do
+        let(:params) { {:remove_old_reports_spool => value } }
+        let(:facts) do
+          { :osfamily               => 'RedHat',
+            :concat_basedir         => '/tmp',
+            :max_allowed_packet     => 32,
+            :operatingsystemrelease => '6.4',
+          }
+        end
+
+        it { should contain_class('puppet::dashboard::maintenance') }
+        it { should contain_cron('remove_old_reports_spool').with({
+            'command'  => '/bin/find /usr/share/puppet-dashboard/spool -type f -name "*.yaml" -mtime +7 -exec /bin/rm -f {} \;',
+            'ensure'   => 'present',
+            'user'     => 'root',
+            'hour'     => '0',
+            'minute'   => '45',
+          })
+        }
+      end
     end
 
     context 'Dashboard spool remove reports with params set' do
@@ -168,22 +204,24 @@ describe 'puppet::dashboard::maintenance' do
       }
     end
 
-    context 'Dashboard spool remove reports with remove_old_reports_spool set to false' do
-      let(:params) { {:remove_old_reports_spool => 'false' }}
-      let(:facts) do
-        { :osfamily               => 'RedHat',
-          :concat_basedir         => '/tmp',
-          :max_allowed_packet     => 32,
-          :operatingsystemrelease => '6.4',
+    [false,'false'].each do |value|
+      context "Dashboard spool remove reports with remove_old_reports_spool set to #{value}" do
+        let(:params) { {:remove_old_reports_spool => value } }
+        let(:facts) do
+          { :osfamily               => 'RedHat',
+            :concat_basedir         => '/tmp',
+            :max_allowed_packet     => 32,
+            :operatingsystemrelease => '6.4',
+          }
+        end
+
+        it { should contain_class('puppet::dashboard::maintenance') }
+
+        it { should contain_cron('remove_old_reports_spool').with({
+            'ensure'   => 'absent',
+          })
         }
       end
-
-      it { should contain_class('puppet::dashboard::maintenance') }
-
-      it { should contain_cron('remove_old_reports_spool').with({
-          'ensure'   => 'absent',
-        })
-      }
     end
 
     context 'with reports_spool_dir set to an invalid path' do

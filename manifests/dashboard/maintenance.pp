@@ -11,7 +11,7 @@ class puppet::dashboard::maintenance (
   $purge_old_reports_user      = 'root',
   $purge_old_reports_hour      = '0',
   $purge_old_reports_minute    = '30',
-  $remove_old_reports_spool    = 'true',
+  $remove_old_reports_spool    = true,
   $reports_spool_dir           = '/usr/share/puppet-dashboard/spool',
   $reports_spool_days_to_keep  = '7',
   $remove_reports_spool_user   = 'root',
@@ -77,6 +77,8 @@ class puppet::dashboard::maintenance (
   } else {
     $enable_remove_old_reports_spool = $remove_old_reports_spool
   }
+  validate_bool($enable_remove_old_reports_spool)
+
   if $enable_remove_old_reports_spool == true {
     $remove_old_reports_spool_enable = 'present'
   } else {
