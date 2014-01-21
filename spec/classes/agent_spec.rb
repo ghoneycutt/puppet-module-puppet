@@ -3,7 +3,7 @@ describe 'puppet::agent' do
 
   describe 'config file' do
 
-    context 'default settings' do
+    context 'with default settings' do
       let(:facts) do
         { :osfamily => 'RedHat',
           :fqdn     => 'agent.example.com',
@@ -21,26 +21,108 @@ describe 'puppet::agent' do
         })
       }
 
-      it { should contain_file('puppet_config').with_content(/^    logdir = \/var\/log\/puppet$/) }
-      it { should contain_file('puppet_config').with_content(/^    rundir = \/var\/run\/puppet$/) }
-      it { should contain_file('puppet_config').with_content(/^    ssldir = \$vardir\/ssl$/) }
-      it { should contain_file('puppet_config').with_content(/^    archive_files = true$/) }
-      it { should contain_file('puppet_config').with_content(/^    archive_file_server = puppet$/) }
-      it { should contain_file('puppet_config').with_content(/^    classfile = \$vardir\/classes.txt$/) }
-      it { should contain_file('puppet_config').with_content(/^    localconfig = \$vardir\/localconfig$/) }
-      it { should contain_file('puppet_config').with_content(/^    certname = agent.example.com$/) }
-      it { should contain_file('puppet_config').with_content(/^    server = puppet$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *logdir = \/var\/log\/puppet$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *rundir = \/var\/run\/puppet$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *ssldir = \$vardir\/ssl$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *archive_files = true$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *archive_file_server = puppet$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *classfile = \$vardir\/classes.txt$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *localconfig = \$vardir\/localconfig$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *certname = agent.example.com$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *server = puppet$/) }
       it { should_not contain_file('puppet_config').with_content(/ca_server =/) }
-      it { should contain_file('puppet_config').with_content(/^    report = true$/) }
-      it { should contain_file('puppet_config').with_content(/^    graph = true$/) }
-      it { should contain_file('puppet_config').with_content(/^    pluginsync = true$/) }
-      it { should contain_file('puppet_config').with_content(/^    noop = false$/) }
-      it { should_not contain_file('puppet_config').with_content(/^   environment = production$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *report = true$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *graph = true$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *pluginsync = true$/) }
+      it { should contain_file('puppet_config').with_content(/^\ *noop = false$/) }
+      it { should_not contain_file('puppet_config').with_content(/environment = production/) }
+    end
+
+    ['false',false].each do |value|
+      context "with is_puppet_master set to #{value} (default)" do
+        let(:facts) do
+          { :osfamily => 'RedHat',
+            :fqdn     => 'agent.example.com',
+          }
+        end
+        let(:params) do
+          { :env              => 'production',
+            :is_puppet_master => value,
+          }
+        end
+
+        it { should contain_class('puppet::agent') }
+
+        it { should contain_file('puppet_config').with({
+            'path'    => '/etc/puppet/puppet.conf',
+            'owner'   => 'root',
+            'group'   => 'root',
+            'mode'    => '0644',
+          })
+        }
+
+        it { should contain_file('puppet_config').with_content(/^\ *logdir = \/var\/log\/puppet$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *rundir = \/var\/run\/puppet$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *ssldir = \$vardir\/ssl$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *archive_files = true$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *archive_file_server = puppet$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *classfile = \$vardir\/classes.txt$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *localconfig = \$vardir\/localconfig$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *certname = agent.example.com$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *server = puppet$/) }
+        it { should_not contain_file('puppet_config').with_content(/ca_server =/) }
+        it { should contain_file('puppet_config').with_content(/^\ *report = true$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *graph = true$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *pluginsync = true$/) }
+        it { should contain_file('puppet_config').with_content(/^\ *noop = false$/) }
+        it { should_not contain_file('puppet_config').with_content(/environment = production/) }
+      end
+    end
+
+    ['true',true].each do |value|
+      context "with is_puppet_master set to #{value}" do
+        let(:facts) do
+          { :osfamily => 'RedHat',
+            :fqdn     => 'agent.example.com',
+          }
+        end
+        let(:params) do
+          { :env              => 'production',
+            :is_puppet_master => value,
+          }
+        end
+
+        it { should contain_class('puppet::agent') }
+
+        it { should contain_file('puppet_config').with({
+            'path'    => '/etc/puppet/puppet.conf',
+            'content' => nil,
+            'owner'   => 'root',
+            'group'   => 'root',
+            'mode'    => '0644',
+          })
+        }
+        it { should_not contain_file('puppet_config').with_content(/^\ *logdir = \/var\/log\/puppet$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *rundir = \/var\/run\/puppet$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *ssldir = \$vardir\/ssl$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *archive_files = true$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *archive_file_server = puppet$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *classfile = \$vardir\/classes.txt$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *localconfig = \$vardir\/localconfig$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *certname = agent.example.com$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *server = puppet$/) }
+        it { should_not contain_file('puppet_config').with_content(/ca_server =/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *report = true$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *graph = true$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *pluginsync = true$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\ *noop = false$/) }
+        it { should_not contain_file('puppet_config').with_content(/environment = production/) }
+      end
     end
   end
 
   describe 'sysconfig file' do
-    context "Puppet agent sysconfig file on osfamily RedHat" do
+    context 'Puppet agent sysconfig file on osfamily RedHat' do
       let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) { { :env => 'production' } }
 
@@ -108,7 +190,7 @@ describe 'puppet::agent' do
       it { should_not contain_file('puppet_agent_sysconfig') }
     end
 
-    context "Puppet agent sysconfig file on osfamily Suse" do
+    context 'Puppet agent sysconfig file on osfamily Suse' do
       let(:facts) { { :osfamily => 'Suse' } }
       let(:params) { { :env => 'production' } }
 
@@ -138,28 +220,43 @@ describe 'puppet::agent' do
   end
 
   describe 'with symlink_puppet_binary' do
-    context 'enabled with defaults' do
-      let(:facts) { { :osfamily => 'Debian' } }
-      let(:params) do
-        { :env                          => 'production',
-          :symlink_puppet_binary        => 'true',
+    ['true',true].each do |value|
+      context "set to #{value} (default)" do
+        let(:facts) { { :osfamily => 'Debian' } }
+        let(:params) do
+          { :env                   => 'production',
+            :symlink_puppet_binary => value,
+          }
+        end
+
+        it {
+          should contain_file('puppet_symlink').with({
+            'path'    => '/usr/local/bin/puppet',
+            'target'  => '/usr/bin/puppet',
+            'ensure'  => 'link',
+          })
         }
       end
+    end
 
-      it {
-        should contain_file('puppet_symlink').with({
-          'path'    => '/usr/local/bin/puppet',
-          'target'  => '/usr/bin/puppet',
-          'ensure'  => 'link',
-        })
-      }
+    ['false',false].each do |value|
+      context "set to #{value} (default)" do
+        let(:facts) { { :osfamily => 'Debian' } }
+        let(:params) do
+          { :env                   => 'production',
+            :symlink_puppet_binary => value,
+          }
+        end
+
+        it { should_not contain_file('puppet_symlink') }
+      end
     end
 
     context 'enabled with all params specified' do
       let(:facts) { { :osfamily => 'Debian' } }
       let(:params) do
         { :env                          => 'production',
-          :symlink_puppet_binary        => 'true',
+          :symlink_puppet_binary        => true,
           :puppet_binary                => '/foo/bar',
           :symlink_puppet_binary_target => '/bar',
         }
@@ -174,9 +271,9 @@ describe 'puppet::agent' do
       }
     end
 
-    context 'and with invalid puppet_binary' do
+    context 'enabled with invalid puppet_binary' do
       let(:params) { {:env => 'production',
-                      :symlink_puppet_binary => 'true',
+                      :symlink_puppet_binary => true,
                       :puppet_binary => 'true',
                       :symlink_puppet_binary_target => '/bar' } }
       it do
@@ -184,9 +281,9 @@ describe 'puppet::agent' do
       end
     end
 
-    context 'and with invalid symlink_puppet_binary_target' do
+    context 'enabled with invalid symlink_puppet_binary_target' do
       let(:params) { {:env => 'production',
-                      :symlink_puppet_binary => 'true',
+                      :symlink_puppet_binary => true,
                       :puppet_binary => '/foo/bar',
                       :symlink_puppet_binary_target => 'undef' } }
       it do
@@ -196,6 +293,29 @@ describe 'puppet::agent' do
   end
 
   describe 'with run_method' do
+    context 'set to disable' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :run_method => 'disable',
+          :env        => 'production',
+        }
+      end
+
+      it { should contain_class('puppet::agent') }
+
+      it { should contain_cron('puppet_agent').with({
+          'ensure' => 'absent'
+        })
+      }
+
+      it { should_not contain_cron('puppet_agent_once_at_boot') }
+
+      it { should contain_service('puppet_agent_daemon').with({
+          'enable' => false,
+        })
+      }
+    end
+
     context 'set to service' do
       let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) do
@@ -219,49 +339,91 @@ describe 'puppet::agent' do
       }
     end
 
-    context 'with run_method set to cron' do
-      let(:facts) { { :osfamily => 'RedHat' } }
-      let(:params) do
-        { :run_method => 'cron',
-          :env        => 'production',
-        }
+    context 'set to cron' do
+
+      context 'with run_in_noop set to non-string and non-boolean' do
+        let(:facts) { { :osfamily => 'RedHat' } }
+        let(:params) do
+          { :run_method  => 'cron',
+            :env         => 'production',
+            :run_in_noop => ['invalid_type','not_a_string','not_a_boolean'],
+          }
+        end
+
+        it 'should fail' do
+          expect {
+            should contain_class('puppet::agent')
+          }.to raise_error(Puppet::Error)
+        end
+
       end
 
-      it { should contain_class('puppet::agent') }
+      context 'with run_in_noop set to invalid string' do
+        let(:facts) { { :osfamily => 'RedHat' } }
+        let(:params) do
+          { :run_method  => 'cron',
+            :env         => 'production',
+            :run_in_noop => 'invalid_string',
+          }
+        end
 
-      it { should contain_cron('puppet_agent').with({
-          'user' => 'root',
-        })
-      }
-
-      it { should contain_cron('puppet_agent_once_at_boot').with({
-          'user' => 'root',
-          'special' => 'reboot',
-        })
-      }
-    end
-
-    context 'with run_method set to disable' do
-      let(:facts) { { :osfamily => 'RedHat' } }
-      let(:params) do
-        { :run_method => 'disable',
-          :env        => 'production',
-        }
+        it 'should fail' do
+          expect {
+            should contain_class('puppet::agent')
+          }.to raise_error(Puppet::Error)
+        end
       end
 
-      it { should contain_class('puppet::agent') }
+      cron_command = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
 
-      it { should contain_cron('puppet_agent').with({
-          'ensure' => 'absent'
-        })
-      }
+      # iterate through a matrix of setting true and false as booleans and
+      # strings for both run_in_noop and run_at_boot.
+      ['true',true,'false',false].each do |rin_value|
+        context "with run_in_noop => #{rin_value}" do
+          ['true',true,'false',false].each do |rab_value|
+            context "and run_at_boot => #{rab_value}" do
+              let(:facts) { { :osfamily => 'RedHat' } }
+              let(:params) do
+                { :run_method  => 'cron',
+                  :env         => 'production',
+                  :run_in_noop => rin_value,
+                  :run_at_boot => rab_value,
+                }
+              end
 
-      it { should_not contain_cron('puppet_agent_once_at_boot') }
+              if rin_value == true or rin_value == 'true' then
+                command = "#{cron_command} --noop"
+              else
+                command = cron_command
+              end
 
-      it { should contain_service('puppet_agent_daemon').with({
-          'enable' => false,
-        })
-      }
+              if rab_value == true or rab_value == 'true' then
+                at_boot_ensure = 'present'
+              else
+                at_boot_ensure = 'absent'
+              end
+
+              it { should contain_class('puppet::agent') }
+
+              it {
+               should contain_cron('puppet_agent').with({
+                  'ensure'  => 'present',
+                  'user'    => 'root',
+                  'command' => command,
+                })
+              }
+
+              it { should contain_cron('puppet_agent_once_at_boot').with({
+                  'ensure'  => at_boot_ensure,
+                  'user'    => 'root',
+                  'command' => command,
+                  'special' => 'reboot',
+                })
+              }
+            end
+          end
+        end
+      end
     end
   end
 end

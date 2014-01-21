@@ -14,19 +14,40 @@ class puppet::agent (
   $env                          = $::env,
   $puppet_server                = 'puppet',
   $puppet_ca_server             = 'UNSET',
-  $is_puppet_master             = 'false',
+  $is_puppet_master             = false,
   $run_method                   = 'service',
   $run_interval                 = '30',
-  $run_in_noop                  = 'false',
+  $run_in_noop                  = false,
   $cron_command                 = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
-  $run_at_boot                  = 'true',
+  $run_at_boot                  = true,
   $puppet_binary                = '/usr/bin/puppet',
   $symlink_puppet_binary_target = '/usr/local/bin/puppet',
-  $symlink_puppet_binary        = 'false',
+  $symlink_puppet_binary        = false,
   $agent_sysconfig              = 'USE_DEFAULTS',
   $agent_sysconfig_ensure       = 'USE_DEFAULTS',
   $daemon_name                  = 'puppet',
 ) {
+
+  if type($run_in_noop) == 'String' {
+    $run_in_noop_bool = str2bool($run_in_noop)
+  } else {
+    $run_in_noop_bool = $run_in_noop
+  }
+  validate_bool($run_in_noop_bool)
+
+  if type($run_at_boot) == 'String' {
+    $run_at_boot_bool = str2bool($run_at_boot)
+  } else {
+    $run_at_boot_bool = $run_at_boot
+  }
+  validate_bool($run_at_boot_bool)
+
+  if type($is_puppet_master) == 'String' {
+    $is_puppet_master_bool = str2bool($is_puppet_master)
+  } else {
+    $is_puppet_master_bool = $is_puppet_master
+  }
+  validate_bool($is_puppet_master_bool)
 
   # env must be set, else fail, since we use it in the puppet_config template
   if ! $env {
@@ -67,48 +88,37 @@ class puppet::agent (
     $agent_sysconfig_ensure_real = $agent_sysconfig_ensure
   }
 
-  case $is_puppet_master {
-    'true': {
-      $config_content = undef
-    }
-    'false': {
-      $config_content = template('puppet/puppetagent.conf.erb')
-    }
-    default: {
-      fail("puppet::agent::is_puppet_master must be 'true' or 'false' and is ${is_puppet_master}")
-    }
+  if $is_puppet_master_bool == false {
+    $config_content = template('puppet/puppetagent.conf.erb')
+  } else {
+    $config_content = undef
   }
 
   case $run_method {
     'service': {
-      $daemon_ensure = 'running'
-      $daemon_enable = true
-      $cron_ensure   = 'absent'
+      $daemon_ensure    = 'running'
+      $daemon_enable    = true
+      $cron_ensure      = 'absent'
       $my_cron_command  = undef
-      $cron_user     = undef
-      $cron_hour     = undef
-      $cron_minute   = undef
+      $cron_user        = undef
+      $cron_hour        = undef
+      $cron_minute      = undef
     }
     'cron': {
       $daemon_ensure = 'stopped'
       $daemon_enable = false
-      $cron_run_one = fqdn_rand($run_interval)
-      $cron_run_two = fqdn_rand($run_interval) + 30
+      $cron_run_one  = fqdn_rand($run_interval)
+      $cron_run_two  = fqdn_rand($run_interval) + 30
       $cron_ensure   = 'present'
-      case $run_in_noop {
-        'true': {
-          $my_cron_command = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop'
-        }
-        'false': {
-          $my_cron_command = $cron_command
-        }
-        default: {
-          fail("run_in_noop is ${run_in_noop} must be 'true' or 'false'.")
-        }
-      }
       $cron_user     = 'root'
       $cron_hour     = '*'
       $cron_minute   = [$cron_run_one, $cron_run_two]
+
+      if $run_in_noop_bool == true {
+        $my_cron_command = "${cron_command} --noop"
+      } else {
+        $my_cron_command = $cron_command
+      }
     }
     'disable': {
       $daemon_ensure    = 'stopped'
@@ -124,26 +134,21 @@ class puppet::agent (
     }
   }
 
-  case $run_at_boot {
-    'true': {
-      $at_boot_ensure = 'present'
-    }
-    'false': {
-      $at_boot_ensure = 'absent'
-    }
-    default: {
-      fail("puppet::agent::run_at_boot is ${run_at_boot} and must be 'true' or 'false'.")
-    }
+  if $run_at_boot_bool == true {
+    $at_boot_ensure = 'present'
+  } else {
+    $at_boot_ensure = 'absent'
   }
 
   if type($symlink_puppet_binary) == 'string' {
-    $symlink_puppet_binary_real = str2bool($symlink_puppet_binary)
+    $symlink_puppet_binary_bool = str2bool($symlink_puppet_binary)
   } else {
-    $symlink_puppet_binary_real = $symlink_puppet_binary
+    $symlink_puppet_binary_bool = $symlink_puppet_binary
   }
+  validate_bool($symlink_puppet_binary_bool)
 
   # optionally create symlinks to puppet binary
-  if $symlink_puppet_binary_real == true {
+  if $symlink_puppet_binary_bool == true {
 
     # validate params
     validate_absolute_path($symlink_puppet_binary_target)
