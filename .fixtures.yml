@@ -15,7 +15,8 @@ fixtures:
     'apache':
       repo: 'git://github.com/puppetlabs/puppetlabs-apache.git'
     'concat':
-      repo: 'git://github.com/ripienaar/puppet-concat.git'
+      repo: 'git://github.com/puppetlabs/puppetlabs-concat.git'
+      ref: '1.0.0'
     'common':
       repo: 'git://github.com/ghoneycutt/puppet-module-common.git'
     'htpasswd':
