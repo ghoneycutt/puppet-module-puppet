@@ -11,6 +11,9 @@ class puppet::dashboard (
 ) {
 
   validate_absolute_path($external_node_script_path)
+  if type($dashboard_package) != 'String' and type($dashboard_package) != 'Array' {
+    fail('puppet::dashboard::dashboard_package must be a string or an array.')
+  }
 
   case $::osfamily {
     'RedHat': {
@@ -49,9 +52,8 @@ class puppet::dashboard (
     $dashboard_group_real = $dashboard_group
   }
 
-  package { 'puppet_dashboard':
+  package { $dashboard_package:
     ensure => present,
-    name   => $dashboard_package,
   }
 
   file { 'external_node_script':
@@ -61,7 +63,7 @@ class puppet::dashboard (
     owner   => $dashboard_user_real,
     group   => $dashboard_group_real,
     mode    => '0755',
-    require => Package['puppet_dashboard'],
+    require => Package[$dashboard_package],
   }
 
   file { 'dashboard_sysconfig':

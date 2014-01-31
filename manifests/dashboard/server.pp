@@ -115,7 +115,7 @@ class puppet::dashboard::server (
     owner   => $database_config_owner_real,
     group   => $database_config_group_real,
     mode    => $database_config_mode,
-    require => Package['puppet_dashboard'],
+    require => Package[$puppet::dashboard::dashboard_package],
   }
 
   file { 'dashboard_vhost':

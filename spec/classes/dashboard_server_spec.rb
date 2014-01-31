@@ -60,7 +60,7 @@ describe 'puppet::dashboard::server' do
 
   end
 
-  context 'with default htpasswd path on osfamily Redhat' do
+  context 'with default htpasswd path on osfamily RedHat' do
     let(:params) do
       { :security => 'htpasswd',
         :htpasswd => {
@@ -92,7 +92,7 @@ describe 'puppet::dashboard::server' do
     }
   end
 
-  context 'with default htpasswd path on osfamily Redhat' do
+  context 'with default htpasswd path on osfamily Debian' do
     let(:params) do
       { :security => 'htpasswd',
         :htpasswd => {
@@ -309,6 +309,7 @@ describe 'puppet::dashboard::server' do
         'owner'   => 'puppet-dashboard',
         'group'   => 'puppet-dashboard',
         'mode'    => '0640',
+        'require' => 'Package[puppet-dashboard]',
       })
     }
   end
@@ -330,6 +331,7 @@ describe 'puppet::dashboard::server' do
         'owner'   => 'puppet',
         'group'   => 'www-data',
         'mode'    => '0640',
+        'require' => 'Package[puppet-dashboard]',
       })
     }
   end

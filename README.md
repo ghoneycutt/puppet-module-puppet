@@ -50,7 +50,7 @@ Defaults:root !requiretty
 
 ## Compatibility ##
 -------------------
-Ruby versions 1.8.7 and 1.9.3 on Puppet 3.x
+Ruby versions 1.8.7, 1.9.3, and 2.0.0 on Puppet 3.x
 
 ### Puppet Master
 -----------------
@@ -203,9 +203,9 @@ The name the puppet agent daemon should run as.
 
 dashboard_package
 -----------------
-The dashboard package name.
+String or Array of the dashboard package(s) name.
 
-- *Default*: puppet-dashboard
+- *Default*: 'puppet-dashboard'
 
 dashboard_user
 --------------
