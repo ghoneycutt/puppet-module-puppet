@@ -2,8 +2,7 @@ require 'spec_helper'
 describe 'puppet::dashboard' do
 
   describe 'class puppet::dashboard' do
-    context 'Dashboard package' do
-      let(:params) { {:dashboard_package => 'puppet-dashboard' } }
+    describe 'with dashboard_package set' do
       let(:facts) do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
@@ -11,14 +10,42 @@ describe 'puppet::dashboard' do
           :concat_basedir         => '/tmp',
         }
       end
+      context 'to a string' do
+        let(:params) { {:dashboard_package => 'puppet-dashboard' } }
 
-      it { should contain_class('puppet::dashboard') }
+        it { should contain_class('puppet::dashboard') }
 
-      it { should contain_package('puppet_dashboard').with({
-          'ensure' => 'present',
-          'name'   => 'puppet-dashboard',
-        })
-      }
+        it { should contain_package('puppet-dashboard').with({
+            'ensure' => 'present',
+          })
+        }
+      end
+
+      context 'to an array' do
+        let(:params) { {:dashboard_package => ['puppet-dashboard','pdb-somethingelse'] } }
+
+        it { should contain_class('puppet::dashboard') }
+
+        it { should contain_package('puppet-dashboard').with({
+            'ensure' => 'present',
+          })
+        }
+
+        it { should contain_package('pdb-somethingelse').with({
+            'ensure' => 'present',
+          })
+        }
+      end
+
+      context 'to an invalid type (boolean)' do
+        let(:params) { {:dashboard_package => true } }
+
+        it 'should fail' do
+          expect {
+            should contain_class('puppet::dashboard')
+          }.to raise_error(Puppet::Error,/puppet::dashboard::dashboard_package must be a string or an array./)
+        end
+      end
     end
 
     context 'external_node_script on osfamily RedHat with default options' do
@@ -33,11 +60,12 @@ describe 'puppet::dashboard' do
       it { should contain_class('puppet::dashboard') }
 
       it { should contain_file('external_node_script').with({
-          'ensure' => 'file',
-          'path'   => '/usr/share/puppet-dashboard/bin/external_node',
-          'owner'  => 'puppet-dashboard',
-          'group'  => 'puppet-dashboard',
-          'mode'   => '0755',
+          'ensure'  => 'file',
+          'path'    => '/usr/share/puppet-dashboard/bin/external_node',
+          'owner'   => 'puppet-dashboard',
+          'group'   => 'puppet-dashboard',
+          'mode'    => '0755',
+          'require' => 'Package[puppet-dashboard]',
         })
       }
     end
@@ -54,11 +82,12 @@ describe 'puppet::dashboard' do
       it { should contain_class('puppet::dashboard') }
 
       it { should contain_file('external_node_script').with({
-          'ensure' => 'file',
-          'path'   => '/usr/share/puppet-dashboard/bin/external_node',
-          'owner'  => 'puppet',
-          'group'  => 'puppet',
-          'mode'   => '0755',
+          'ensure'  => 'file',
+          'path'    => '/usr/share/puppet-dashboard/bin/external_node',
+          'owner'   => 'puppet',
+          'group'   => 'puppet',
+          'mode'    => '0755',
+          'require' => 'Package[puppet-dashboard]',
         })
       }
     end
@@ -76,11 +105,12 @@ describe 'puppet::dashboard' do
       it { should contain_class('puppet::dashboard') }
 
       it { should contain_file('external_node_script').with({
-          'ensure' => 'file',
-          'path'   => '/opt/local/puppet-dashboard/bin/external_node',
-          'owner'  => 'puppet',
-          'group'  => 'puppet',
-          'mode'   => '0755',
+          'ensure'  => 'file',
+          'path'    => '/opt/local/puppet-dashboard/bin/external_node',
+          'owner'   => 'puppet',
+          'group'   => 'puppet',
+          'mode'    => '0755',
+          'require' => 'Package[puppet-dashboard]',
         })
       }
     end
