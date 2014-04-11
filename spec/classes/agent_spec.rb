@@ -341,6 +341,43 @@ describe 'puppet::agent' do
 
     context 'set to cron' do
 
+      # iterate through a matrix of setting for run_interval
+      ['15','30','60','120','180','240','1440'].each do |run_value|
+        context "with run_interval => #{run_value}" do
+          let(:facts) { { :osfamily => 'RedHat' } }
+          let(:params) do
+            { :run_method  => 'cron',
+              :env         => 'production',
+              :run_interval => run_value,
+            }
+          end
+
+          it {
+            should contain_cron('puppet_agent').with({
+              'ensure'  => 'present',
+              'user'    => 'root',
+             })
+          }
+        end
+      end
+
+      context 'with run_interval set to invalid' do
+        let(:facts) { { :osfamily => 'RedHat' } }
+        let(:params) do
+          { :run_method  => 'cron',
+            :env         => 'production',
+            :run_interval => 'invalid',
+          }
+        end
+
+        it 'should fail' do
+          expect {
+            should contain_class('puppet::agent')
+          }.to raise_error(Puppet::Error)
+        end
+
+      end
+
       context 'with run_in_noop set to non-string and non-boolean' do
         let(:facts) { { :osfamily => 'RedHat' } }
         let(:params) do
