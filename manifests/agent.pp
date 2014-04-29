@@ -107,12 +107,45 @@ class puppet::agent (
     'cron': {
       $daemon_ensure = 'stopped'
       $daemon_enable = false
-      $cron_run_one  = fqdn_rand($run_interval)
-      $cron_run_two  = fqdn_rand($run_interval) + 30
+      case ($run_interval) {
+        '15': {
+          $cron_hour     = '*'
+          $cron_minute = [fqdn_rand($run_interval), fqdn_rand($run_interval) + 15, fqdn_rand($run_interval) + 30, fqdn_rand($run_interval) + 45]
+        }
+        '30': {
+          $cron_hour     = '*'
+          $cron_minute = [fqdn_rand($run_interval), fqdn_rand($run_interval) + 30]
+        }
+        '60': {
+          $cron_hour     = '*'
+          $cron_minute = fqdn_rand($run_interval)
+        }
+        '120': {
+          $cron_random   = fqdn_rand(2)
+          $cron_hour     = [$cron_random, $cron_random + 2, $cron_random + 4, $cron_random + 6, $cron_random + 8, $cron_random + 10, $cron_random + 12, $cron_random + 14, $cron_random + 16, $cron_random + 18, $cron_random + 20, $cron_random + 22]
+          $cron_minute = fqdn_rand(60)
+        }
+        '180': {
+          $cron_random   = fqdn_rand(3)
+          $cron_hour     = [$cron_random, $cron_random + 3, $cron_random + 6, $cron_random + 9, $cron_random + 12, $cron_random + 15, $cron_random + 18, $cron_random + 22]
+          $cron_minute = fqdn_rand(60)
+        }
+        '240': {
+          $cron_random   = fqdn_rand(4)
+          $cron_hour     = [$cron_random, $cron_random + 4, $cron_random + 8, $cron_random + 12, $cron_random + 16, $cron_random + 20]
+          $cron_minute = fqdn_rand(60)
+        }
+        '1440': {
+          $cron_hour     = fqdn_rand(24)
+          $cron_minute = fqdn_rand(60)
+        }
+        default: {
+          fail("puppet::agent::run_interval is ${run_interval} and is outside support values (15,30,60,120,180,240,1440).")
+        }
+      }
+
       $cron_ensure   = 'present'
       $cron_user     = 'root'
-      $cron_hour     = '*'
-      $cron_minute   = [$cron_run_one, $cron_run_two]
 
       if $run_in_noop_bool == true {
         $my_cron_command = "${cron_command} --noop"

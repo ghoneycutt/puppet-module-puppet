@@ -136,7 +136,7 @@ Whether to run as a service or in cron mode. Valid values are `disable`, `cron`,
 
 run_interval
 ------------
-The interval with which the client should run (in minutes)
+The interval with which the client should run (in minutes). Valid values are 15,30,60,120,180,240,1440.
 
 - *Default*: 30
 
