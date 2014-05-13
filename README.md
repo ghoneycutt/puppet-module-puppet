@@ -327,6 +327,12 @@ The location for the puppet log files.
 
 - *Default*: /var/log/puppet
 
+manage_mysql_options
+--------------------
+Whether to pass mysql options (mysql_max_packet_size) to mysql::server.
+
+- *Default*: true
+
 mysql_user
 ----------
 The user for the mysql connection.
