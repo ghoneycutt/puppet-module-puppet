@@ -25,7 +25,7 @@ doc/
 .DS_Store
 
 # Puppet
-metadata.json
 coverage/
 spec/fixtures/modules/*
+spec/fixtures/manifests/*
 Gemfile.lock
