@@ -1,4 +1,12 @@
 {
+  "name": "ghoneycutt-puppet",
+  "version": "2.11.0",
+  "author": "ghoneycutt",
+  "summary": "Manage Puppet",
+  "license": "Apache License, Version 2.0",
+  "source": "git://github.com/ghoneycutt/puppet-module-puppet.git",
+  "project_page": "https://github.com/ghoneycutt/puppet-module-puppet",
+  "issues_url": "https://github.com/ghoneycutt/puppet-module-puppet/issues",
   "requirements": [
     {
       "name": "pe",
@@ -66,14 +74,6 @@
       ]
     }
   ],
-  "name": "ghoneycutt-puppet",
-  "version": "2.10.0",
-  "author": "ghoneycutt",
-  "summary": "Manage Puppet",
-  "license": "Apache License, Version 2.0",
-  "source": "git://github.com/ghoneycutt/puppet-module-puppet.git",
-  "project_page": "https://github.com/ghoneycutt/puppet-module-puppet",
-  "issues_url": "https://github.com/ghoneycutt/puppet-module-puppet/issues",
   "description": "Manages Puppet, including Master, Agent, Dashboard and maintenance tasks.",
   "dependencies": [
     {"name":"leinaddm/htpasswd","version_requirement":">= 0.0.1"},
