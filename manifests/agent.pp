@@ -26,6 +26,7 @@ class puppet::agent (
   $agent_sysconfig              = 'USE_DEFAULTS',
   $agent_sysconfig_ensure       = 'USE_DEFAULTS',
   $daemon_name                  = 'puppet',
+  $stringify_facts              = true,
 ) {
 
   if type($run_in_noop) == 'String' {
@@ -53,6 +54,13 @@ class puppet::agent (
   if ! $env {
     fail('puppet::agent::env must be set')
   }
+
+  if type($stringify_facts) == 'string' {
+    $stringify_facts_bool = str2bool($stringify_facts)
+  } else {
+    $stringify_facts_bool = $stringify_facts
+  }
+  validate_bool($stringify_facts_bool)
 
   case $::osfamily {
     'Debian': {

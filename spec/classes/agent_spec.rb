@@ -36,6 +36,7 @@ describe 'puppet::agent' do
       it { should contain_file('puppet_config').with_content(/^\ *pluginsync = true$/) }
       it { should contain_file('puppet_config').with_content(/^\ *noop = false$/) }
       it { should_not contain_file('puppet_config').with_content(/environment = production/) }
+      it { should contain_file('puppet_config').with_content(/^\s*stringify_facts = true$/) }
     end
 
     ['false',false].each do |value|
@@ -76,6 +77,7 @@ describe 'puppet::agent' do
         it { should contain_file('puppet_config').with_content(/^\ *pluginsync = true$/) }
         it { should contain_file('puppet_config').with_content(/^\ *noop = false$/) }
         it { should_not contain_file('puppet_config').with_content(/environment = production/) }
+        it { should contain_file('puppet_config').with_content(/^\s*stringify_facts = true$/) }
       end
     end
 
@@ -117,6 +119,53 @@ describe 'puppet::agent' do
         it { should_not contain_file('puppet_config').with_content(/^\ *pluginsync = true$/) }
         it { should_not contain_file('puppet_config').with_content(/^\ *noop = false$/) }
         it { should_not contain_file('puppet_config').with_content(/environment = production/) }
+        it { should_not contain_file('puppet_config').with_content(/^\s*stringify_facts = true$/) }
+      end
+    end
+  end
+
+  describe 'with stringify_facts' do
+    ['true',true].each do |value|
+      context "set to #{value}" do
+        let(:params) do
+          {
+            :stringify_facts => value,
+            :env             => 'production',
+          }
+        end
+        let(:facts) { { :osfamily => 'RedHat' } }
+
+        it { should contain_file('puppet_config').with_content(/^\s*stringify_facts = true$/) }
+      end
+    end
+
+    ['false',false].each do |value|
+      context "set to #{value}" do
+        let(:params) do
+          {
+            :stringify_facts => value,
+            :env             => 'production',
+          }
+        end
+        let(:facts) { { :osfamily => 'RedHat' } }
+
+        it { should contain_file('puppet_config').with_content(/^\s*stringify_facts = false$/) }
+      end
+    end
+
+    context 'set to an invalid setting' do
+      let(:params) do
+        {
+          :stringify_facts => 'invalid',
+          :env             => 'production',
+        }
+      end
+      let(:facts) { { :osfamily => 'RedHat' } }
+
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::agent')
+        }.to raise_error(Puppet::Error)
       end
     end
   end

@@ -188,12 +188,17 @@ String for 'file' or 'present'. Allows you to not manage the sysconfig file.
 
 - *Default*: use defaults based on osfamily
 
-
 daemon_name
 -----------
 The name the puppet agent daemon should run as.
 
 - *Default*: puppet
+
+stringify_facts
+---------------
+Boolean to set the value of stringify_facts main section of the puppet agent's config. This must be set to true to use structured facts.
+
+- *Default*: true
 
 ===
 
