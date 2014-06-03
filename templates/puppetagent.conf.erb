@@ -17,6 +17,11 @@
     archive_files = true
     archive_file_server = <%= @puppet_server %>
 
+    # If stringify_facts is true, you have the classic facter fact that is
+    # always a string. If set to false, then you can use structured facts which
+    # were introduced in Facter v2
+    stringify_facts = <%= @stringify_facts_bool %>
+
 [agent]
     # The file in which puppetd stores a list of the classes
     # associated with the retrieved configuratiion.  Can be loaded in
