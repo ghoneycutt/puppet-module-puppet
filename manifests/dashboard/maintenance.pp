@@ -28,7 +28,6 @@ class puppet::dashboard::maintenance (
   $purge_old_db_backups_minute = '0',
 ) {
 
-  include common
   require 'puppet::dashboard'
 
   validate_absolute_path($reports_spool_dir)
@@ -46,13 +45,13 @@ class puppet::dashboard::maintenance (
     $my_dump_database_command = "cd ~puppet-dashboard && sudo -u ${puppet::dashboard::dashboard_user_real} /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=${dump_dir}/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 ${dump_dir}/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1"
   }
 
-  common::mkdir_p { $dump_dir: }
+  puppet::mkdir_p { $dump_dir: }
 
   file { $dump_dir:
     ensure  => directory,
     group   => $puppet::dashboard::dashboard_group_real,
     mode    => '0775',
-    require => Common::Mkdir_p[$dump_dir],
+    require => Puppet::Mkdir_p[$dump_dir],
   }
 
   cron { 'monthly_dashboard_database_optimization':

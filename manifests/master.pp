@@ -25,7 +25,6 @@ class puppet::master (
   }
 
   include apache::mod::ssl
-  include common
   include passenger
   include puppet::lint
   include puppet::master::maintenance
@@ -75,23 +74,23 @@ class puppet::master (
   }
 
   # Passenger
-  common::mkdir_p { $rack_dir: }
-  common::mkdir_p { "${rack_dir}/public": }
-  common::mkdir_p { "${rack_dir}/tmp": }
+  puppet::mkdir_p { $rack_dir: }
+  puppet::mkdir_p { "${rack_dir}/public": }
+  puppet::mkdir_p { "${rack_dir}/tmp": }
 
   file { $rack_dir:
     ensure  => directory,
-    require => Common::Mkdir_p[$rack_dir],
+    require => Puppet::Mkdir_p[$rack_dir],
   }
 
   file { "${rack_dir}/public":
     ensure  => directory,
-    require => Common::Mkdir_p["${rack_dir}/public"],
+    require => Puppet::Mkdir_p["${rack_dir}/public"],
   }
 
   file { "${rack_dir}/tmp":
     ensure  => directory,
-    require => Common::Mkdir_p["${rack_dir}/tmp"],
+    require => Puppet::Mkdir_p["${rack_dir}/tmp"],
   }
 
   file { "${rack_dir}/config.ru":
