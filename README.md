@@ -5,7 +5,7 @@
 
 This module handles the various parts of puppet on a given machine.
 
-Dependencies for this module are: apache, common, mysql and passenger
+Dependencies for this module are: apache, mysql and passenger
 
 ## Components ##
 
