@@ -1,6 +1,6 @@
 {
   "name": "ghoneycutt-puppet",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "author": "ghoneycutt",
   "summary": "Manage Puppet",
   "license": "Apache License, Version 2.0",
@@ -76,6 +76,7 @@
   ],
   "description": "Manages Puppet, including Master, Agent, Dashboard and maintenance tasks.",
   "dependencies": [
+    {"name":"ghoneycutt/common","version_requirement":">= v1.0.3"},
     {"name":"leinaddm/htpasswd","version_requirement":">= 0.0.1"},
     {"name":"puppetlabs/stdlib","version_requirement":">= 3.2.0"},
     {"name":"puppetlabs/mysql","version_requirement":">= 2.0.0"},
