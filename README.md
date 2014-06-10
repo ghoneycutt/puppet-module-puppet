@@ -27,12 +27,12 @@ Dependencies for this module are: apache, common, mysql and passenger
 
 ### Dashboard
 -------------
-- Manages [Puppet Dashboard](https://puppetlabs.com/puppet/related-projects/dashboard/)
+- Manages [Puppet Dashboard](https://github.com/sodabrew/puppet-dashboard)
 - This installation is used by puppet systems, that need access to the dashboard
 
 ### Dashboard Server
 --------------------
-- Manages [Puppet Dashboard](https://puppetlabs.com/puppet/related-projects/dashboard/)
+- Manages [Puppet Dashboard](https://github.com/sodabrew/puppet-dashboard)
 - This is the actual server running the Dashboard
 - Configures the Dashboard MySQL settings
 - Creates database for puppet with mysql module
