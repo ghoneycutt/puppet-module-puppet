@@ -7,7 +7,7 @@ summary 'Manage Puppet'
 description 'Manages Puppet, including Master, Agent, Dashboard and maintenance tasks.'
 project_page 'https://github.com/ghoneycutt/puppet-module-puppet'
 
-dependency 'ghoneycutt/common', '>= v1.0.3'
+dependency 'ghoneycutt/common', '>= 1.0.3'
 dependency 'leinaddm/htpasswd', '>= 0.0.1'
 dependency 'puppetlabs/stdlib', '>= 3.2.0'
 dependency 'puppetlabs/mysql', '>= 2.0.0'
