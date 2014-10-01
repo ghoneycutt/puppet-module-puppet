@@ -64,6 +64,7 @@ Ruby versions 1.8.7, 1.9.3, and 2.0.0 on Puppet 3.x
 * Debian 6
 * Debian 7
 * EL 6
+* EL 7
 * Solaris
 * Suse 11
 * Ubuntu 12.04 LTS
