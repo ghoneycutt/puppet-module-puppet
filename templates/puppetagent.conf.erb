@@ -21,7 +21,11 @@
     # always a string. If set to false, then you can use structured facts which
     # were introduced in Facter v2
     stringify_facts = <%= @stringify_facts_bool %>
+<% if @etckeeper_hooks_bool == true %>
 
+    prerun_command=/etc/puppet/etckeeper-commit-pre
+    postrun_command=/etc/puppet/etckeeper-commit-post
+<% end -%>
 [agent]
     # The file in which puppetd stores a list of the classes
     # associated with the retrieved configuratiion.  Can be loaded in
