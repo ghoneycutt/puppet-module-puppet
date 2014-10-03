@@ -13,6 +13,7 @@ class puppet::agent (
   $config_mode                  = '0644',
   $env                          = $::env,
   $puppet_server                = 'puppet',
+  $puppet_masterport            = 'UNSET',
   $puppet_ca_server             = 'UNSET',
   $is_puppet_master             = false,
   $run_method                   = 'service',
@@ -53,6 +54,12 @@ class puppet::agent (
   # env must be set, else fail, since we use it in the puppet_config template
   if ! $env {
     fail('puppet::agent::env must be set')
+  }
+
+  unless $puppet_masterport == 'UNSET' {
+    unless is_integer($puppet_masterport) {
+      fail("puppet::agent::puppet_masterport is set to '${puppet_masterport}'. It should be an integer.")
+    }
   }
 
   if type($stringify_facts) == 'string' {

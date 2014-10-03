@@ -117,6 +117,12 @@ The puppet server the client should connect to.
 
 - *Default*: puppet
 
+puppet_masterport
+-----------------
+The masterport setting in puppet.conf. By default this line is not set.
+
+- *Default*: UNSET
+
 puppet_ca_server
 ----------------
 The puppet CA server the client should use
