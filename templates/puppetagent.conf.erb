@@ -37,6 +37,7 @@
 
     certname = <%= @certname %>
     server = <%= @puppet_server %>
+<% if @puppet_masterport != 'UNSET' %>    masterport = <%= @puppet_masterport %><% end %>
 <% if @puppet_ca_server != 'UNSET' %>    ca_server = <%= @puppet_ca_server %><% end %>
     report = true
     graph = true

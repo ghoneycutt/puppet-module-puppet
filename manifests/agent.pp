@@ -13,6 +13,7 @@ class puppet::agent (
   $config_mode                  = '0644',
   $env                          = $::env,
   $puppet_server                = 'puppet',
+  $puppet_masterport            = 'UNSET',
   $puppet_ca_server             = 'UNSET',
   $is_puppet_master             = false,
   $run_method                   = 'service',
