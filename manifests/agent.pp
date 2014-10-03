@@ -15,6 +15,8 @@ class puppet::agent (
   $puppet_server                = 'puppet',
   $puppet_masterport            = 'UNSET',
   $puppet_ca_server             = 'UNSET',
+  $http_proxy_host              = 'UNSET',
+  $http_proxy_port              = 'UNSET',
   $is_puppet_master             = false,
   $run_method                   = 'service',
   $run_interval                 = '30',
@@ -74,6 +76,14 @@ class puppet::agent (
     $etckeeper_hooks_bool = $etckeeper_hooks
   }
   validate_bool($etckeeper_hooks_bool)
+
+  if $http_proxy_host != 'UNSET' and (is_domain_name($http_proxy_host) == false and is_ip_address($http_proxy_host) == false){
+    fail("puppet::agent::http_proxy_host is set to <${http_proxy_host}>. It should be a fqdn or an ip-address.")
+  }
+
+  if $http_proxy_port != 'UNSET' and is_integer($http_proxy_port) == false {
+    fail("puppet::agent::http_proxy_port is set to <${http_proxy_port}>. It should be an Integer.")
+  }
 
   case $::osfamily {
     'Debian': {

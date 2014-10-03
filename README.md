@@ -129,6 +129,18 @@ The puppet CA server the client should use
 
 - *Default*: UNSET
 
+http_proxy_host
+---------------
+The http-proxy the client should use
+
+- *Default*: UNSET
+
+http_proxy_port
+----------------
+The http-proxy port the client should use
+
+- *Default*: UNSET
+
 is_puppet_master
 ----------------
 Whether the machine is a puppet master or not.

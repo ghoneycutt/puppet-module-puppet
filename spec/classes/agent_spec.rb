@@ -32,6 +32,8 @@ describe 'puppet::agent' do
       it { should contain_file('puppet_config').with_content(/^\ *server = puppet$/) }
       it { should_not contain_file('puppet_config').with_content(/masterport =/) }
       it { should_not contain_file('puppet_config').with_content(/ca_server =/) }
+      it { should_not contain_file('puppet_config').with_content(/^\s*http_proxy_host =/) }
+      it { should_not contain_file('puppet_config').with_content(/^\s*http_proxy_port =/) }
       it { should contain_file('puppet_config').with_content(/^\ *report = true$/) }
       it { should contain_file('puppet_config').with_content(/^\ *graph = true$/) }
       it { should contain_file('puppet_config').with_content(/^\ *pluginsync = true$/) }
@@ -478,6 +480,7 @@ describe 'puppet::agent' do
       end
     end
   end
+
   describe 'with puppet_masterport' do
     context 'set to integer' do
       let(:facts) { { :osfamily => 'RedHat' } }
@@ -521,6 +524,7 @@ describe 'puppet::agent' do
       end
     end
   end
+
   describe 'with etckeeper_hooks' do
     ['true',true].each do |value|
       context "set to #{value}" do
@@ -569,6 +573,100 @@ describe 'puppet::agent' do
         expect {
           should contain_class('puppet::agent')
         }.to raise_error(Puppet::Error)
+      end
+    end
+  end
+
+  describe 'with http_proxy_host' do
+    context 'set to a valid domain' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :http_proxy_host => 'proxy.host.local.domain',
+          :env             => 'production',
+        }
+      end
+      it { should contain_class('puppet::agent') }
+      it {should contain_file('puppet_config').with_content(/^\s*http_proxy_host = proxy\.host\.local\.domain$/) }
+    end
+
+    ['8.8.8.8','2a00:1450:400f:804::1011'].each do |ip_address|
+      context "set to #{ip_address} (ip-address)" do
+        let(:facts) { { :osfamily => 'RedHat' } }
+        let(:params) do
+          { :env                   => 'production',
+            :http_proxy_host       => ip_address,
+          }
+        end
+
+        it { should contain_file('puppet_config').with_content(/\s*http_proxy_host = #{Regexp.escape(ip_address)}$/) }
+      end
+    end
+    ['8.8.8.8.#','".#.%.!','foo..bar'].each do |invalid_value|
+      context "set to #{invalid_value} (invalid value)" do
+        let(:facts) { { :osfamily => 'RedHat' } }
+        let(:params) do
+          { :env                   => 'production',
+            :http_proxy_host       => invalid_value,
+          }
+        end
+        it 'should fail' do
+          expect {
+            should contain_class('puppet::agent')
+          }.to raise_error(Puppet::Error,/puppet::agent::http_proxy_host is set to <#{Regexp.escape(invalid_value)}>. It should be a fqdn or an ip-address./)
+        end
+      end
+    end
+    context 'set to an invalid type' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :http_proxy_host => ['invalid','type'],
+          :env             => 'production',
+        }
+      end
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::agent')
+        }.to raise_error(Puppet::Error)
+      end
+    end
+  end
+
+
+  describe 'with http_proxy_port' do
+    context 'set to integer' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :http_proxy_port => '8888',
+          :env             => 'production',
+        }
+      end
+      it { should contain_class('puppet::agent') }
+      it { should contain_file('puppet_config').with_content(/^\s*http_proxy_port = 8888$/) }
+    end
+    context 'set to an invalid type' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :http_proxy_port => ['invalid','type'],
+          :env             => 'production',
+        }
+      end
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::agent')
+        }.to raise_error(Puppet::Error)
+      end
+    end
+    context 'set to an invalid value' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :http_proxy_port => 'foo',
+          :env             => 'production',
+        }
+      end
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::agent')
+        }.to raise_error(Puppet::Error,/puppet::agent::http_proxy_port is set to <foo>. It should be an Integer./)
       end
     end
   end
