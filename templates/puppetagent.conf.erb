@@ -22,6 +22,10 @@
     # were introduced in Facter v2
     stringify_facts = <%= @stringify_facts_bool %>
 
+    # Use etckeeper if it is enabled
+    prerun_command=/etc/puppet/etckeeper-commit-pre
+    postrun_command=/etc/puppet/etckeeper-commit-post
+
 [agent]
     # The file in which puppetd stores a list of the classes
     # associated with the retrieved configuratiion.  Can be loaded in

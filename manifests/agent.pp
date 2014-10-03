@@ -177,6 +177,22 @@ class puppet::agent (
     mode    => $config_mode,
   }
 
+  file { 'etckeeper_pre':
+    path   => '/etc/puppet/etckeeper-commit-pre',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+    source => 'puppet:///modules/puppet/etckeeper-commit-pre'
+  }
+
+  file { 'etckeeper_post':
+    path   => '/etc/puppet/etckeeper-commit-post',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+    source => 'puppet:///modules/puppet/etckeeper-commit-post'
+  }
+
   if $default_agent_sysconfig_ensure =~ /(present)|(file)/ {
     file { 'puppet_agent_sysconfig':
       ensure  => $agent_sysconfig_ensure_real,
