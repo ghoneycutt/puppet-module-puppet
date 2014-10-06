@@ -27,6 +27,7 @@ class puppet::agent (
   $agent_sysconfig_ensure       = 'USE_DEFAULTS',
   $daemon_name                  = 'puppet',
   $stringify_facts              = true,
+  $etckeeper_hooks              = false,
 ) {
 
   if type($run_in_noop) == 'String' {
@@ -61,6 +62,13 @@ class puppet::agent (
     $stringify_facts_bool = $stringify_facts
   }
   validate_bool($stringify_facts_bool)
+
+  if type($etckeeper_hooks) == 'String' {
+    $etckeeper_hooks_bool = str2bool($etckeeper_hooks)
+  } else {
+    $etckeeper_hooks_bool = $etckeeper_hooks
+  }
+  validate_bool($etckeeper_hooks_bool)
 
   case $::osfamily {
     'Debian': {
@@ -175,6 +183,24 @@ class puppet::agent (
     owner   => $config_owner,
     group   => $config_group,
     mode    => $config_mode,
+  }
+
+  if ($etckeeper_hooks_bool) {
+    file { 'etckeeper_pre':
+      path   => '/etc/puppet/etckeeper-commit-pre',
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0755',
+      source => 'puppet:///modules/puppet/etckeeper-commit-pre'
+    }
+
+    file { 'etckeeper_post':
+      path   => '/etc/puppet/etckeeper-commit-post',
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0755',
+      source => 'puppet:///modules/puppet/etckeeper-commit-post'
+    }
   }
 
   if $default_agent_sysconfig_ensure =~ /(present)|(file)/ {
