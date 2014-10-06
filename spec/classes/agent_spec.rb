@@ -38,6 +38,8 @@ describe 'puppet::agent' do
       it { should contain_file('puppet_config').with_content(/^\ *noop = false$/) }
       it { should_not contain_file('puppet_config').with_content(/environment = production/) }
       it { should contain_file('puppet_config').with_content(/^\s*stringify_facts = true$/) }
+      it { should_not contain_file('puppet_config').with_content(/^\s*prerun_command=\/etc\/puppet\/etckeeper-commit-pre$/) }
+      it { should_not contain_file('puppet_config').with_content(/^\s*postrun_command=\/etc\/puppet\/etckeeper-commit-post$/) }
     end
 
     ['false',false].each do |value|
@@ -511,6 +513,57 @@ describe 'puppet::agent' do
           :env               => 'production',
         }
       end
+
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::agent')
+        }.to raise_error(Puppet::Error)
+      end
+    end
+  end
+  describe 'with etckeeper_hooks' do
+    ['true',true].each do |value|
+      context "set to #{value}" do
+        let(:params) do
+          {
+            :etckeeper_hooks => value,
+            :env             => 'production',
+          }
+        end
+        let(:facts) { { :osfamily => 'RedHat' } }
+
+          it { should contain_file('etckeeper_pre') }
+          it { should contain_file('etckeeper_post') }
+          it { should contain_file('puppet_config').with_content(/^\s*prerun_command=\/etc\/puppet\/etckeeper-commit-pre$/) }
+          it { should contain_file('puppet_config').with_content(/^\s*postrun_command=\/etc\/puppet\/etckeeper-commit-post$/) }
+      end
+    end
+
+    ['false',false].each do |value|
+      context "set to #{value}" do
+        let(:params) do
+          {
+            :etckeeper_hooks => value,
+            :env             => 'production',
+          }
+        end
+        let(:facts) { { :osfamily => 'RedHat' } }
+
+        it { should_not contain_file('etckeeper_pre') }
+        it { should_not contain_file('etckeeper_post') }
+        it { should_not contain_file('puppet_config').with_content(/^\s*prerun_command=\/etc\/puppet\/etckeeper-commit-pre$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\s*postrun_command=\/etc\/puppet\/etckeeper-commit-post$/) }
+      end
+    end
+
+    context 'set to an invalid setting' do
+      let(:params) do
+        {
+          :etckeeper_hooks => 'invalid',
+          :env             => 'production',
+        }
+      end
+      let(:facts) { { :osfamily => 'RedHat' } }
 
       it 'should fail' do
         expect {

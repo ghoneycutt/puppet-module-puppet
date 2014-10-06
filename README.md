@@ -207,6 +207,12 @@ Boolean to set the value of stringify_facts main section of the puppet agent's c
 
 - *Default*: true
 
+etckeeper_hooks
+---------------
+Boolean to include pre- and postrun hooks for etckeeper in the main section of the puppet agent's config.
+
+- *Default*: false
+
 ===
 
 ## Class `puppet::dashboard` ##
