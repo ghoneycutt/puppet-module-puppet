@@ -56,10 +56,8 @@ class puppet::agent (
     fail('puppet::agent::env must be set')
   }
 
-  unless $puppet_masterport == 'UNSET' {
-    unless is_integer($puppet_masterport) {
-      fail("puppet::agent::puppet_masterport is set to '${puppet_masterport}'. It should be an integer.")
-    }
+  if $puppet_masterport != 'UNSET' and is_integer($puppet_masterport) == false {
+    fail("puppet::agent::puppet_masterport is set to <${puppet_masterport}>. It should be an integer.")
   }
 
   if type($stringify_facts) == 'string' {

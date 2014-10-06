@@ -481,25 +481,41 @@ describe 'puppet::agent' do
       let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) do
         { :puppet_masterport => '8888',
-          :env        => 'production',
+          :env               => 'production',
         }
       end
-      it {
-        should contain_class('puppet::agent')
-        should contain_file('puppet_config').with_content(/^\s*masterport = 8888$/)
-      }
+
+      it { should contain_class('puppet::agent') }
+      it { should contain_file('puppet_config').with_content(/^\s*masterport = 8888$/) }
     end
-    context 'set to foo' do
+
+    context 'set to a string that is not an integer (foo)' do
       let(:facts) { { :osfamily => 'RedHat' } }
       let(:params) do
         { :puppet_masterport => 'foo',
-          :env        => 'production',
+          :env               => 'production',
         }
       end
+
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/puppet::agent::puppet_masterport is set to 'foo'. It should be an integer./)
+        }.to raise_error(Puppet::Error,/puppet::agent::puppet_masterport is set to <foo>. It should be an integer./)
+      end
+    end
+
+    context 'set to an invalid type (non-string)' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :puppet_masterport => ['invalid','type'],
+          :env               => 'production',
+        }
+      end
+
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::agent')
+        }.to raise_error(Puppet::Error)
       end
     end
   end
