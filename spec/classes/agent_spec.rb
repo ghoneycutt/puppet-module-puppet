@@ -30,6 +30,7 @@ describe 'puppet::agent' do
       it { should contain_file('puppet_config').with_content(/^\ *localconfig = \$vardir\/localconfig$/) }
       it { should contain_file('puppet_config').with_content(/^\ *certname = agent.example.com$/) }
       it { should contain_file('puppet_config').with_content(/^\ *server = puppet$/) }
+      it { should_not contain_file('puppet_config').with_content(/masterport =/) }
       it { should_not contain_file('puppet_config').with_content(/ca_server =/) }
       it { should contain_file('puppet_config').with_content(/^\ *report = true$/) }
       it { should contain_file('puppet_config').with_content(/^\ *graph = true$/) }
@@ -472,6 +473,33 @@ describe 'puppet::agent' do
             end
           end
         end
+      end
+    end
+  end
+  describe 'with puppet_masterport' do
+    context 'set to integer' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :puppet_masterport => '8888',
+          :env        => 'production',
+        }
+      end
+      it {
+        should contain_class('puppet::agent')
+        should contain_file('puppet_config').with_content(/^\s*masterport = 8888$/)
+      }
+    end
+    context 'set to foo' do
+      let(:facts) { { :osfamily => 'RedHat' } }
+      let(:params) do
+        { :puppet_masterport => 'foo',
+          :env        => 'production',
+        }
+      end
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::agent')
+        }.to raise_error(Puppet::Error,/puppet::agent::puppet_masterport is set to 'foo'. It should be an integer./)
       end
     end
   end
