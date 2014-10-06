@@ -119,7 +119,7 @@ The puppet server the client should connect to.
 
 puppet_masterport
 -----------------
-The puppet server's port
+The masterport setting in puppet.conf. By default this line is not set.
 
 - *Default*: UNSET
 
