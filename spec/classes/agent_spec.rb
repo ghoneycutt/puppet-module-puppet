@@ -30,6 +30,7 @@ describe 'puppet::agent' do
       it { should contain_file('puppet_config').with_content(/^\ *localconfig = \$vardir\/localconfig$/) }
       it { should contain_file('puppet_config').with_content(/^\ *certname = agent.example.com$/) }
       it { should contain_file('puppet_config').with_content(/^\ *server = puppet$/) }
+      it { should_not contain_file('puppet_config').with_content(/masterport =/) }
       it { should_not contain_file('puppet_config').with_content(/ca_server =/) }
       it { should contain_file('puppet_config').with_content(/^\ *report = true$/) }
       it { should contain_file('puppet_config').with_content(/^\ *graph = true$/) }
