@@ -18,7 +18,7 @@ Listen 8140
     SSLEngine On
 
     # Only allow high security cryptography. Alter if needed for compatibility.
-    SSLProtocol             All -SSLv2
+    SSLProtocol             All -SSLv2 -SSLv3
     SSLCipherSuite          HIGH:!ADH:RC4+RSA:-MEDIUM:-LOW:-EXP
     SSLCertificateFile      /var/lib/puppet/ssl/certs/<%= @fqdn %>.pem
     SSLCertificateKeyFile   /var/lib/puppet/ssl/private_keys/<%= @fqdn %>.pem
