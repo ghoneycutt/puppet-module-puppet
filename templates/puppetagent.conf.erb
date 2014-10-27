@@ -41,14 +41,25 @@
 
     certname = <%= @certname %>
     server = <%= @puppet_server %>
-<% if @puppet_masterport != 'UNSET' %>    masterport = <%= @puppet_masterport %><% end %>
-<% if @puppet_ca_server != 'UNSET' %>    ca_server = <%= @puppet_ca_server %><% end %>
-<% if @http_proxy_host != 'UNSET' %>    http_proxy_host = <%= @http_proxy_host %><% end %>
-<% if @http_proxy_port != 'UNSET' %>    http_proxy_port = <%= @http_proxy_port %><% end %>
+<% if @puppet_masterport != 'UNSET' -%>
+    masterport = <%= @puppet_masterport %>
+<% end -%>
+<% if @puppet_ca_server != 'UNSET' -%>
+    ca_server = <%= @puppet_ca_server %>
+<% end -%>
+<% if @http_proxy_host != 'UNSET' -%>
+    http_proxy_host = <%= @http_proxy_host %>
+<% end -%>
+<% if @http_proxy_port != 'UNSET' -%>
+    http_proxy_port = <%= @http_proxy_port %>
+<% end -%>
     report = true
     graph = true
     pluginsync = true
-<% if @run_method == 'service' %>    # run in noop mode?
+<% if @run_method == 'service' %>
+    # run in noop mode?
     noop = <%= @run_in_noop %>
 <% end -%>
-<% if @env != 'production' %>    environment = <%= @env %><% end -%>
+<% if @env != 'production' -%>
+    environment = <%= @env %>
+<% end -%>
