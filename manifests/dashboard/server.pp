@@ -14,6 +14,7 @@ class puppet::dashboard::server (
   $log_dir                   = '/var/log/puppet',
   $mysql_user                = 'dashboard',
   $mysql_password            = 'puppet',
+  $mysql_use_hiera_settings  = false,
   $mysql_max_packet_size     = '32M',
   $security                  = 'none',
   $vhost_path                = 'USE_DEFAULTS',
@@ -81,10 +82,26 @@ class puppet::dashboard::server (
   require 'passenger'
   include puppet::dashboard::maintenance
 
-  class { 'mysql::server':
-    override_options => {
-      'mysqld' => {
-        'max_allowed_packet' => $mysql_max_packet_size,
+  case type($mysql_use_hiera_settings) {
+    'boolean': {
+      $mysql_use_hiera_settings_real = $mysql_use_hiera_settings
+    }
+    'string': {
+      $mysql_use_hiera_settings_real = str2bool($mysql_use_hiera_settings)
+    }
+    default: {
+      fail("puppet::dashboard::server::mysql_use_hiera_settings supports booleans only and is <${mysql_use_hiera_settings}>.")
+    }
+  }
+
+  if $mysql_use_hiera_settings_real == true {
+    class { 'mysql::server': }
+  } else {
+    class { 'mysql::server':
+      override_options => {
+        'mysqld' => {
+          'max_allowed_packet' => $mysql_max_packet_size,
+        }
       }
     }
   }

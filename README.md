@@ -375,6 +375,19 @@ The mysql max packet size.
 
 - *Default*: 32M
 
+mysql_use_hiera_settings
+------------------------
+Boolean to trigger usage of hiera settings for mysql::server configuration. Set to <true> it will skip build in values for mysql configuration, you can specify them in hiera then:
+<pre>
+puppet::dashboard::server::mysql_use_hiera_settings: true
+mysql::server::override_options:
+  mysqld:
+    max_allowed_packet:      '32M'
+    innodb_buffer_pool_size: '64M'
+</pre>
+
+- *Default*: false
+
 security
 --------
 String to indicate security type used. Valid values are 'none' and 'htpasswd'. Using 'htpasswd' will use Apache basic auth with a htpasswd file. See htpasswd and htpasswd_path parameters.

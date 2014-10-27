@@ -183,6 +183,73 @@ describe 'puppet::dashboard::server' do
     end
   end
 
+
+  [true,'true'].each do |value|
+    context "with mysql_use_hiera_settings set to <#{value}>" do
+      let(:params) { { :mysql_use_hiera_settings => "#{value}" } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :processorcount         => '8',
+        }
+      end
+
+      it { should contain_class('puppet::dashboard::server') }
+
+      it { should_not contain_file('/etc/my.cnf').with_content(/^max_allowed_packet = 32M$/) }
+      end
+    end
+
+  [false,'false'].each do |value|
+    context "with mysql_use_hiera_settings set to <#{value}>" do
+      let(:params) { { :mysql_use_hiera_settings => "#{value}" } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :processorcount         => '8',
+        }
+      end
+
+      it { should contain_class('puppet::dashboard::server') }
+
+      it { should contain_file('/etc/my.cnf').with_content(/^max_allowed_packet = 32M$/) }
+      end
+    end
+
+  ['invalid',[ 'dont', 'like', 'arrays', ], { 'nor' => 'hashes', },  ].each do |value|
+    context "with mysql_use_hiera_settings set to <#{value}>" do
+      let(:params) { { :mysql_use_hiera_settings => "#{value}" } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :processorcount         => '8',
+        }
+      end
+
+      it do
+        expect {
+          should contain_class('puppet::dashboard')
+        }.to raise_error(Puppet::Error)
+      end
+    end
+  end
+
+  context 'with mysql_use_hiera_settings set to invalid value' do
+    let(:params) { { :mysql_use_hiera_settings => 'invalid' } }
+    let(:facts) do
+      { :osfamily               => 'RedHat',
+        :operatingsystemrelease => '6.4',
+        :processorcount         => '8',
+      }
+    end
+
+    it do
+      expect {
+        should contain_class('puppet::dashboard')
+      }.to raise_error(Puppet::Error)
+    end
+  end
+
   describe 'Dashboard vhost configuration file content' do
     context 'when vhost_path is invalid it should fail' do
       let(:params) { { :vhost_path => 'not/a/valid/path' } }
