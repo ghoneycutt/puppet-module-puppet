@@ -78,13 +78,13 @@ class puppet::dashboard::server (
   } else {
     $vhost_path_real = $vhost_path
   }
- 
+
   if $mysql_host == 'USE_DEFAULTS' {
     $mysql_host_real = 'localhost'
   } else {
     $mysql_host_real = $mysql_host
   }
- 
+
   if $mysql_port == 'USE_DEFAULTS' {
     $mysql_port_real = '3306'
   } else {
