@@ -12,6 +12,8 @@ class puppet::dashboard::server (
   $htpasswd_group            = 'USE_DEFAULTS',
   $htpasswd_mode             = '0640',
   $log_dir                   = '/var/log/puppet',
+  $mysql_host                 = 'USE_DEFAULTS',
+  $mysql_port                 = 'USE_DEFAULTS',
   $mysql_user                = 'dashboard',
   $mysql_password            = 'puppet',
   $mysql_max_packet_size     = '32M',
@@ -75,6 +77,18 @@ class puppet::dashboard::server (
     $vhost_path_real = $default_vhost_path
   } else {
     $vhost_path_real = $vhost_path
+  }
+ 
+  if $mysql_host == 'USE_DEFAULTS' {
+    $mysql_host_real = 'localhost'
+  } else {
+    $mysql_host_real = $mysql_host
+  }
+ 
+  if $mysql_port == 'USE_DEFAULTS' {
+    $mysql_port_real = '3306'
+  } else {
+    $mysql_port_real = $mysql_port
   }
   validate_absolute_path($vhost_path_real)
 
