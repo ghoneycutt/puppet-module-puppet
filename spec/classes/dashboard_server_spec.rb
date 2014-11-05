@@ -183,6 +183,56 @@ describe 'puppet::dashboard::server' do
     end
   end
 
+  [false,'false'].each do |value|
+    context "with manage_mysql_options set to <#{value}>" do
+      let(:params) { { :manage_mysql_options => "#{value}" } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :processorcount         => '8',
+        }
+      end
+
+      it { should contain_class('puppet::dashboard::server') }
+
+      it { should contain_file('/etc/my.cnf').without_content(/^max_allowed_packet = 32M$/) }
+      end
+    end
+
+  [true,'true'].each do |value|
+    context "with manage_mysql_options set to <#{value}>" do
+      let(:params) { { :manage_mysql_options => "#{value}" } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :processorcount         => '8',
+        }
+      end
+
+      it { should contain_class('puppet::dashboard::server') }
+
+      it { should contain_file('/etc/my.cnf').with_content(/^max_allowed_packet = 32M$/) }
+      end
+    end
+
+  ['invalid',[ 'dont', 'like', 'arrays', ], { 'nor' => 'hashes', },  ].each do |value|
+    context "with manage_mysql_options set to invalid value <#{value}>" do
+      let(:params) { { :manage_mysql_options => "#{value}" } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :processorcount         => '8',
+        }
+      end
+
+      it do
+        expect {
+          should contain_class('puppet::dashboard')
+        }.to raise_error(Puppet::Error)
+      end
+    end
+  end
+
   describe 'Dashboard vhost configuration file content' do
     context 'when vhost_path is invalid it should fail' do
       let(:params) { { :vhost_path => 'not/a/valid/path' } }

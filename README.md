@@ -273,6 +273,20 @@ The port the web server will respond to.
 
 - *Default*: 3000
 
+manage_mysql_options
+--------------------
+Boolean to use modules default mysql::server settings (mysql_max_packet_size).
+For specific mysql::server settings you can use hiera now:
+<pre>
+puppet::dashboard::server::manage_mysql_options: false
+mysql::server::override_options:
+  mysqld:
+    max_allowed_packet:      '32M'
+    innodb_buffer_pool_size: '64M'
+</pre>
+
+- *Default*: true
+
 ===
 
 ## Class `puppet::dashboard::server` ##
