@@ -37,6 +37,8 @@
 #
 # Each environment should be a hash with keys for:
 #
+# - host
+# - port
 # - database
 # - username
 # - password
@@ -47,6 +49,8 @@
 # be "utf8".
 #
 production:
+  host: <%= @mysql_host %>
+  port: <%= @mysql_port %>
   database: dashboard
   username: <%= @mysql_user %>
   password: <%= @mysql_password %>
@@ -54,6 +58,8 @@ production:
   adapter: mysql
 
 #development:
+#  host    : localhost
+#  port    : 3306
 #  database: dashboard_development
 #  username: <%= @mysql_user %>
 #  password: <%= @mysql_password %>
@@ -61,6 +67,8 @@ production:
 #  adapter: mysql
 #
 #test:
+#  host    : localhost
+#  port    : 3306
 #  database: dashboard_test
 #  username: <%= @mysql_user %>
 #  password: <%= @mysql_password %>

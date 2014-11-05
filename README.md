@@ -357,6 +357,18 @@ The location for the puppet log files.
 
 - *Default*: /var/log/puppet
 
+mysql_host
+----------
+The hostname for the mysql connection.
+
+- *Default*: localhost
+
+mysql_port
+----------
+The port number for the mysql connection.
+
+- *Default*: 3306
+
 mysql_user
 ----------
 The user for the mysql connection.
