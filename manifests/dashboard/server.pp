@@ -12,6 +12,7 @@ class puppet::dashboard::server (
   $htpasswd_group            = 'USE_DEFAULTS',
   $htpasswd_mode             = '0640',
   $log_dir                   = '/var/log/puppet',
+  $manage_mysql_options      = true,
   $mysql_user                = 'dashboard',
   $mysql_password            = 'puppet',
   $mysql_max_packet_size     = '32M',
@@ -81,12 +82,28 @@ class puppet::dashboard::server (
   require 'passenger'
   include puppet::dashboard::maintenance
 
-  class { 'mysql::server':
-    override_options => {
-      'mysqld' => {
-        'max_allowed_packet' => $mysql_max_packet_size,
+  case type($manage_mysql_options) {
+    'boolean': {
+      $manage_mysql_options_real = $manage_mysql_options
+    }
+    'string': {
+      $manage_mysql_options_real = str2bool($manage_mysql_options)
+    }
+    default: {
+      fail("puppet::dashboard::server::manage_mysql_options supports booleans only and is <${manage_mysql_options}>.")
+    }
+  }
+
+  if $manage_mysql_options_real == true {
+    class { 'mysql::server':
+      override_options => {
+        'mysqld' => {
+          'max_allowed_packet' => $mysql_max_packet_size,
+        }
       }
     }
+  } else {
+    include mysql::server
   }
 
   if $security == 'htpasswd' and $htpasswd != undef {
