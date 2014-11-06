@@ -336,7 +336,7 @@ describe 'puppet::dashboard::server' do
     }
   end
 
-  context 'Dashboard database configuration file content' do
+  context 'Dashboard database configuration file content with default parameters' do
     let(:facts) do
       { :osfamily               => 'RedHat',
         :operatingsystemrelease => '6.4',
@@ -347,8 +347,42 @@ describe 'puppet::dashboard::server' do
     end
 
     it { should contain_class('puppet::dashboard::server') }
-
+    
+    it { should contain_file('database_config').with_content(/^\s*host: localhost$/) }
+    it { should contain_file('database_config').with_content(/^\s*port: 3306$/) }
+    it { should contain_file('database_config').with_content(/^\s*database: dashboard$/) }
     it { should contain_file('database_config').with_content(/^\s*username: dashboard$/) }
+    it { should contain_file('database_config').with_content(/^\s*password: puppet$/) }
+    it { should contain_file('database_config').with_content(/^\s*encoding: utf8$/) }
+    it { should contain_file('database_config').with_content(/^\s*adapter: mysql$/) }
+  end
+  
+  context 'with mysql_host is invalid domainname' do
+    let :params do
+      {
+        :mysql_host => 'host.example.com',
+      }
+    end
+    
+    it 'should fail' do
+      expect {
+        should raise_error(Puppet::Error, /"puppet::server::mysql_host is not a valid FQDN. Detected value is host.example.com."/)
+      }
+    end 
+  end
+
+  context 'with mysql_port is string' do
+    let :params do
+      {
+        :mysql_port => '3306',
+      }
+    end
+
+    it 'should fail' do
+      expect {
+        should raise_error(Puppet::Error, /"puppet::server::mysql_port is not numeric. Detected value is '3306'."/)
+      }
+    end
   end
 
   context 'Dashboard vhost configuration file on osfamily RedHat' do
@@ -416,7 +450,7 @@ describe 'puppet::dashboard::server' do
       })
     }
   end
-
+  
   context 'Dashboard database migration' do
     let(:facts) do
       { :osfamily => 'RedHat',
