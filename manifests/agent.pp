@@ -233,9 +233,9 @@ class puppet::agent (
     # GH: This service will always show as being running while an agent run is
     # taking place, so we no longer ensure its status. Before doing this, there
     # would *always* be a logged change and the Console could never be green.
-    #ensure     => $daemon_ensure,
-    name       => $daemon_name,
-    enable     => $daemon_enable,
+    #ensure => $daemon_ensure,
+    name   => $daemon_name,
+    enable => $daemon_enable,
   }
 
   cron { 'puppet_agent':

@@ -83,7 +83,7 @@ class puppet::dashboard (
   }
 
   service { 'puppet-dashboard-workers':
-    ensure    => stopped,
-    enable    => false,
+    ensure => stopped,
+    enable => false,
   }
 }
