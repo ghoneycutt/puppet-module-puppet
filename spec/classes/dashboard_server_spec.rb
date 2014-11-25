@@ -195,7 +195,10 @@ describe 'puppet::dashboard::server' do
 
       it { should contain_class('puppet::dashboard::server') }
 
-      it { should contain_file('/etc/my.cnf').without_content(/^max_allowed_packet = 32M$/) }
+      it { should contain_class('mysql::server').with('override_options' => {},) }
+
+      it { should_not contain_file('/etc/my.cnf').with_content(/^max_allowed_packet = 32M$/) }
+
       end
     end
 
@@ -212,6 +215,17 @@ describe 'puppet::dashboard::server' do
       it { should contain_class('puppet::dashboard::server') }
 
       it { should contain_file('/etc/my.cnf').with_content(/^max_allowed_packet = 32M$/) }
+
+      it {
+        should contain_class('mysql::server').with({
+          'override_options' => {
+            'mysqld' => {
+              'max_allowed_packet' => '32M',
+            },
+          },
+        })
+      }
+
       end
     end
 
