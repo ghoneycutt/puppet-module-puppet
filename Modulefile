@@ -1,5 +1,5 @@
 name    'ghoneycutt-puppet'
-version '2.13.1'
+version '2.14.0'
 source 'git://github.com/ghoneycutt/puppet-module-puppet.git'
 author 'ghoneycutt'
 license 'Apache License, Version 2.0'
