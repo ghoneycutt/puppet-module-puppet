@@ -143,7 +143,12 @@ class puppet::agent (
       $cron_ensure   = 'present'
       $cron_user     = 'root'
       $cron_hour     = '*'
-      $cron_minute   = [$cron_run_one, $cron_run_two]
+
+      if $run_interval > 30 {
+        $cron_minute = $cron_run_one
+      } else {
+        $cron_minute = [$cron_run_one, $cron_run_two]
+      }
 
       if $run_in_noop_bool == true {
         $my_cron_command = "${cron_command} --noop"
