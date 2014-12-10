@@ -31,7 +31,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('purge_old_puppet_reports').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
           'user'    => 'root',
           'hour'    => '0',
           'minute'  => '15',
@@ -57,7 +57,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('purge_old_puppet_reports').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
           'user'    => 'gh',
           'hour'    => '23',
           'minute'  => '42',
@@ -79,7 +79,7 @@ describe 'puppet::master::maintenance' do
 
         it { should contain_cron('purge_old_puppet_reports').with({
             'ensure'  => 'present',
-            'command' => '/usr/bin/find /var/lib/puppet/reports -type f -mtime +42 -exec /bin/rm -fr {} \;',
+            'command' => '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +42 -exec /bin/rm -fr {} \;',
             'user'    => 'root',
             'hour'    => '0',
             'minute'  => '15',
@@ -120,7 +120,7 @@ describe 'puppet::master::maintenance' do
 
         it { should contain_cron('purge_old_puppet_reports').with({
             'ensure'  => 'present',
-            'command' => '/usr/bin/find /etc/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
+            'command' => '/usr/bin/find -L /etc/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
             'user'    => 'root',
             'hour'    => '0',
             'minute'  => '15',
@@ -162,7 +162,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('purge_old_puppet_reports').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find /etc/puppet/reports -type f -mtime +42 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find -L /etc/puppet/reports -type f -mtime +42 -exec /bin/rm -fr {} \;',
           'user'    => 'root',
           'hour'    => '0',
           'minute'  => '15',
