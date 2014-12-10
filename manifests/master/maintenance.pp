@@ -9,7 +9,7 @@ class puppet::master::maintenance (
   $filebucket_cleanup_minute  = '0',
   $reportdir                   = $::puppet_reportdir,
   $reportdir_days_to_keep      = '30',
-  $reportdir_purge_command     = '/usr/bin/find /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
+  $reportdir_purge_command     = '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
   $reportdir_purge_user        = 'root',
   $reportdir_purge_hour        = '0',
   $reportdir_purge_minute      = '15',
@@ -38,7 +38,7 @@ class puppet::master::maintenance (
   }
 
   if ( $reportdir_days_to_keep != 30 ) or ( $reportdir != '/var/lib/puppet/reports' ) {
-    $my_reportdir_purge_command = "/usr/bin/find ${reportdir} -type f -mtime +${reportdir_days_to_keep} -exec /bin/rm -fr {} \\;"
+    $my_reportdir_purge_command = "/usr/bin/find -L ${reportdir} -type f -mtime +${reportdir_days_to_keep} -exec /bin/rm -fr {} \\;"
   } else {
     $my_reportdir_purge_command = $reportdir_purge_command
   }

@@ -711,7 +711,7 @@ reportdir_purge_command
 -----------------------
 Command ran by cron to purge old reports.
 
-- *Default*: /usr/bin/find /var/lib/puppet/reports/ -type f -mtime +30 -exec /bin/rm -fr {} \;'
+- *Default*: /usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;'
 
 reportdir_purge_user
 --------------------
