@@ -1,9 +1,9 @@
 {
   "name": "ghoneycutt-puppet",
-  "version": "2.14.0",
+  "version": "2.14.1",
   "author": "ghoneycutt",
   "summary": "Manage Puppet",
-  "license": "Apache License, Version 2.0",
+  "license": "Apache-2.0",
   "source": "git://github.com/ghoneycutt/puppet-module-puppet.git",
   "project_page": "https://github.com/ghoneycutt/puppet-module-puppet",
   "issues_url": "https://github.com/ghoneycutt/puppet-module-puppet/issues",
