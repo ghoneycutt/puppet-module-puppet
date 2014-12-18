@@ -129,6 +129,68 @@ describe 'puppet::agent' do
     end
   end
 
+  describe 'with run_interval' do
+    ['29','30',30,'45',56].each do |value|
+      context "set to #{value}" do
+        let(:facts) do
+          {
+            :osfamily => 'RedHat',
+            :fqdn     => 'agent.learnpuppet.com',
+          }
+        end
+        let(:params) do
+          {
+            :run_method   => 'cron',
+            :run_interval => value,
+            :env          => 'production',
+          }
+        end
+
+        # Values here are from trial and error based on the fqdn above. Not
+        # sure if it is possible to stub fqdn_rand()
+        if value.to_s > '30'
+          it {
+           should contain_cron('puppet_agent').with({
+              'ensure' => 'present',
+              'minute' => 39,
+            })
+          }
+        else
+          it {
+           should contain_cron('puppet_agent').with({
+              'ensure' => 'present',
+              'minute' => ['7', 37],
+            })
+          }
+        end
+      end
+    end
+
+    [true,false,{ 'k' => 'v'},['1','2']].each do |value|
+      context "set to invalid value #{value}" do
+        let(:facts) do
+          {
+            :osfamily => 'RedHat',
+            :fqdn     => 'agent.learnpuppet.com',
+          }
+        end
+        let(:params) do
+          {
+            :run_method   => 'cron',
+            :run_interval => value,
+            :env          => 'production',
+          }
+        end
+
+        it 'should fail' do
+          expect {
+            should contain_class('puppet::agent')
+          }.to raise_error(Puppet::Error)
+        end
+      end
+    end
+  end
+
   describe 'with stringify_facts' do
     ['true',true].each do |value|
       context "set to #{value}" do
