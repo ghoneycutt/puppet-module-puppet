@@ -1,6 +1,6 @@
 {
   "name": "ghoneycutt-puppet",
-  "version": "2.14.1",
+  "version": "2.14.2",
   "author": "ghoneycutt",
   "summary": "Manage Puppet",
   "license": "Apache-2.0",
