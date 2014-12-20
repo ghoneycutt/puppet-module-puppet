@@ -155,7 +155,7 @@ Whether to run as a service or in cron mode. Valid values are `disable`, `cron`,
 
 run_interval
 ------------
-The interval with which the client should run (in minutes)
+The interval, in minutes, with which the client should run. If greater than 30, the agent will only run once per hour.
 
 - *Default*: 30
 
