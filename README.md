@@ -730,3 +730,57 @@ reportdir_purge_minute
 Minute past the hour in which to run the reportdir_purge_command.
 
 - *Default*: 15
+
+===
+
+## Class `puppet::passenger` ##
+
+### Parameters ###
+
+passenger_high_performance
+--------------------------
+Use high performance mode. Can be less compatible with other Apache modules.
+
+- *Default*: 'on'
+
+passenger_max_pool_size
+-----------------------
+Maximum number of Passenger application processes that may simultaneously run.
+
+- *Default*: 1.5 * number of cores
+
+passenger_max_requests
+----------------------
+Maximum number of request a Passenger application will process before being restarted.
+
+- *Default*: '1000'
+
+passenger_pool_idle_time
+------------------------
+Maximum number of seconds a Passenger Application process will be allowed to remain idle before being shut down.
+
+- *Default*: '600'
+
+passenger_stat_throttle_rate
+----------------------------
+How often Passenger performs file system checks, at most once every x seconds.
+
+- *Default*: '120'
+
+passenger_use_global_queue
+--------------------------
+Allows toggling of PassengerUseGlobalQueue.
+
+- *Default*: 'on'
+
+rack_autodetect
+---------------
+Should Passenger automatically detect if the document root of a virtual host is a Rack application.
+
+- *Default*: 'on'
+
+rails_autodetect
+----------------
+Should Passenger automatically detect if the document root of a virtual host is a Rails application.
+
+- *Default*: 'on'
