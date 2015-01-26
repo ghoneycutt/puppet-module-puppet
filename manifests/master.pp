@@ -5,28 +5,26 @@ class puppet::master (
   $rack_dir        = '/usr/share/puppet/rack/puppetmasterd',
   $puppet_user     = 'puppet',
   $manage_firewall = undef,
-  $vhost_path      = 'USE_DEFAULTS',
 ) {
 
   case $::osfamily {
     'RedHat': {
       $default_sysconfig_path = '/etc/sysconfig/puppetmaster'
       $sysconfig_template     = 'puppetmaster_sysconfig.erb'
-      $default_vhost_path     = '/etc/httpd/conf.d/puppetmaster.conf'
     }
     'Debian': {
       $default_sysconfig_path = '/etc/default/puppetmaster'
       $sysconfig_template     = 'puppetmaster_default.erb'
-      $default_vhost_path     = '/etc/apache2/sites-enabled/puppetmaster'
     }
     default: {
       fail("puppet::master supports osfamilies Debian and RedHat. Detected osfamily is <${::osfamily}>.")
     }
   }
 
+  include puppet::passenger
   include apache::mod::ssl
+  include apache::mod::headers
   include common
-  include passenger
   include puppet::lint
   include puppet::master::maintenance
 
@@ -36,13 +34,6 @@ class puppet::master (
     $sysconfig_path_real = $sysconfig_path
   }
   validate_absolute_path($sysconfig_path_real)
-
-  if $vhost_path == 'USE_DEFAULTS' {
-    $vhost_path_real = $default_vhost_path
-  } else {
-    $vhost_path_real = $vhost_path
-  }
-  validate_absolute_path($vhost_path_real)
 
   if $manage_firewall == true {
     firewall { '8140 open port 8140 for Puppet Master':
@@ -102,14 +93,31 @@ class puppet::master (
     mode   => '0644',
   }
 
-  file { 'puppetmaster_vhost':
-    ensure  => file,
-    path    => $vhost_path_real,
-    content => template('puppet/puppetmaster-vhost.conf.erb'),
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    require => File['httpd_vdir'],
-    notify  => Service['httpd'],
+  apache::vhost { 'puppetmaster':
+    servername          => $fqdn,
+    port                => '8140',
+    docroot             => "${rack_dir}/public",
+    ssl                 => true,
+    ssl_cipher          => "HIGH:!ADH:RC4+RSA:-MEDIUM:-LOW:-EXP",
+    ssl_cert            => "/var/lib/puppet/ssl/certs/${fqdn}.pem",
+    ssl_key             => "/var/lib/puppet/ssl/private_keys/${fqdn}.pem",
+    ssl_chain           => "/var/lib/puppet/ssl/ca/ca_crt.pem",
+    ssl_ca              => "/var/lib/puppet/ssl/ca/ca_crt.pem",
+    ssl_crl             => "/var/lib/puppet/ssl/ca/ca_crl.pem",
+    ssl_verify_client   => 'optional',
+    ssl_verify_depth    => '1',
+    ssl_options         => '+StdEnvVars +ExportCertData',
+    ssl_protocol        => 'All -SSLv2 -SSLv3',
+    directories         => {
+      path              => "${rack_dir}/",
+      options           => 'None',
+      passenger_enabled => 'on',
+    },
+    request_headers     => [
+      'unset X-Forwarded-For',
+      'set X-SSL-Subject %{SSL_CLIENT_S_DN}e',
+      'set X-Client-DN %{SSL_CLIENT_S_DN}e',
+      'set X-Client-Verify %{SSL_CLIENT_VERIFY}e',
+    ],
   }
 }

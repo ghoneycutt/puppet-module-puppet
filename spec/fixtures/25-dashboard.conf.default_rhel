@@ -1,0 +1,35 @@
+# ************************************
+# Vhost template in module puppetlabs-apache
+# Managed by Puppet
+# ************************************
+
+<VirtualHost *:3000>
+  ServerName puppet.example.com
+
+  ## Vhost docroot
+  DocumentRoot "/usr/share/puppet-dashboard/public/"
+
+
+
+  ## Directories, there should at least be a declaration for /usr/share/puppet-dashboard/public/
+
+
+  <Directory "/usr/share/puppet-dashboard/public/">
+    Options None
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+  </Directory>
+
+  ## Load additional static includes
+
+
+  ## Logging
+  ErrorLog "/var/log/puppet/dashboard_error.log"
+  LogLevel warn
+  ServerSignature Off
+  CustomLog "/var/log/puppet/dashboard_access.log" combined
+
+
+
+</VirtualHost>

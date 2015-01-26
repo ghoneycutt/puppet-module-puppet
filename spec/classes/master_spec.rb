@@ -144,19 +144,14 @@ describe 'puppet::master' do
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
+          :fqdn                   => 'my_fqdn.example.com',
         }
       end
 
       it { should contain_class('puppet::master') }
 
-      it { should contain_file('puppetmaster_vhost').with({
-          'ensure'  => 'file',
-          'path'    => '/etc/httpd/conf.d/puppetmaster.conf',
-          'owner'   => 'root',
-          'group'   => 'root',
-          'mode'    => '0644',
-        })
-      }
+      puppetmaster_fixture = File.read(fixtures("25-puppetmaster.conf.default_rhel"))
+      it { should contain_file('25-puppetmaster.conf').with_content(puppetmaster_fixture) }
     end
 
     context 'Puppetmaster vhost configuration file on osfamily Debian' do
@@ -165,72 +160,14 @@ describe 'puppet::master' do
           :operatingsystemrelease => '6.0.8',
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
+          :fqdn                   => 'my_fqdn.example.com',
         }
       end
 
       it { should contain_class('puppet::master') }
 
-      it { should contain_file('puppetmaster_vhost').with({
-          'ensure'  => 'file',
-          'path'    => '/etc/apache2/sites-enabled/puppetmaster',
-          'owner'   => 'root',
-          'group'   => 'root',
-          'mode'    => '0644',
-        })
-      }
-    end
-
-    context 'Puppetmaster vhost configuration file specified as param' do
-      let(:params) { { :vhost_path => '/usr/local/apache/conf.d/puppetmaster.conf' } }
-      let(:facts) do
-        { :osfamily               => 'RedHat',
-          :operatingsystemrelease => '6.4',
-          :concat_basedir         => '/tmp',
-          :puppet_reportdir       => '/var/lib/puppet/reports',
-        }
-      end
-
-      it { should contain_class('puppet::master') }
-
-      it { should contain_file('puppetmaster_vhost').with({
-          'ensure'  => 'file',
-          'path'    => '/usr/local/apache/conf.d/puppetmaster.conf',
-          'owner'   => 'root',
-          'group'   => 'root',
-          'mode'    => '0644',
-        })
-      }
-    end
-
-    context 'Puppetmaster vhost configuration file specified as invalid path' do
-      let(:params) { { :vhost_path => 'invalid/path/statement' } }
-      let(:facts) do
-        { :osfamily               => 'RedHat',
-          :operatingsystemrelease => '6.4',
-          :concat_basedir         => '/tmp',
-          :puppet_reportdir       => '/var/lib/puppet/reports',
-        }
-      end
-
-      it 'should fail' do
-        expect {
-          should contain_class('puppet::master')
-        }.to raise_error(Puppet::Error)
-      end
-    end
-
-    context 'Puppetmaster vhost configuration file content' do
-      let(:facts) do
-        { :osfamily               => 'RedHat',
-          :operatingsystemrelease => '6.4',
-          :concat_basedir         => '/tmp',
-          :puppet_reportdir       => '/var/lib/puppet/reports',
-        }
-      end
-
-      it { should contain_class('puppet::master') }
-
-      it { should contain_file('puppetmaster_vhost').with_content(/^\s*<Directory \/usr\/share\/puppet\/rack\/puppetmasterd\/>$/) }
+      puppetmaster_fixture = File.read(fixtures("25-puppetmaster.conf.default_debian"))
+      it { should contain_file('25-puppetmaster.conf').with_content(puppetmaster_fixture) }
     end
   end
 end
