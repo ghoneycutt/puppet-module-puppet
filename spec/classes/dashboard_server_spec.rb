@@ -190,6 +190,7 @@ describe 'puppet::dashboard::server' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :processorcount         => '8',
+          :concat_basedir         => '/tmp',
         }
       end
 
@@ -209,6 +210,7 @@ describe 'puppet::dashboard::server' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :processorcount         => '8',
+          :concat_basedir         => '/tmp',
         }
       end
 

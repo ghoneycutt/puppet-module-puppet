@@ -9,6 +9,7 @@ describe 'puppet::master' do
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
+          :processorcount         => '8',
         }
       end
 
@@ -26,6 +27,7 @@ describe 'puppet::master' do
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
+          :processorcount         => '8',
         }
       end
 
@@ -43,6 +45,7 @@ describe 'puppet::master' do
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
+          :processorcount         => '8',
         }
       end
 
@@ -57,6 +60,7 @@ describe 'puppet::master' do
           :operatingsystemrelease => '7',
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
+          :processorcount         => '8',
         }
       end
 
@@ -73,6 +77,7 @@ describe 'puppet::master' do
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
+          :processorcount         => '8',
         }
       end
 
@@ -90,6 +95,7 @@ describe 'puppet::master' do
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
+          :processorcount         => '8',
         }
       end
 
@@ -107,6 +113,7 @@ describe 'puppet::master' do
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
+          :processorcount         => '8',
         }
       end
 
@@ -125,6 +132,7 @@ describe 'puppet::master' do
           :operatingsystemrelease => '6.4',
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
+          :processorcount         => '8',
         }
       end
 
@@ -145,6 +153,7 @@ describe 'puppet::master' do
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
           :fqdn                   => 'my_fqdn.example.com',
+          :processorcount         => '8',
         }
       end
 
@@ -161,6 +170,7 @@ describe 'puppet::master' do
           :concat_basedir         => '/tmp',
           :puppet_reportdir       => '/var/lib/puppet/reports',
           :fqdn                   => 'my_fqdn.example.com',
+          :processorcount         => '8',
         }
       end
 
