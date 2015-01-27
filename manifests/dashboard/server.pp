@@ -32,12 +32,10 @@ class puppet::dashboard::server (
     'RedHat': {
       $default_database_config_group = $puppet::dashboard::dashboard_group_real
       $default_htpasswd_group        = 'apache'
-      $default_vhost_path            = '/etc/httpd/conf.d/dashboard.conf'
     }
     'Debian': {
       $default_database_config_group = 'www-data'
       $default_htpasswd_group        = 'www-data'
-      $default_vhost_path            = '/etc/apache2/sites-enabled/puppetdashboard'
 
       file { 'dashboard_workers_default':
         ensure  => file,
@@ -72,15 +70,8 @@ class puppet::dashboard::server (
     $htpasswd_group_real = $htpasswd_group
   }
 
-  if $vhost_path == 'USE_DEFAULTS' {
-    $vhost_path_real = $default_vhost_path
-  } else {
-    $vhost_path_real = $vhost_path
-  }
-  validate_absolute_path($vhost_path_real)
-
-  require 'passenger'
   include puppet::dashboard::maintenance
+  include puppet::passenger
 
   case type($manage_mysql_options) {
     'boolean': {
@@ -125,6 +116,68 @@ class puppet::dashboard::server (
     }
   }
 
+  if $security == 'htpasswd' {
+    # The custom fragment is needed as there is no support for Limits in directories in the apache module
+    apache::vhost { 'dashboard':
+      servername      => $dashboard_fqdn,
+      port            => $port,
+      docroot         => '/usr/share/puppet-dashboard/public/',
+      docroot_owner   => 'puppet-dashboard',
+      docroot_group   => 'puppet-dashboard',
+      logroot         => "${log_dir}",
+      error_log_file  => "dashboard_error.log",
+      log_level       => 'warn',
+      custom_fragment => '    <Location /reports/upload>
+        <Limit POST>
+           Order allow,deny
+           Allow from all
+           Satisfy any
+        </Limit>
+    </Location>
+
+   <Location /nodes>
+       <Limit GET>
+           Order allow,deny
+           Allow from all
+           Satisfy any
+       </Limit>
+   </Location>',
+      directories    => [
+        { 'path'     => '/usr/share/puppet-dashboard/public/',
+          'provider' => 'directory',
+          'options'  => 'None',
+        },
+        { 'path'                => '/',
+          'provider'            => 'location',
+          'auth_type'           => 'basic',
+          'auth_name'           => 'Puppet Dashboard',
+          'auth_require'        => 'valid-user',
+          'auth_basic_provider' => 'file',
+          'auth_user_file'      => $htpasswd_path,
+          'order'               => ['deny','allow'],
+        },
+      ],
+    }
+
+  } else {
+    apache::vhost { 'dashboard':
+      servername     => $dashboard_fqdn,
+      port           => $port,
+      docroot        => '/usr/share/puppet-dashboard/public/',
+      docroot_owner  => 'puppet-dashboard',
+      docroot_group  => 'puppet-dashboard',
+      logroot        => "${log_dir}",
+      error_log_file => "dashboard_error.log",
+      log_level      => 'warn',
+      directories    => [
+        { 'path'     => '/usr/share/puppet-dashboard/public/',
+          'provider' => 'directory',
+          'options'  => 'None',
+        },
+      ],
+    }
+  }
+
   file { 'database_config':
     ensure  => file,
     content => template('puppet/database.yml.erb'),
@@ -133,19 +186,6 @@ class puppet::dashboard::server (
     group   => $database_config_group_real,
     mode    => $database_config_mode,
     require => Package[$puppet::dashboard::dashboard_package],
-  }
-
-  file { 'dashboard_vhost':
-    ensure  => file,
-    path    => $vhost_path_real,
-    content => template('puppet/dashboard-vhost.conf.erb'),
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    require => [ File['httpd_vdir'],       # apache
-#                Exec['compile-passenger'], # passenger
-                ],
-    notify  => Service['httpd'],           # apache
   }
 
   mysql::db { 'dashboard':

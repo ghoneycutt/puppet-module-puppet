@@ -190,6 +190,7 @@ describe 'puppet::dashboard::server' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :processorcount         => '8',
+          :concat_basedir         => '/tmp',
         }
       end
 
@@ -209,6 +210,7 @@ describe 'puppet::dashboard::server' do
         { :osfamily               => 'RedHat',
           :operatingsystemrelease => '6.4',
           :processorcount         => '8',
+          :concat_basedir         => '/tmp',
         }
       end
 
@@ -248,25 +250,6 @@ describe 'puppet::dashboard::server' do
   end
 
   describe 'Dashboard vhost configuration file content' do
-    context 'when vhost_path is invalid it should fail' do
-      let(:params) { { :vhost_path => 'not/a/valid/path' } }
-      let(:facts) do
-        { :osfamily               => 'RedHat',
-          :operatingsystemrelease => '6.4',
-          :ports_file             => '/etc/httpd/ports.conf"',
-          :processorcount         => '8',
-          :concat_basedir         => '/tmp',
-          :domain                 => 'example.com',
-        }
-      end
-
-      it do
-        expect {
-          should contain_class('puppet::dashboard')
-        }.to raise_error(Puppet::Error)
-      end
-    end
-
     context 'when htpasswd_path is invalid it should fail' do
       let(:params) { { :htpasswd_path => 'not/a/valid/path' } }
       let(:facts) do
@@ -318,7 +301,8 @@ describe 'puppet::dashboard::server' do
 
       it { should contain_class('puppet::dashboard::server') }
 
-      it { should contain_file('dashboard_vhost').with_content(/^\s*ServerName puppet.example.com$/) }
+      dashboard_fixture = File.read(fixtures("25-dashboard.conf.default_rhel"))
+      it { should contain_file('25-dashboard.conf').with_content(dashboard_fixture) }
     end
 
     context 'with security set to none' do
@@ -329,14 +313,14 @@ describe 'puppet::dashboard::server' do
           :ports_file             => '/etc/httpd/ports.conf"',
           :processorcount         => '8',
           :concat_basedir         => '/tmp',
+          :domain                 => 'example.com',
         }
       end
 
       it { should contain_class('puppet::dashboard::server') }
 
-      it { should contain_file('dashboard_vhost') }
-
-      it { should_not contain_file('dashboard_vhost').with_content(/(\s+|)AuthType(\s+)basic(\s*)/) }
+      dashboard_fixture = File.read(fixtures("25-dashboard.conf.default_rhel"))
+      it { should contain_file('25-dashboard.conf').with_content(dashboard_fixture) }
     end
 
     context 'with security set to htpasswd' do
@@ -347,12 +331,14 @@ describe 'puppet::dashboard::server' do
           :ports_file             => '/etc/httpd/ports.conf"',
           :processorcount         => '8',
           :concat_basedir         => '/tmp',
+          :domain                 => 'example.com'
         }
       end
 
       it { should contain_class('puppet::dashboard::server') }
 
-      it { should contain_file('dashboard_vhost').with_content(/(\s+|)AuthType(\s+)basic(\s*)/) }
+      dashboard_fixture = File.read(fixtures("25-dashboard.conf.htpasswd_rhel"))
+      it { should contain_file('25-dashboard.conf').with_content(dashboard_fixture) }
     end
   end
 
@@ -413,52 +399,6 @@ describe 'puppet::dashboard::server' do
     it { should contain_class('puppet::dashboard::server') }
 
     it { should contain_file('database_config').with_content(/^\s*username: dashboard$/) }
-  end
-
-  context 'Dashboard vhost configuration file on osfamily RedHat' do
-    let(:facts) do
-      { :osfamily               => 'RedHat',
-        :operatingsystemrelease => '6.4',
-        :ports_file             => '/etc/httpd/ports.conf"',
-        :processorcount         => '8',
-        :concat_basedir         => '/tmp',
-        :domain                 => 'example.com',
-      }
-    end
-
-    it { should contain_class('puppet::dashboard::server') }
-
-    it { should contain_file('dashboard_vhost').with({
-        'ensure'  => 'file',
-        'path'    => '/etc/httpd/conf.d/dashboard.conf',
-        'owner'   => 'root',
-        'group'   => 'root',
-        'mode'    => '0644',
-      })
-    }
-  end
-
-  context 'Dashboard vhost configuration file on osfamily Debian' do
-    let(:facts) do
-      { :osfamily               => 'Debian',
-        :operatingsystemrelease => '6.0.8',
-        :ports_file             => '/etc/httpd/ports.conf"',
-        :processorcount         => '8',
-        :concat_basedir         => '/tmp',
-        :domain                 => 'example.com',
-      }
-    end
-
-    it { should contain_class('puppet::dashboard::server') }
-
-    it { should contain_file('dashboard_vhost').with({
-        'ensure'  => 'file',
-        'path'    => '/etc/apache2/sites-enabled/puppetdashboard',
-        'owner'   => 'root',
-        'group'   => 'root',
-        'mode'    => '0644',
-      })
-    }
   end
 
   context 'Dashboard Mysql Database' do

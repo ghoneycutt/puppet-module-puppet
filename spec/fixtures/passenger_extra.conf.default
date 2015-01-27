@@ -1,0 +1,12 @@
+# The Passanger Apache module configuration file is being
+# managed by Puppet and changes will be overwritten.
+<IfModule mod_passenger.c>
+  PassengerHighPerformance on
+  PassengerMaxPoolSize 6
+  PassengerPoolIdleTime 600
+  PassengerMaxRequests 1000
+  PassengerStatThrottleRate 120
+  RackAutoDetect on
+  RailsAutoDetect on
+  PassengerUseGlobalQueue on
+</IfModule>

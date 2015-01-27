@@ -1,0 +1,56 @@
+# ************************************
+# Vhost template in module puppetlabs-apache
+# Managed by Puppet
+# ************************************
+
+<VirtualHost *:8140>
+  ServerName my_fqdn.example.com
+
+  ## Vhost docroot
+  DocumentRoot "/usr/share/puppet/rack/puppetmasterd/public"
+
+
+
+  ## Directories, there should at least be a declaration for /usr/share/puppet/rack/puppetmasterd/public
+
+
+  <Directory "/usr/share/puppet/rack/puppetmasterd/">
+    Options None
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+    PassengerEnabled on
+  </Directory>
+
+  ## Load additional static includes
+
+
+  ## Logging
+  ErrorLog "/var/log/httpd/puppetmaster_error_ssl.log"
+  ServerSignature Off
+  CustomLog "/var/log/httpd/puppetmaster_access_ssl.log" combined
+
+
+
+
+  ## SSL directives
+  SSLEngine on
+  SSLCertificateFile      "/var/lib/puppet/ssl/certs/my_fqdn.example.com.pem"
+  SSLCertificateKeyFile   "/var/lib/puppet/ssl/private_keys/my_fqdn.example.com.pem"
+  SSLCertificateChainFile "/var/lib/puppet/ssl/ca/ca_crt.pem"
+  SSLCACertificatePath    "/etc/pki/tls/certs"
+  SSLCACertificateFile    "/var/lib/puppet/ssl/ca/ca_crt.pem"
+  SSLCARevocationFile     "/var/lib/puppet/ssl/ca/ca_crl.pem"
+  SSLProtocol             All -SSLv2 -SSLv3
+  SSLCipherSuite          HIGH:!ADH:RC4+RSA:-MEDIUM:-LOW:-EXP
+  SSLVerifyClient         optional
+  SSLVerifyDepth          1
+  SSLOptions +StdEnvVars +ExportCertData
+
+  ## Request header rules
+  ## as per http://httpd.apache.org/docs/2.2/mod/mod_headers.html#requestheader
+  RequestHeader unset X-Forwarded-For
+  RequestHeader set X-SSL-Subject %{SSL_CLIENT_S_DN}e
+  RequestHeader set X-Client-DN %{SSL_CLIENT_S_DN}e
+  RequestHeader set X-Client-Verify %{SSL_CLIENT_VERIFY}e
+</VirtualHost>
