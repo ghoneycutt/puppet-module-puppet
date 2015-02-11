@@ -16,6 +16,29 @@ describe 'puppet::master::maintenance' do
         })
       }
     end
+
+    context 'with reportdir_purge_ensure set to invalid value' do
+      let(:facts) { { :puppet_reportdir => '/var/lib/puppet/reports', } }
+      let(:params) { { :reportdir_purge_ensure => 'installed', } }
+
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::master::maintenance')
+        }.to raise_error(Puppet::Error,/^reportdir_purge_ensure must be 'present' or 'absent'. Detected value is <installed>/)
+      end
+    end
+
+    context 'with clientbucket_cleanup_ensure set to invalid value' do
+      let(:facts) { { :puppet_reportdir => '/var/lib/puppet/reports', } }
+      let(:params) { { :clientbucket_cleanup_ensure => 'installed', } }
+
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::master::maintenance')
+        }.to raise_error(Puppet::Error,/^clientbucket_cleanup_ensure must be 'present' or 'absent'. Detected value is <installed>/)
+      end
+    end
+
   end
 
   describe 'clientbucket cleanup' do
@@ -110,6 +133,23 @@ describe 'puppet::master::maintenance' do
         })
       }
     end
+
+    context 'with clientbucket_cleanup_ensure set to absent' do
+      let(:facts) do
+        { :puppet_reportdir => '/var/lib/puppet/reports', }
+      end
+      let(:params) do
+        { :clientbucket_cleanup_ensure => 'absent', }
+      end
+
+      it { should contain_class('puppet::master::maintenance') }
+
+      it { should contain_cron('filebucket_cleanup').with({
+          'ensure'  => 'absent'
+        })
+      }
+    end
+
   end
 
   describe 'purge reportdir' do
@@ -263,5 +303,23 @@ describe 'puppet::master::maintenance' do
         })
       }
     end
+
+    context 'with purge_old_puppet_reports set to absent' do
+      let(:facts) do
+        { :puppet_reportdir => '/var/lib/puppet/reports', }
+      end
+      let(:params) do
+        { :reportdir_purge_ensure => 'absent', }
+      end
+
+      it { should contain_class('puppet::master::maintenance') }
+
+      it { should contain_cron('purge_old_puppet_reports').with({
+          'ensure'  => 'absent'
+        })
+      }
+
+    end
+
   end
 end
