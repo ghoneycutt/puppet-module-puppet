@@ -18,6 +18,100 @@ describe 'puppet::master::maintenance' do
     end
   end
 
+  describe 'clientbucket cleanup' do
+    context 'with default settings' do
+      let(:facts) { { :puppet_reportdir => '/var/lib/puppet/reports' } }
+
+      it { should contain_class('puppet::master::maintenance') }
+
+      it { should contain_cron('filebucket_cleanup').with({
+          'ensure'  => 'present',
+          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'user'    => 'root',
+          'hour'    => '0',
+          'minute'  => '0',
+        })
+      }
+    end
+
+    context 'with non-default user' do
+      let(:facts) { { :puppet_reportdir => '/var/lib/puppet/reports' } }
+      let(:params) do
+        { :filebucket_cleanup_user => 'gh', }
+      end
+
+      it { should contain_class('puppet::master::maintenance') }
+
+      it { should contain_cron('filebucket_cleanup').with({
+          'ensure'  => 'present',
+          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'user'    => 'gh',
+          'hour'    => '0',
+          'minute'  => '0',
+        })
+      }
+    end
+
+    context 'with non-default path' do
+      let(:facts) { { :puppet_reportdir => '/var/lib/puppet/reports' } }
+      let(:params) do
+        { :clientbucket_path => '/var/lib/puppet/filebucket/', }
+      end
+
+      it { should contain_class('puppet::master::maintenance') }
+
+      it { should contain_cron('filebucket_cleanup').with({
+          'ensure'  => 'present',
+          'command' => '/usr/bin/find /var/lib/puppet/filebucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'user'    => 'root',
+          'hour'    => '0',
+          'minute'  => '0',
+        })
+      }
+    end
+
+    context 'with non-default number of days to keep' do
+      let(:facts) { { :puppet_reportdir => '/var/lib/puppet/reports' } }
+      let(:params) do
+        {
+          :clientbucket_days_to_keep => '20',
+        }
+      end
+
+      it { should contain_class('puppet::master::maintenance') }
+
+      it { should contain_cron('filebucket_cleanup').with({
+          'ensure'  => 'present',
+          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +20 -exec /bin/rm -fr {} \;',
+          'user'    => 'root',
+          'hour'    => '0',
+          'minute'  => '0',
+        })
+      }
+    end
+
+    context 'with non-default hour and minute set' do
+      let(:facts) { { :puppet_reportdir => '/var/lib/puppet/reports' } }
+      let(:params) do
+        {
+          :filebucket_cleanup_hour   => '2',
+          :filebucket_cleanup_minute => '30',
+        }
+      end
+
+      it { should contain_class('puppet::master::maintenance') }
+
+      it { should contain_cron('filebucket_cleanup').with({
+          'ensure'  => 'present',
+          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'user'    => 'root',
+          'hour'    => '2',
+          'minute'  => '30',
+        })
+      }
+    end
+  end
+
   describe 'purge reportdir' do
     context 'with default settings for params' do
       let(:facts) do
