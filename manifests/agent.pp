@@ -183,12 +183,11 @@ class puppet::agent (
   }
   validate_bool($symlink_puppet_binary_bool)
 
+  validate_absolute_path($puppet_binary)
+  validate_absolute_path($symlink_puppet_binary_target)
+
   # optionally create symlinks to puppet binary
   if $symlink_puppet_binary_bool == true {
-
-    # validate params
-    validate_absolute_path($symlink_puppet_binary_target)
-    validate_absolute_path($puppet_binary)
 
     file { 'puppet_symlink':
       ensure => link,
