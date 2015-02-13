@@ -96,7 +96,7 @@ describe 'puppet::master' do
       it 'should fail' do
         expect {
           should contain_class('puppet::master')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/^"invalid\/path\/statement" is not an absolute path./)
       end
     end
 
@@ -215,7 +215,7 @@ describe 'puppet::master' do
       it 'should fail' do
         expect {
           should contain_class('puppet::master')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/^"invalid\/path\/statement" is not an absolute path./)
       end
     end
 
