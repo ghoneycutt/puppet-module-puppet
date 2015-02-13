@@ -185,7 +185,7 @@ describe 'puppet::agent' do
         it 'should fail' do
           expect {
             should contain_class('puppet::agent')
-          }.to raise_error(Puppet::Error)
+          }.to raise_error(Puppet::Error,/^undefined method `to_i'/)
         end
       end
     end
@@ -232,7 +232,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/^str2bool\(\): Unknown type of boolean given/)
       end
     end
   end
@@ -388,22 +388,30 @@ describe 'puppet::agent' do
     end
 
     context 'enabled with invalid puppet_binary' do
+      let(:facts) { { :osfamily => 'Debian' } }
       let(:params) { {:env => 'production',
                       :symlink_puppet_binary => true,
-                      :puppet_binary => 'true',
+                      :puppet_binary => 'invalid/path',
                       :symlink_puppet_binary_target => '/bar' } }
-      it do
-        expect { should }.to raise_error(Puppet::Error)
+
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::master')
+        }.to raise_error(Puppet::Error,/^"invalid\/path" is not an absolute path./)
       end
     end
 
     context 'enabled with invalid symlink_puppet_binary_target' do
+      let(:facts) { { :osfamily => 'Debian' } }
       let(:params) { {:env => 'production',
                       :symlink_puppet_binary => true,
                       :puppet_binary => '/foo/bar',
-                      :symlink_puppet_binary_target => 'undef' } }
-      it do
-        expect { should }.to raise_error(Puppet::Error)
+                      :symlink_puppet_binary_target => 'invalid/path' } }
+
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::master')
+        }.to raise_error(Puppet::Error,/^"invalid\/path" is not an absolute path./)
       end
     end
   end
@@ -469,7 +477,7 @@ describe 'puppet::agent' do
         it 'should fail' do
           expect {
             should contain_class('puppet::agent')
-          }.to raise_error(Puppet::Error)
+          }.to raise_error(Puppet::Error,/^\["invalid_type", "not_a_string", "not_a_boolean"\] is not a boolean./)
         end
 
       end
@@ -486,7 +494,7 @@ describe 'puppet::agent' do
         it 'should fail' do
           expect {
             should contain_class('puppet::agent')
-          }.to raise_error(Puppet::Error)
+          }.to raise_error(Puppet::Error,/^str2bool\(\): Unknown type of boolean given/)
         end
       end
 
@@ -582,7 +590,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/^undefined method `to_i'/)
       end
     end
   end
@@ -634,7 +642,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/^str2bool\(\): Unknown type of boolean given/)
       end
     end
   end
@@ -688,7 +696,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/chomp/)
       end
     end
   end
@@ -715,7 +723,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/^undefined method `to_i'/)
       end
     end
     context 'set to an invalid value' do

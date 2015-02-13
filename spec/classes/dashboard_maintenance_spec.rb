@@ -73,7 +73,7 @@ describe 'puppet::dashboard::maintenance' do
       it do
         expect {
           should contain_class('puppet::dashboard::maintenance')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/^"invalid\/path\/statement" is not an absolute path./)
       end
     end
 
@@ -133,7 +133,7 @@ describe 'puppet::dashboard::maintenance' do
       it do
         expect {
           should contain_class('puppet::dashboard::maintenance')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/^str2bool\(\): Unknown type of boolean/)
       end
     end
 
@@ -150,7 +150,7 @@ describe 'puppet::dashboard::maintenance' do
       it do
         expect {
           should contain_class('puppet::dashboard::maintenance')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/^\["invalid_type", "not_a_string", "not_a_boolean"\] is not a boolean./)
       end
     end
 
@@ -225,7 +225,7 @@ describe 'puppet::dashboard::maintenance' do
     end
 
     context 'with reports_spool_dir set to an invalid path' do
-      let(:params) { {:reports_spool_dir=> 'invalid/path/param' }}
+      let(:params) { {:reports_spool_dir=> 'invalid/path/statement' } }
       let(:facts) do
         { :osfamily               => 'RedHat',
           :concat_basedir         => '/tmp',
@@ -237,7 +237,7 @@ describe 'puppet::dashboard::maintenance' do
       it do
         expect {
           should contain_class('puppet::dashboard::maintenance')
-        }.to raise_error(Puppet::Error)
+        }.to raise_error(Puppet::Error,/^"invalid\/path\/statement" is not an absolute path./)
       end
     end
 

@@ -234,7 +234,7 @@ describe 'puppet::master::maintenance' do
         it do
           expect {
             should contain_class('puppet::master::maintenance')
-          }.to raise_error(Puppet::Error)
+          }.to raise_error(Puppet::Error,/^"invalid\/path" is not an absolute path./)
         end
       end
     end
