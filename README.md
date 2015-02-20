@@ -657,11 +657,22 @@ Whether to manage the firewall settings on the client
 
 ## Class `puppet::master::maintenance` ##
 
+If you have a cluster of puppet masters mounting the same data, you should
+disable these cronjobs on all systems except for one to ensure they are not all
+cleaning up the same data.
+
+```
+puppet::master::maintenance::clientbucket_cleanup_ensure: 'absent'
+puppet::master::maintenance::reportdir_purge_ensure: 'absent'
+```
+
 ### Parameters ###
 
 clientbucket_cleanup_ensure
 ---------------------------
-String for ensure parameter for filebucket_cleanup cron job
+String for ensure parameter for filebucket_cleanup cron job.
+
+- *Default*: 'present'
 
 clientbucket_path
 -----------------
@@ -700,8 +711,10 @@ Minute at which to run the filebucket cleanup.
 - *Default*: 0
 
 reportdir_purge_ensure
----------------------------
-String for ensure parameter for purge_old_puppet_reports cron job
+----------------------
+String for ensure parameter for purge_old_puppet_reports cron job.
+
+- *Default*: 'present'
 
 reportdir
 ---------
