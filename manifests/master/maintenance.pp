@@ -1,21 +1,27 @@
 # == Class: puppet::master::maintenance
 #
 class puppet::master::maintenance (
-  $clientbucket_path          = '/var/lib/puppet/clientbucket/',
-  $clientbucket_days_to_keep  = '30',
-  $filebucket_cleanup_command = '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
-  $filebucket_cleanup_user    = 'root',
-  $filebucket_cleanup_hour    = '0',
-  $filebucket_cleanup_minute  = '0',
-  $reportdir                   = $::puppet_reportdir,
-  $reportdir_days_to_keep      = '30',
-  $reportdir_purge_command     = '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
-  $reportdir_purge_user        = 'root',
-  $reportdir_purge_hour        = '0',
-  $reportdir_purge_minute      = '15',
+  $clientbucket_cleanup_ensure  = 'present',
+  $clientbucket_path            = '/var/lib/puppet/clientbucket/',
+  $clientbucket_days_to_keep    = '30',
+  $filebucket_cleanup_command   = '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+  $filebucket_cleanup_user      = 'root',
+  $filebucket_cleanup_hour      = '0',
+  $filebucket_cleanup_minute    = '0',
+  $reportdir_purge_ensure       = 'present',
+  $reportdir                    = $::puppet_reportdir,
+  $reportdir_days_to_keep       = '30',
+  $reportdir_purge_command      = '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
+  $reportdir_purge_user         = 'root',
+  $reportdir_purge_hour         = '0',
+  $reportdir_purge_minute       = '15',
 ) {
 
   validate_absolute_path($reportdir)
+
+  validate_re($clientbucket_cleanup_ensure, '^(present|absent)$', "clientbucket_cleanup_ensure must be 'present' or 'absent'. Detected value is <${clientbucket_cleanup_ensure}>")
+
+  validate_re($reportdir_purge_ensure, '^(present|absent)$', "reportdir_purge_ensure must be 'present' or 'absent'. Detected value is <${reportdir_purge_ensure}>")
 
   # if not using the defaults, then construct the command with variables, else
   # use the default command
@@ -26,7 +32,7 @@ class puppet::master::maintenance (
   }
 
   cron { 'filebucket_cleanup':
-    ensure  => present,
+    ensure  => $clientbucket_cleanup_ensure,
     command => $my_filebucket_cleanup_command,
     user    => $filebucket_cleanup_user,
     hour    => $filebucket_cleanup_hour,
@@ -44,10 +50,11 @@ class puppet::master::maintenance (
   }
 
   cron { 'purge_old_puppet_reports':
-    ensure  => present,
+    ensure  => $reportdir_purge_ensure,
     command => $my_reportdir_purge_command,
     user    => $reportdir_purge_user,
     hour    => $reportdir_purge_hour,
     minute  => $reportdir_purge_minute,
   }
+
 }
