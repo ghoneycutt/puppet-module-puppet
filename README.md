@@ -659,6 +659,10 @@ Whether to manage the firewall settings on the client
 
 ### Parameters ###
 
+clientbucket_cleanup_ensure
+---------------------------
+String for ensure parameter for filebucket_cleanup cron job
+
 clientbucket_path
 -----------------
 Path to where the clientbucket files are stored.
@@ -694,6 +698,10 @@ filebucket_cleanup_minute
 Minute at which to run the filebucket cleanup.
 
 - *Default*: 0
+
+reportdir_purge_ensure
+---------------------------
+String for ensure parameter for purge_old_puppet_reports cron job
 
 reportdir
 ---------
