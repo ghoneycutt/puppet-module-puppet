@@ -50,7 +50,7 @@ Defaults:root !requiretty
 
 ## Compatibility ##
 -------------------
-Ruby versions 1.8.7, 1.9.3, and 2.0.0 on Puppet 3.x
+Ruby versions 1.8.7, 1.9.3, 2.0.0 and 2.1.0 on Puppet v3.
 
 ### Puppet Master
 -----------------
