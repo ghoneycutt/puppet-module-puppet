@@ -72,7 +72,7 @@ class puppet::dashboard::maintenance (
     minute  => $purge_old_reports_minute,
   }
 
-  if type($remove_old_reports_spool) == 'string' {
+  if is_string($remove_old_reports_spool) {
     $enable_remove_old_reports_spool = str2bool($remove_old_reports_spool)
   } else {
     $enable_remove_old_reports_spool = $remove_old_reports_spool
