@@ -82,17 +82,14 @@ class puppet::dashboard::server (
   require 'passenger'
   include puppet::dashboard::maintenance
 
-  case type($manage_mysql_options) {
-    'boolean': {
+  if is_bool($manage_mysql_options) {
       $manage_mysql_options_real = $manage_mysql_options
-    }
-    'string': {
+  } elsif is_string($manage_mysql_options) {
       $manage_mysql_options_real = str2bool($manage_mysql_options)
-    }
-    default: {
+  } else {
       fail("puppet::dashboard::server::manage_mysql_options supports booleans only and is <${manage_mysql_options}>.")
-    }
   }
+  
 
   if $manage_mysql_options_real == true {
     class { 'mysql::server':
