@@ -33,21 +33,21 @@ class puppet::agent (
   $etckeeper_hooks              = false,
 ) {
 
-  if type($run_in_noop) == 'String' {
+  if is_string($run_in_noop) {
     $run_in_noop_bool = str2bool($run_in_noop)
   } else {
     $run_in_noop_bool = $run_in_noop
   }
   validate_bool($run_in_noop_bool)
 
-  if type($run_at_boot) == 'String' {
+  if is_string($run_at_boot) {
     $run_at_boot_bool = str2bool($run_at_boot)
   } else {
     $run_at_boot_bool = $run_at_boot
   }
   validate_bool($run_at_boot_bool)
 
-  if type($is_puppet_master) == 'String' {
+  if is_string($is_puppet_master) {
     $is_puppet_master_bool = str2bool($is_puppet_master)
   } else {
     $is_puppet_master_bool = $is_puppet_master
@@ -63,14 +63,14 @@ class puppet::agent (
     fail("puppet::agent::puppet_masterport is set to <${puppet_masterport}>. It should be an integer.")
   }
 
-  if type($stringify_facts) == 'string' {
+  if is_string($stringify_facts) {
     $stringify_facts_bool = str2bool($stringify_facts)
   } else {
     $stringify_facts_bool = $stringify_facts
   }
   validate_bool($stringify_facts_bool)
 
-  if type($etckeeper_hooks) == 'String' {
+  if is_string($etckeeper_hooks) {
     $etckeeper_hooks_bool = str2bool($etckeeper_hooks)
   } else {
     $etckeeper_hooks_bool = $etckeeper_hooks
@@ -176,7 +176,7 @@ class puppet::agent (
     $at_boot_ensure = 'absent'
   }
 
-  if type($symlink_puppet_binary) == 'string' {
+  if is_string($symlink_puppet_binary) {
     $symlink_puppet_binary_bool = str2bool($symlink_puppet_binary)
   } else {
     $symlink_puppet_binary_bool = $symlink_puppet_binary
