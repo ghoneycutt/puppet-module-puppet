@@ -281,8 +281,7 @@ describe 'puppet::dashboard::maintenance' do
       }
     end
 
-    context 'with dump_database_command specified' do
-      let(:params) { {:dump_database_command => '/foo/bar' } }
+    describe 'with dump_database_command specified' do
       let(:facts) do
         { :osfamily               => 'RedHat',
           :concat_basedir         => '/tmp',
@@ -291,15 +290,69 @@ describe 'puppet::dashboard::maintenance' do
         }
       end
 
-      it { should contain_class('puppet::dashboard::maintenance') }
+      ['/usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production reports:prune upto=12 unit=hours','/foo/bar'].each do |value|
+        context "to valid #{value} (as #{value.class})" do
+          let (:params) {{'dump_database_command' => value }}
 
-      it { should contain_cron('dump_dashboard_database').with({
-          'command'  => '/foo/bar',
-          'user'     => 'root',
-          'hour'     => '1',
-          'minute'   => '0',
-        })
-      }
+          it { should contain_cron('dump_dashboard_database').with({
+              'command'  => "#{value}",
+              'user'     => 'root',
+              'hour'     => '1',
+              'minute'   => '0',
+            })
+          }
+        end
+      end
+
+      [true,['array'],a = { 'ha' => 'sh' }].each do |value|
+        context "to invalid #{value} (as #{value.class})" do
+          let (:params) {{'dump_database_command' => value }}
+
+          it 'should fail' do
+            expect {
+              should contain_class('puppet::dashboard::maintenance')
+            }.to raise_error(Puppet::Error,/is not a string.  It looks to be a/)
+          end
+        end
+      end
+
+    end
+
+    describe 'with reports_days_to_keep specified' do
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :concat_basedir         => '/tmp',
+          :max_allowed_packet     => 32,
+          :operatingsystemrelease => '6.4',
+        }
+      end
+
+      [242,'42'].each do |value|
+        context "to valid #{value} (as #{value.class})" do
+          let (:params) {{'reports_days_to_keep' => value }}
+
+          it { should contain_cron('purge_old_reports').with({
+              'command'  => "/usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production reports:prune upto=#{value} unit=day >> /var/log/puppet/dashboard_maintenance.log",
+              'user'     => 'root',
+              'hour'     => '0',
+              'minute'   => '30',
+            })
+          }
+        end
+      end
+
+      [2.42,true,'string',['array'],a = { 'ha' => 'sh' }].each do |value|
+        context "to invalid #{value} (as #{value.class})" do
+          let (:params) {{'reports_days_to_keep' => value }}
+
+          it 'should fail' do
+            expect {
+              should contain_class('puppet::dashboard::maintenance')
+            }.to raise_error(Puppet::Error,/validate_integer\(\)/)
+          end
+        end
+      end
+
     end
 
     context 'Dashboard database backup cleanup' do
