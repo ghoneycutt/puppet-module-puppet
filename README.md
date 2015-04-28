@@ -213,6 +213,12 @@ The name the puppet agent daemon should run as.
 
 - *Default*: puppet
 
+ssldir
+------
+String for ssldir in puppet agent's config.
+
+- *Default*: '$vardir/ssl'
+
 stringify_facts
 ---------------
 Boolean to set the value of stringify_facts main section of the puppet agent's config. This must be set to true to use structured facts.
