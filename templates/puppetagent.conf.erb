@@ -12,7 +12,7 @@
 
     # Where SSL certificates are kept.
     # The default value is '$confdir/ssl'.
-    ssldir = $vardir/ssl
+    ssldir = <%= @ssldir_real %>
 
     archive_files = true
     archive_file_server = <%= @puppet_server %>
