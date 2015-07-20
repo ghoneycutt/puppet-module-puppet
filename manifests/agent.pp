@@ -18,14 +18,14 @@ class puppet::agent (
   $http_proxy_host              = 'UNSET',
   $http_proxy_port              = 'UNSET',
   $is_puppet_master             = false,
-  $run_method                   = 'service',
-  $run_interval                 = '30',
-  $run_in_noop                  = false,
-  $cron_command                 = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
-  $run_at_boot                  = true,
   $puppet_binary                = '/usr/bin/puppet',
   $symlink_puppet_binary_target = '/usr/local/bin/puppet',
   $symlink_puppet_binary        = false,
+  $run_method                   = 'service',
+  $run_interval                 = '30',
+  $run_in_noop                  = false,
+  $cron_command                 = 'USE_DEFAULTS',
+  $run_at_boot                  = true,
   $agent_sysconfig              = 'USE_DEFAULTS',
   $agent_sysconfig_ensure       = 'USE_DEFAULTS',
   $daemon_name                  = 'puppet',
@@ -107,6 +107,14 @@ class puppet::agent (
     }
   }
 
+  validate_absolute_path($puppet_binary)
+
+  if $cron_command == 'USE_DEFAULTS' {
+    $cron_command_real = "${puppet_binary} agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay"
+  } else {
+    $cron_command_real = $cron_command
+  }
+
   if $agent_sysconfig == 'USE_DEFAULTS' {
     $agent_sysconfig_real = $default_agent_sysconfig
   } else {
@@ -127,13 +135,13 @@ class puppet::agent (
 
   case $run_method {
     'service': {
-      $daemon_ensure    = 'running'
-      $daemon_enable    = true
-      $cron_ensure      = 'absent'
-      $my_cron_command  = undef
-      $cron_user        = undef
-      $cron_hour        = undef
-      $cron_minute      = undef
+      $daemon_ensure   = 'running'
+      $daemon_enable   = true
+      $cron_ensure     = 'absent'
+      $my_cron_command = undef
+      $cron_user       = undef
+      $cron_hour       = undef
+      $cron_minute     = undef
     }
     'cron': {
       $daemon_ensure = 'stopped'
@@ -151,19 +159,19 @@ class puppet::agent (
       }
 
       if $run_in_noop_bool == true {
-        $my_cron_command = "${cron_command} --noop"
+        $my_cron_command = "${cron_command_real} --noop"
       } else {
-        $my_cron_command = $cron_command
+        $my_cron_command = $cron_command_real
       }
     }
     'disable': {
-      $daemon_ensure    = 'stopped'
-      $daemon_enable    = false
-      $cron_ensure      = 'absent'
-      $my_cron_command  = undef
-      $cron_user        = undef
-      $cron_hour        = undef
-      $cron_minute      = undef
+      $daemon_ensure   = 'stopped'
+      $daemon_enable   = false
+      $cron_ensure     = 'absent'
+      $my_cron_command = undef
+      $cron_user       = undef
+      $cron_hour       = undef
+      $cron_minute     = undef
     }
     default: {
       fail("puppet::agent::run_method is ${run_method} and must be 'disable', 'service' or 'cron'.")
