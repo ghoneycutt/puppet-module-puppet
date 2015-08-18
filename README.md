@@ -446,8 +446,11 @@ How many days to keep the reports.
 purge_old_reports_command
 -------------------------
 Which command to run to purge old reports.
+Defaults to: '/usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production reports:prune upto=${reports_days_to_keep} unit=day >> /var/log/puppet/dashboard_maintenance.log'
+If using a specific command here, please keep in mind you need to align it with $reports_days_to_keep yourself.
 
-- *Default*: /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production reports:prune upto=30 unit=day >> /var/log/puppet/dashboard_maintenance.log
+- *Default*: 'USE_DEFAULTS'
+
 
 purge_old_reports_user
 ----------------------
@@ -510,8 +513,10 @@ The directory to use for dumps.
 dump_database_command
 ---------------------
 The command to run to dump the database.
+Defaults to: 'cd ~puppet-dashboard && sudo -u ${puppet::dashboard::dashboard_user_real} /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=${dump_dir}/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 ${dump_dir}/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1'
+If using a specific command here, please keep in mind you need to align it with $puppet::dashboard::dashboard_user & $dump_dir yourself.
 
-- *Default*: sudo -u puppet-dashboard /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=/var/local/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log && bzip2 -v9 /var/local/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log
+- *Default*: 'USE_DEFAULTS'
 
 dump_database_user
 ------------------
