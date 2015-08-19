@@ -87,6 +87,6 @@
     {"name":"puppetlabs/passenger","version_requirement":">= 0.0.4"},
     {"name":"puppetlabs/apache","version_requirement":">= 0.7.0"},
     {"name":"puppetlabs/firewall","version_requirement":">= 0.2.1"},
-    {"name":"puppetlabs/concat","version_requirement":">= 1.0.0"}
+    {"name":"puppetlabs/concat","version_requirement":">= 2.0.1"}
   ]
 }
