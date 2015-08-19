@@ -179,7 +179,7 @@ describe 'puppet::dashboard::server' do
     it do
       expect {
         should contain_class('puppet::dashboard')
-      }.to raise_error(Puppet::Error,/^"not\/a\/valid\/path" is not an absolute path./)
+      }.to raise_error(Puppet::Error,/"not\/a\/valid\/path" is not an absolute path\./)
     end
   end
 
@@ -242,7 +242,7 @@ describe 'puppet::dashboard::server' do
       it do
         expect {
           should contain_class('puppet::dashboard')
-        }.to raise_error(Puppet::Error,/^str2bool\(\): Unknown type of boolean/)
+        }.to raise_error(Puppet::Error,/str2bool\(\): Unknown type of boolean/)
       end
     end
   end
@@ -263,7 +263,7 @@ describe 'puppet::dashboard::server' do
       it do
         expect {
           should contain_class('puppet::dashboard')
-        }.to raise_error(Puppet::Error,/^"not\/a\/valid\/path" is not an absolute path./)
+        }.to raise_error(Puppet::Error,/"not\/a\/valid\/path" is not an absolute path\./)
       end
     end
 
@@ -282,7 +282,7 @@ describe 'puppet::dashboard::server' do
       it do
         expect {
           should contain_class('puppet::dashboard')
-        }.to raise_error(Puppet::Error,/^"not\/a\/valid\/path" is not an absolute path./)
+        }.to raise_error(Puppet::Error,/"not\/a\/valid\/path" is not an absolute path\./)
       end
     end
 

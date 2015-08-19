@@ -128,7 +128,7 @@ describe 'puppet::dashboard' do
       it 'should fail' do
         expect {
           should contain_class('puppet::dashboard')
-        }.to raise_error(Puppet::Error,/^"invalid\/path\/statement" is not an absolute path./)
+        }.to raise_error(Puppet::Error,/"invalid\/path\/statement" is not an absolute path\./)
       end
     end
 
@@ -213,7 +213,7 @@ describe 'puppet::dashboard' do
       it 'should fail' do
         expect {
           should contain_class('puppet::dashboard')
-        }.to raise_error(Puppet::Error,/^"invalid\/path\/statement" is not an absolute path./)
+        }.to raise_error(Puppet::Error,/"invalid\/path\/statement" is not an absolute path\./)
       end
     end
 
