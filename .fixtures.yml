@@ -13,8 +13,8 @@ fixtures:
       repo: 'git://github.com/puppetlabs/puppetlabs-passenger.git'
       ref: '0.4.1'
     apache:
-      repo: 'git://github.com/puppetlabs/puppetlabs-apache.git'
-      ref: '1.6.0'
+      repo: 'git://github.com/Phil-Friderici/puppetlabs-apache.git'
+      ref: 'fix_ssl'
     concat:
       repo: 'git://github.com/puppetlabs/puppetlabs-concat.git'
       ref: '2.0.1'
