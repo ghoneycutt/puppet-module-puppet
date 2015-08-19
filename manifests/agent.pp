@@ -29,6 +29,7 @@ class puppet::agent (
   $agent_sysconfig              = 'USE_DEFAULTS',
   $agent_sysconfig_ensure       = 'USE_DEFAULTS',
   $daemon_name                  = 'puppet',
+  $ssldir                       = '$vardir/ssl',
   $stringify_facts              = true,
   $etckeeper_hooks              = false,
 ) {
@@ -61,6 +62,11 @@ class puppet::agent (
 
   if $puppet_masterport != 'UNSET' and is_integer($puppet_masterport) == false {
     fail("puppet::agent::puppet_masterport is set to <${puppet_masterport}>. It should be an integer.")
+  }
+
+  # ssldir must be a string and contain a value, else fail
+  if is_string($ssldir) == false or $ssldir == '' {
+    fail('puppet::agent::ssldir must be set as string')
   }
 
   if type($stringify_facts) == 'string' {

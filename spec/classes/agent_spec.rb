@@ -191,6 +191,39 @@ describe 'puppet::agent' do
     end
   end
 
+  let(:facts) { { :osfamily => 'RedHat' } }
+  describe 'with ssldir' do
+    ['$vardir/ssl-test','/var/lib/puppet/ssl-test'].each do |value|
+      context "set to valid #{value} (as #{value.class})" do
+        let(:params) do
+          {
+            :ssldir => value,
+            :env    => 'production',
+          }
+        end
+
+        it { should contain_file('puppet_config').with_content(/^\s*ssldir = #{Regexp.escape(value)}$/) }
+      end
+    end
+
+    ['',242,2.42,['array'],a = { 'ha' => 'sh' }].each do |value|
+      context "set to invalid #{value} (as #{value.class})" do
+        let(:params) do
+          {
+            :ssldir => value,
+            :env    => 'production',
+          }
+        end
+
+        it 'should fail' do
+          expect {
+            should contain_class('puppet::agent')
+          }.to raise_error(Puppet::Error,/^puppet::agent::ssldir must be set as string/)
+        end
+      end
+    end
+  end
+
   describe 'with stringify_facts' do
     ['true',true].each do |value|
       context "set to #{value}" do
