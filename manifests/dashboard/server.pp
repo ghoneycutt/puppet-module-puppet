@@ -82,7 +82,7 @@ class puppet::dashboard::server (
   require 'passenger'
   include puppet::dashboard::maintenance
 
-  case type($manage_mysql_options) {
+  case type3x($manage_mysql_options) {
     'boolean': {
       $manage_mysql_options_real = $manage_mysql_options
     }
