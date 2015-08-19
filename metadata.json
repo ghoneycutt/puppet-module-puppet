@@ -80,7 +80,7 @@
   ],
   "description": "Manages Puppet, including Master, Agent, Dashboard and maintenance tasks.",
   "dependencies": [
-    {"name":"ghoneycutt/common","version_requirement":">= 1.0.3"},
+    {"name":"ghoneycutt/common","version_requirement":">= 1.3.0"},
     {"name":"leinaddm/htpasswd","version_requirement":">= 0.0.1"},
     {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0"},
     {"name":"puppetlabs/mysql","version_requirement":">= 2.0.0"},
