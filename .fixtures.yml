@@ -11,7 +11,7 @@ fixtures:
       ref: '2.0.1-rc1'
     passenger:
       repo: 'git://github.com/puppetlabs/puppetlabs-passenger.git'
-      ref: '0.0.4'
+      ref: '0.4.1'
     apache:
       repo: 'git://github.com/puppetlabs/puppetlabs-apache.git'
       ref: '0.7.0'
