@@ -22,7 +22,7 @@ class puppet::agent (
   $run_interval                 = '30',
   $run_in_noop                  = false,
   $cron_command                 = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
-  $run_at_boot                  = true,
+  $run_at_boot                  = 'UNSET',
   $puppet_binary                = '/usr/bin/puppet',
   $symlink_puppet_binary_target = '/usr/local/bin/puppet',
   $symlink_puppet_binary        = false,
@@ -39,13 +39,6 @@ class puppet::agent (
     $run_in_noop_bool = $run_in_noop
   }
   validate_bool($run_in_noop_bool)
-
-  if type($run_at_boot) == 'String' {
-    $run_at_boot_bool = str2bool($run_at_boot)
-  } else {
-    $run_at_boot_bool = $run_at_boot
-  }
-  validate_bool($run_at_boot_bool)
 
   if type($is_puppet_master) == 'String' {
     $is_puppet_master_bool = str2bool($is_puppet_master)
@@ -134,6 +127,7 @@ class puppet::agent (
       $cron_user        = undef
       $cron_hour        = undef
       $cron_minute      = undef
+      $run_at_boot_real = false
     }
     'cron': {
       $daemon_ensure = 'stopped'
@@ -150,6 +144,12 @@ class puppet::agent (
         $cron_minute = [$cron_run_one, $cron_run_two]
       }
 
+      if $run_at_boot == 'UNSET' {
+        $run_at_boot_real = true
+      } else {
+        $run_at_boot_real = $run_at_boot
+      }
+
       if $run_in_noop_bool == true {
         $my_cron_command = "${cron_command} --noop"
       } else {
@@ -164,11 +164,19 @@ class puppet::agent (
       $cron_user        = undef
       $cron_hour        = undef
       $cron_minute      = undef
+      $run_at_boot_real = false
     }
     default: {
       fail("puppet::agent::run_method is ${run_method} and must be 'disable', 'service' or 'cron'.")
     }
   }
+
+  if type($run_at_boot_real) == 'String' {
+    $run_at_boot_bool = str2bool($run_at_boot_real)
+  } else {
+    $run_at_boot_bool = $run_at_boot_real
+  }
+  validate_bool($run_at_boot_bool)
 
   if $run_at_boot_bool == true {
     $at_boot_ensure = 'present'
@@ -250,12 +258,10 @@ class puppet::agent (
     minute  => $cron_minute,
   }
 
-  if $run_method == 'cron' {
-    cron { 'puppet_agent_once_at_boot':
-      ensure  => $at_boot_ensure,
-      command => $my_cron_command,
-      user    => $cron_user,
-      special => 'reboot',
-    }
+  cron { 'puppet_agent_once_at_boot':
+    ensure  => $at_boot_ensure,
+    command => $my_cron_command,
+    user    => $cron_user,
+    special => 'reboot',
   }
 }

@@ -432,7 +432,10 @@ describe 'puppet::agent' do
         })
       }
 
-      it { should_not contain_cron('puppet_agent_once_at_boot') }
+      it { should_not contain_cron('puppet_agent_once_at_boot').with({
+          'ensure' => 'present',
+        })
+      }
 
       it { should contain_service('puppet_agent_daemon').with({
           'enable' => false,
@@ -455,7 +458,10 @@ describe 'puppet::agent' do
         })
       }
 
-      it { should_not contain_cron('puppet_agent_once_at_boot') }
+      it { should_not contain_cron('puppet_agent_once_at_boot').with({
+          'ensure' => 'present',
+        })
+      }
 
       it { should contain_service('puppet_agent_daemon').with({
           'enable' => true,
