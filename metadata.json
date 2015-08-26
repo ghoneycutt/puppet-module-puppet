@@ -83,7 +83,7 @@
     {"name":"ghoneycutt/common","version_requirement":">= 1.3.0"},
     {"name":"leinaddm/htpasswd","version_requirement":">= 0.0.1"},
     {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0"},
-    {"name":"puppetlabs/mysql","version_requirement":">= 2.0.0"},
+    {"name":"puppetlabs/mysql","version_requirement":">= 3.6.0"},
     {"name":"puppetlabs/passenger","version_requirement":">= 0.4.1"},
     {"name":"Phil-Friderici/apache","version_requirement":">= 1.6.0"},
     {"name":"puppetlabs/firewall","version_requirement":">= 0.2.1"},
