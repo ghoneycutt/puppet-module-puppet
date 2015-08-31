@@ -185,7 +185,7 @@ describe 'puppet::agent' do
         it 'should fail' do
           expect {
             should contain_class('puppet::agent')
-          }.to raise_error(Puppet::Error,/^undefined method `to_i'/)
+          }.to raise_error(Puppet::Error,/undefined method `to_i'/)
         end
       end
     end
@@ -232,7 +232,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/^str2bool\(\): Unknown type of boolean given/)
+        }.to raise_error(Puppet::Error,/str2bool\(\): Unknown type of boolean given/)
       end
     end
   end
@@ -330,7 +330,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/puppet::agent supports osfamilies Debian, RedHat, Solaris, and Suse. Detected osfamily is <invalid>./)
+        }.to raise_error(Puppet::Error,/puppet::agent supports osfamilies Debian, RedHat, Solaris, and Suse. Detected osfamily is <invalid>\./)
       end
     end
   end
@@ -397,7 +397,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::master')
-        }.to raise_error(Puppet::Error,/^"invalid\/path" is not an absolute path./)
+        }.to raise_error(Puppet::Error,/"invalid\/path" is not an absolute path\./)
       end
     end
 
@@ -411,7 +411,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::master')
-        }.to raise_error(Puppet::Error,/^"invalid\/path" is not an absolute path./)
+        }.to raise_error(Puppet::Error,/"invalid\/path" is not an absolute path\./)
       end
     end
   end
@@ -477,7 +477,7 @@ describe 'puppet::agent' do
         it 'should fail' do
           expect {
             should contain_class('puppet::agent')
-          }.to raise_error(Puppet::Error,/^\["invalid_type", "not_a_string", "not_a_boolean"\] is not a boolean./)
+          }.to raise_error(Puppet::Error,/\["invalid_type", "not_a_string", "not_a_boolean"\] is not a boolean\./)
         end
 
       end
@@ -494,7 +494,7 @@ describe 'puppet::agent' do
         it 'should fail' do
           expect {
             should contain_class('puppet::agent')
-          }.to raise_error(Puppet::Error,/^str2bool\(\): Unknown type of boolean given/)
+          }.to raise_error(Puppet::Error,/str2bool\(\): Unknown type of boolean given/)
         end
       end
 
@@ -575,7 +575,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/puppet::agent::puppet_masterport is set to <foo>. It should be an integer./)
+        }.to raise_error(Puppet::Error,/puppet::agent::puppet_masterport is set to <foo>. It should be an integer\./)
       end
     end
 
@@ -590,7 +590,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/^puppet::agent::puppet_masterport is set to <invalidtype>. It should be an integer./)
+        }.to raise_error(Puppet::Error,/puppet::agent::puppet_masterport is set to <[\[]?invalid.*type[\]]?>\. It should be an integer\./)
       end
     end
   end
@@ -642,7 +642,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/^str2bool\(\): Unknown type of boolean given/)
+        }.to raise_error(Puppet::Error,/str2bool\(\): Unknown type of boolean given/)
       end
     end
   end
@@ -682,7 +682,7 @@ describe 'puppet::agent' do
         it 'should fail' do
           expect {
             should contain_class('puppet::agent')
-          }.to raise_error(Puppet::Error,/puppet::agent::http_proxy_host is set to <#{Regexp.escape(invalid_value)}>. It should be a fqdn or an ip-address./)
+          }.to raise_error(Puppet::Error,/puppet::agent::http_proxy_host is set to <#{Regexp.escape(invalid_value)}>. It should be a fqdn or an ip-address\./)
         end
       end
     end
@@ -696,7 +696,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/^puppet::agent::http_proxy_host is set to <invalidtype>. It should be a fqdn or an ip-address./)
+        }.to raise_error(Puppet::Error,/puppet::agent::http_proxy_host is set to <[\[]?invalid.*type[\]]?>\. It should be a fqdn or an ip-address\./)
       end
     end
   end
@@ -723,7 +723,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/^puppet::agent::http_proxy_port is set to <invalidtype>. It should be an Integer./)
+        }.to raise_error(Puppet::Error,/puppet::agent::http_proxy_port is set to <[\[]?invalid.*type[\]]?>\. It should be an Integer\./)
       end
     end
     context 'set to an invalid value' do
@@ -736,7 +736,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/puppet::agent::http_proxy_port is set to <foo>. It should be an Integer./)
+        }.to raise_error(Puppet::Error,/puppet::agent::http_proxy_port is set to <foo>. It should be an Integer\./)
       end
     end
   end
