@@ -24,7 +24,7 @@ describe 'puppet::master::maintenance' do
       it 'should fail' do
         expect {
           should contain_class('puppet::master::maintenance')
-        }.to raise_error(Puppet::Error,/^reportdir_purge_ensure must be 'present' or 'absent'. Detected value is <installed>/)
+        }.to raise_error(Puppet::Error,/reportdir_purge_ensure must be 'present' or 'absent'\. Detected value is <installed>/)
       end
     end
 
@@ -35,7 +35,7 @@ describe 'puppet::master::maintenance' do
       it 'should fail' do
         expect {
           should contain_class('puppet::master::maintenance')
-        }.to raise_error(Puppet::Error,/^clientbucket_cleanup_ensure must be 'present' or 'absent'. Detected value is <installed>/)
+        }.to raise_error(Puppet::Error,/clientbucket_cleanup_ensure must be 'present' or 'absent'\. Detected value is <installed>/)
       end
     end
 
@@ -234,7 +234,7 @@ describe 'puppet::master::maintenance' do
           it do
             expect {
               should contain_class('puppet::master::maintenance')
-            }.to raise_error(Puppet::Error,/puppet::master::maintenance::reportdir_days_to_keep must be a positive integer greater than zero. Detected value is <#{value}>./)
+            }.to raise_error(Puppet::Error,/puppet::master::maintenance::reportdir_days_to_keep must be a positive integer greater than zero\. Detected value is <#{value}>\./)
           end
         end
       end
@@ -274,7 +274,7 @@ describe 'puppet::master::maintenance' do
         it do
           expect {
             should contain_class('puppet::master::maintenance')
-          }.to raise_error(Puppet::Error,/^"invalid\/path" is not an absolute path./)
+          }.to raise_error(Puppet::Error,/"invalid\/path" is not an absolute path\./)
         end
       end
     end

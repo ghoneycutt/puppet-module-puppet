@@ -73,7 +73,7 @@ describe 'puppet::dashboard::maintenance' do
       it do
         expect {
           should contain_class('puppet::dashboard::maintenance')
-        }.to raise_error(Puppet::Error,/^"invalid\/path\/statement" is not an absolute path./)
+        }.to raise_error(Puppet::Error,/"invalid\/path\/statement" is not an absolute path\./)
       end
     end
 
@@ -133,7 +133,7 @@ describe 'puppet::dashboard::maintenance' do
       it do
         expect {
           should contain_class('puppet::dashboard::maintenance')
-        }.to raise_error(Puppet::Error,/^str2bool\(\): Unknown type of boolean/)
+        }.to raise_error(Puppet::Error,/str2bool\(\): Unknown type of boolean/)
       end
     end
 
@@ -150,7 +150,7 @@ describe 'puppet::dashboard::maintenance' do
       it do
         expect {
           should contain_class('puppet::dashboard::maintenance')
-        }.to raise_error(Puppet::Error,/^\["invalid_type", "not_a_string", "not_a_boolean"\] is not a boolean./)
+        }.to raise_error(Puppet::Error,/\["invalid_type", "not_a_string", "not_a_boolean"\] is not a boolean\./)
       end
     end
 
@@ -237,7 +237,7 @@ describe 'puppet::dashboard::maintenance' do
       it do
         expect {
           should contain_class('puppet::dashboard::maintenance')
-        }.to raise_error(Puppet::Error,/^"invalid\/path\/statement" is not an absolute path./)
+        }.to raise_error(Puppet::Error,/"invalid\/path\/statement" is not an absolute path\./)
       end
     end
 
