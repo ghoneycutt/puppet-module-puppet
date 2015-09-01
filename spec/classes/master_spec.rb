@@ -79,7 +79,7 @@ describe 'puppet::master' do
       it 'should fail' do
         expect {
           should contain_class('puppet::master')
-        }.to raise_error(Puppet::Error,/puppet::master supports osfamilies Debian and RedHat. Detected osfamily is <invalid>./)
+        }.to raise_error(Puppet::Error,/puppet::master supports osfamilies Debian and RedHat\. Detected osfamily is <invalid>\./)
       end
     end
 
@@ -96,7 +96,7 @@ describe 'puppet::master' do
       it 'should fail' do
         expect {
           should contain_class('puppet::master')
-        }.to raise_error(Puppet::Error,/^"invalid\/path\/statement" is not an absolute path./)
+        }.to raise_error(Puppet::Error,/"invalid\/path\/statement" is not an absolute path\./)
       end
     end
 
@@ -215,7 +215,7 @@ describe 'puppet::master' do
       it 'should fail' do
         expect {
           should contain_class('puppet::master')
-        }.to raise_error(Puppet::Error,/^"invalid\/path\/statement" is not an absolute path./)
+        }.to raise_error(Puppet::Error,/"invalid\/path\/statement" is not an absolute path\./)
       end
     end
 
