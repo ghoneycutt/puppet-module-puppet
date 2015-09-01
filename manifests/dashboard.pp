@@ -11,7 +11,7 @@ class puppet::dashboard (
 ) {
 
   validate_absolute_path($external_node_script_path)
-  if type($dashboard_package) != 'String' and type($dashboard_package) != 'Array' {
+  if type3x($dashboard_package) != 'String' and type3x($dashboard_package) != 'Array' {
     fail('puppet::dashboard::dashboard_package must be a string or an array.')
   }
 
