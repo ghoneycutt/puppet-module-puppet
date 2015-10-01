@@ -31,6 +31,12 @@ class puppet::agent (
   $daemon_name                  = 'puppet',
   $stringify_facts              = true,
   $etckeeper_hooks              = false,
+  $splay                        = false,
+  $splaylimit                   = $run_interval,
+  $show_comments                = true,
+  $archive_files                = false,
+  $archive_file_server          = $::puppet::agent::server,
+
 ) {
 
   if type($run_in_noop) == 'String' {
