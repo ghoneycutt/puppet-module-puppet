@@ -6,21 +6,21 @@
 # puppet from cron or as a daemon.
 #
 class puppet::agent (
-  $certname                     = $::fqdn,
+  $certname                     = $puppet::agent::certname,
   $config_path                  = '/etc/puppet/puppet.conf',
   $config_owner                 = 'root',
   $config_group                 = 'root',
   $config_mode                  = '0644',
-  $env                          = $::env,
-  $puppet_server                = 'puppet',
-  $puppet_masterport            = 'UNSET',
+  $env                          = $puppet::params::env,
+  $puppet_server                = $puppet::params::server,
+  $puppet_masterport            = $puppet::params::masterport,
   $puppet_ca_server             = 'UNSET',
   $http_proxy_host              = 'UNSET',
   $http_proxy_port              = 'UNSET',
   $is_puppet_master             = false,
   $run_method                   = 'service',
   $run_interval                 = '30',
-  $run_in_noop                  = false,
+  $run_in_noop                  = $puppet::agent::noop,
   $cron_command                 = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
   $run_at_boot                  = true,
   $puppet_binary                = '/usr/bin/puppet',
@@ -34,10 +34,21 @@ class puppet::agent (
   $splay                        = false,
   $splaylimit                   = $run_interval,
   $show_comments                = true,
+  $show_defaults                = true,       # If false, don't populate puppet.conf with parameters if their values match PuppetLabs defaults. 
   $archive_files                = false,
-  $archive_file_server          = $::puppet::agent::server,
+  $archive_file_server          = $puppet::agent::archive_file_server,
+  $report_server                = $puppet::agent::report_server,
+  $use_srv_records              = $puppet::agent::use_srv_records,
+  $configtimeout                = $puppet::agent::configtimeout,  
+  $digest_algorithm             = $puppet::agent::digest_algorithm,
+  $classfile                    = $puppet::agent::classfile,
+  $pluginsync                   = $puppet::agent::pluginsync,
+  $graph                        = $puppet::agent::graph,
+  $logdir                       = $puppet::agent::logdir,
+  $rundir                       = $puppet::agent::rundir,
+  $ssldir                       = $puppet::agent::ssldir,
 
-) {
+) inherits puppet::params {
 
   if type($run_in_noop) == 'String' {
     $run_in_noop_bool = str2bool($run_in_noop)

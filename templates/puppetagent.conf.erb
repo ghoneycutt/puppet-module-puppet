@@ -1,22 +1,31 @@
 # This file is being maintained by Puppet.
 # DO NOT EDIT
 
+<% if ! @show_defaults -%>
+# Parameters with values set to defaults are suppressed based on $show_defaults => true
+<% end %>
 [main]
+<% if @logdir != scope.lookupvar('puppet::params::logdir') or @show_defaults -%>
 <% if @show_comments %>
     # logdir:  The Puppet log directory.
     # The default value is '$vardir/log'.
 <% end -%>
-    logdir = /var/log/puppet
+    logdir = <%= @logdir %>
+<% end -%>
+<% if @rundir != scope.lookupvar('puppet::params::rundir') or @show_defaults -%>
 <% if @show_comments %>
     # rundir:  Where Puppet PID files are kept.
     # The default value is '$vardir/run'.
 <% end -%>
-    rundir = /var/run/puppet
+    rundir = <%= @rundir %> 
+<% end -%>
+<% if @ssldir != scope.lookupvar('puppet::params::ssldir') or @show_defaults -%>
 <% if @show_comments %>
     # ssldir:  Where SSL certificates are kept.
     # The default value is '$confdir/ssl'.
 <% end -%>
     ssldir = $vardir/ssl
+<% end -%>
 <% if @archive_files -%>
 <% if @show_comments %>
     # archive_files:  During an inspect run, whether to archive files whose contents are audited to a file bucket.
@@ -46,6 +55,7 @@
 <% end -%>
 
 [agent]
+<% if @classfile != scope.lookupvar('puppet::params::classfile') or @show_defaults -%>
 <% if @show_comments %>
     # The file in which puppetd stores a list of the classes
     # associated with the retrieved configuratiion.  Can be loaded in
@@ -53,13 +63,17 @@
     # option.
     # The default value is '$confdir/classes.txt'.
 <% end -%>
-    classfile = $vardir/classes.txt
+    classfile = <%= @classfile %>
+<% end -%>
+<% if @localconfig != scope.lookupvar('puppet::params::localconfig') or @show_defaults -%>
 <% if @show_comments %>
     # Where puppetd caches the local configuration.  An
     # extension indicating the cache format is added automatically.
     # The default value is '$confdir/localconfig'.
 <% end -%>
     localconfig = $vardir/localconfig
+<% end -%>
+<% if @certname != scope.lookupvar('puppet::params::certname') or @show_defaults -%>
 <% if @show_comments %>
     # The name to use when handling certificates. When a node requests a certificate from the CA
     # puppet master, it uses the value of the certname setting as its requested Subject CN.
@@ -80,12 +94,13 @@
     # Default: (the system’s fully qualified domain name)
 <% end -%>
     certname = <%= @certname %>
+<% end -%>
 <% if @show_comments %>
     # server:  The puppet master server to which the puppet agent should connect.
     # Default: puppet
 <% end -%>
     server = <%= @puppet_server %>
-<% if @puppet_masterport != 'UNSET' -%>
+<% if @puppet_masterport != scope.lookupvar('puppet::params::masterport') or @show_defaults -%>
 <% if @show_comments %>
     #  masterport:  The port for puppet master traffic. For puppet master, this is the port
     #  to listen on; for puppet agent, this is the port to make requests on. Both applications
@@ -118,11 +133,13 @@
 <% end -%>
     http_proxy_port = <%= @http_proxy_port %>
 <% end -%>
+<% if @report != scope.lookupvar('puppet::params::report') or @show_defaults -%>
 <% if @show_comments %>
     # report:  Whether to send reports after every transaction.
     # Default: true
 <% end -%>
-    report = true
+    report = <%= @report %>
+<% end -%>
 <% if @show_comments %>
     # graph:  Whether to create .dot graph files, which let you visualize the dependency and
     # containment relationships in Puppet’s catalog. You can load and view these files with tools
@@ -140,12 +157,27 @@
 
     # Default: false
 <% end -%>
-    graph = true
+<% if @graph -%>
+<% if @show_comments %>
+    # graph:  Whether to create .dot graph files, which let you visualize the dependency and containment 
+    # relationships in Puppet’s catalog. You can load and view these files with tools like OmniGraffle (OS X) 
+    # or graphviz (multi-platform).  Graph files are created when applying a catalog, so this setting should 
+    # be used on nodes running puppet agent or puppet apply.
+    # The graphdir setting determines where Puppet will save graphs. Note that we don’t save graphs for historical 
+    # runs; Puppet will replace the previous .dot files with new ones every time it applies a catalog.
+    # See your graphing software’s documentation for details on opening .dot files. If you’re using GraphViz’s dot 
+    # command, you can do a quick PNG render with dot -Tpng <DOT FILE> -o <OUTPUT FILE>.
+    # Default: false
+<% end -%>
+    graph = <%= @graph %>
+<% end -%>
+<% if @pluginsync != scope.lookupvar('puppet::params::pluginsync') or @show_defaults -%>
 <% if @show_comments %>
     # pluginsync: Whether plugins should be synced with the central server.
     # Default: true
 <% end -%>
-    pluginsync = true
+    pluginsync = <%= @pluginsync %>
+<% end -%>
 <% if @run_method == 'service' -%>
 <% if @show_comments %>
     # noop:  Whether to apply catalogs in noop mode, which allows Puppet to partially simulate a normal run.
@@ -174,14 +206,14 @@
 <% end -%>
     environment = <%= @env %>
 <% end -%>
-<% if @splay -%>
+<% if @splay != scope.lookupvar('puppet::params::splay') or @show_defaults -%>
 <% if @show_comments %>
     #  splay:  Whether to sleep for a pseudo-random (but consistent) amount of time before a run.
     #  Default: false
 <% end -%>
     splay = <%= @splay %>
 <% end -%>
-<% if @splaylimit -%>
+<% if @splaylimit != scope.lookupvar('puppet::params::splaylimit') or @show_defaults -%>
 <% if @show_comments %>
     # splaylimit:  The maximum time to delay before runs. Defaults to being the same as the run interval. This
     # setting can be a time interval in seconds (30 or 30s), minutes (30m), hours (6h), days (2d), or years (5y).
@@ -189,7 +221,7 @@
 <% end -%>
     splaylimit = <%= @splaylimit %>
 <% end -%>
-<% if @run_interval -%>
+<% if @run_interval != scope.lookupvar('puppet::params::run_interval') or @show_defaults -%>
 <% if @show_comments %>
     #  runinterval:  How often puppet agent applies the catalog. Note that a runinterval of 0 means “run continuously”
     #  rather than “never run.” If you want puppet agent to never run, you should start it with the --no-client
@@ -197,4 +229,34 @@
     #  Default: 30m
 <% end -%>
     runinterval = <%= @run_interval %>
+<% end -%>
+<% if @report_server != scope.lookupvar('puppet::params::report_server') or @show_defaults -%>
+<% if @show_comments %>
+    # report_server:  The server to send transaction reports to.
+    # Default: $server
+<% end -%>
+    report_server = <%= @report_server %>
+<% end -%>
+<% if @use_srv_records != scope.lookupvar('puppet::params::use_srv_records') or @show_defaults -%>
+<% if @show_comments %>
+    # use_srv_records:  Whether the server will search for SRV records in DNS for the current domain.
+    # Default: false
+<% end -%>
+    use_srv_records = <%= @use_srv_records %>
+<% end -%>
+<% if @configtimeout != scope.lookupvar('puppet::params::configtimeout') or @show_defaults -%>
+<% if @show_comments %>
+    # configtimeout:  How long the client should wait for the configuration to be retrieved before considering it a failure. 
+    # This setting is deprecated and has been replaced by http_connect_timeout and http_read_timeout. This setting can be a 
+    # time interval in seconds (30 or 30s), minutes (30m), hours (6h), days (2d), or years (5y).
+    # Default: 2m
+<% end -%>
+    configtimeout = <%= @configtimeout %>
+<% end -%>
+<% if @digest_algorithm != scope.lookupvar('puppet::params::digest_algorithm') or @show_defaults -%>
+<% if @show_comments %>
+    # digest_algorithm:  Which digest algorithm to use for file resources and the filebucket. Valid values are md5, sha256. Default is md5.
+    # Default: md5
+<% end -%>
+    digest_algorithm = <%= @digest_algorithm %>
 <% end -%>
