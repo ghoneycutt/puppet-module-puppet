@@ -219,6 +219,7 @@ class puppet::agent (
     owner   => $config_owner,
     group   => $config_group,
     mode    => $config_mode,
+    notify  => Service['puppet_agent_daemon'],
   }
 
   if ($etckeeper_hooks_bool) {
@@ -254,7 +255,7 @@ class puppet::agent (
     # GH: This service will always show as being running while an agent run is
     # taking place, so we no longer ensure its status. Before doing this, there
     # would *always* be a logged change and the Console could never be green.
-    #ensure => $daemon_ensure,
+    ensure => $daemon_ensure,
     name   => $daemon_name,
     enable => $daemon_enable,
   }
