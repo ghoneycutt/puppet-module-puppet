@@ -590,7 +590,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/^puppet::agent::puppet_masterport is set to <invalidtype>. It should be an integer./)
+        }.to raise_error(Puppet::Error,/puppet::agent::puppet_masterport is set to <invalidtype>\. It should be an integer\./)
       end
     end
   end
@@ -696,7 +696,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/^puppet::agent::http_proxy_host is set to <invalidtype>. It should be a fqdn or an ip-address./)
+        }.to raise_error(Puppet::Error,/puppet::agent::http_proxy_host is set to <invalidtype>\. It should be a fqdn or an ip-address\./)
       end
     end
   end
@@ -723,7 +723,7 @@ describe 'puppet::agent' do
       it 'should fail' do
         expect {
           should contain_class('puppet::agent')
-        }.to raise_error(Puppet::Error,/^puppet::agent::http_proxy_port is set to <invalidtype>. It should be an Integer./)
+        }.to raise_error(Puppet::Error,/puppet::agent::http_proxy_port is set to <invalidtype>\. It should be an Integer\./)
       end
     end
     context 'set to an invalid value' do
