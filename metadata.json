@@ -3,6 +3,7 @@
   "version": "2.16.0",
   "author": "ghoneycutt",
   "summary": "Manage Puppet",
+  "description": "Manages Puppet, including Master, Agent, Dashboard and maintenance tasks.",
   "license": "Apache-2.0",
   "source": "git://github.com/ghoneycutt/puppet-module-puppet.git",
   "project_page": "https://github.com/ghoneycutt/puppet-module-puppet",
@@ -10,11 +11,11 @@
   "requirements": [
     {
       "name": "pe",
-      "version_requirement": "3.2.x"
+      "version_requirement": ">= 3.2.0 < 5.0.0"
     },
     {
       "name": "puppet",
-      "version_requirement": "3.x"
+      "version_requirement": ">= 3.0.0 < 5.0.0"
     }
   ],
   "operatingsystem_support": [
@@ -78,15 +79,14 @@
       ]
     }
   ],
-  "description": "Manages Puppet, including Master, Agent, Dashboard and maintenance tasks.",
   "dependencies": [
-    {"name":"ghoneycutt/common","version_requirement":">= 1.0.3"},
-    {"name":"leinaddm/htpasswd","version_requirement":">= 0.0.1"},
-    {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0"},
-    {"name":"puppetlabs/mysql","version_requirement":">= 2.0.0"},
-    {"name":"puppetlabs/passenger","version_requirement":">= 0.0.4"},
-    {"name":"puppetlabs/apache","version_requirement":">= 0.5.0"},
-    {"name":"puppetlabs/firewall","version_requirement":">= 0.2.1"},
-    {"name":"puppetlabs/concat","version_requirement":">= 1.0.0"}
+    {"name":"ghoneycutt/common","version_requirement":">= 1.0.3 < 2.0.0"},
+    {"name":"leinaddm/htpasswd","version_requirement":">= 0.0.1 < 2.0.0"},
+    {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 6.0.0"},
+    {"name":"puppetlabs/mysql","version_requirement":">= 2.0.0 < 3.0.0"},
+    {"name":"puppetlabs/passenger","version_requirement":">= 0.0.4 < 2.0.0"},
+    {"name":"puppetlabs/apache","version_requirement":">= 0.5.0 < 2.0.0"},
+    {"name":"puppetlabs/firewall","version_requirement":">= 0.2.1 < 2.0.0"},
+    {"name":"puppetlabs/concat","version_requirement":">= 1.0.0 < 2.0.0"}
   ]
 }
