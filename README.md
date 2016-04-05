@@ -169,7 +169,7 @@ cron_command
 ------------
 The command that should be added to the crontab (in cron mode)
 
-- *Default*: /usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay
+- *Default*: 'USE_DEFAULTS'
 
 run_at_boot
 -----------
