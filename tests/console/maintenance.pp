@@ -1,1 +1,1 @@
-include puppet::console::maintenance
+include ::puppet::console::maintenance

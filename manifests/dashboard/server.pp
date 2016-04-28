@@ -79,8 +79,8 @@ class puppet::dashboard::server (
   }
   validate_absolute_path($vhost_path_real)
 
-  require 'passenger'
-  include puppet::dashboard::maintenance
+  require '::passenger'
+  include ::puppet::dashboard::maintenance
 
   if is_bool($manage_mysql_options) {
       $manage_mysql_options_real = $manage_mysql_options
@@ -89,18 +89,17 @@ class puppet::dashboard::server (
   } else {
       fail("puppet::dashboard::server::manage_mysql_options supports booleans only and is <${manage_mysql_options}>.")
   }
-  
 
   if $manage_mysql_options_real == true {
-    class { 'mysql::server':
+    class { '::mysql::server':
       override_options => {
         'mysqld' => {
           'max_allowed_packet' => $mysql_max_packet_size,
-        }
-      }
+        },
+      },
     }
   } else {
-    include mysql::server
+    include ::mysql::server
   }
 
   if $security == 'htpasswd' and $htpasswd != undef {
@@ -109,7 +108,7 @@ class puppet::dashboard::server (
       target => $htpasswd_path,
     }
 
-    Htpasswd <||> -> File['dashboard_htpasswd_path']
+    Htpasswd <| tag == 'puppet::dashboard::server' |> -> File['dashboard_htpasswd_path']
 
     create_resources('htpasswd',$htpasswd)
 

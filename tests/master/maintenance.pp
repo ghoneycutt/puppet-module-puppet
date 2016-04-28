@@ -1,1 +1,1 @@
-include puppet::master::maintenance
+include ::puppet::master::maintenance
