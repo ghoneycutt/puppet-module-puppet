@@ -49,7 +49,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('filebucket_cleanup').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -f {} \;',
           'user'    => 'root',
           'hour'    => '0',
           'minute'  => '0',
@@ -67,7 +67,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('filebucket_cleanup').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -f {} \;',
           'user'    => 'gh',
           'hour'    => '0',
           'minute'  => '0',
@@ -85,7 +85,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('filebucket_cleanup').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find /var/lib/puppet/filebucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find /var/lib/puppet/filebucket/ -type f -mtime +30 -exec /bin/rm -f {} \;',
           'user'    => 'root',
           'hour'    => '0',
           'minute'  => '0',
@@ -105,7 +105,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('filebucket_cleanup').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +20 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +20 -exec /bin/rm -f {} \;',
           'user'    => 'root',
           'hour'    => '0',
           'minute'  => '0',
@@ -126,7 +126,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('filebucket_cleanup').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -f {} \;',
           'user'    => 'root',
           'hour'    => '2',
           'minute'  => '30',
@@ -165,7 +165,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('purge_old_puppet_reports').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -f {} \;',
           'user'    => 'root',
           'hour'    => '0',
           'minute'  => '15',
@@ -191,7 +191,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('purge_old_puppet_reports').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -f {} \;',
           'user'    => 'gh',
           'hour'    => '23',
           'minute'  => '42',
@@ -213,7 +213,7 @@ describe 'puppet::master::maintenance' do
 
         it { should contain_cron('purge_old_puppet_reports').with({
             'ensure'  => 'present',
-            'command' => '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +42 -exec /bin/rm -fr {} \;',
+            'command' => '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +42 -exec /bin/rm -f {} \;',
             'user'    => 'root',
             'hour'    => '0',
             'minute'  => '15',
@@ -254,7 +254,7 @@ describe 'puppet::master::maintenance' do
 
         it { should contain_cron('purge_old_puppet_reports').with({
             'ensure'  => 'present',
-            'command' => '/usr/bin/find -L /etc/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
+            'command' => '/usr/bin/find -L /etc/puppet/reports -type f -mtime +30 -exec /bin/rm -f {} \;',
             'user'    => 'root',
             'hour'    => '0',
             'minute'  => '15',
@@ -296,7 +296,7 @@ describe 'puppet::master::maintenance' do
 
       it { should contain_cron('purge_old_puppet_reports').with({
           'ensure'  => 'present',
-          'command' => '/usr/bin/find -L /etc/puppet/reports -type f -mtime +42 -exec /bin/rm -fr {} \;',
+          'command' => '/usr/bin/find -L /etc/puppet/reports -type f -mtime +42 -exec /bin/rm -f {} \;',
           'user'    => 'root',
           'hour'    => '0',
           'minute'  => '15',
