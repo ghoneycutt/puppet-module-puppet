@@ -24,11 +24,11 @@ class puppet::master (
     }
   }
 
-  include apache::mod::ssl
-  include common
-  include passenger
-  include puppet::lint
-  include puppet::master::maintenance
+  include ::apache::mod::ssl
+  include ::common
+  include ::passenger
+  include ::puppet::lint
+  include ::puppet::master::maintenance
 
   if $sysconfig_path == 'USE_DEFAULTS' {
     $sysconfig_path_real = $default_sysconfig_path
