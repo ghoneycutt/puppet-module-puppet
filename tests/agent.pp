@@ -1,1 +1,1 @@
-include puppet::agent
+include ::puppet::agent

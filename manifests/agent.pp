@@ -218,7 +218,7 @@ class puppet::agent (
       owner  => 'root',
       group  => 'root',
       mode   => '0755',
-      source => 'puppet:///modules/puppet/etckeeper-commit-pre'
+      source => 'puppet:///modules/puppet/etckeeper-commit-pre',
     }
 
     file { 'etckeeper_post':
@@ -226,7 +226,7 @@ class puppet::agent (
       owner  => 'root',
       group  => 'root',
       mode   => '0755',
-      source => 'puppet:///modules/puppet/etckeeper-commit-post'
+      source => 'puppet:///modules/puppet/etckeeper-commit-post',
     }
   }
 
