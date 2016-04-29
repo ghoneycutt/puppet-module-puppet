@@ -1,11 +1,12 @@
 # == Class: puppet::master
 #
 class puppet::master (
-  $sysconfig_path  = 'USE_DEFAULTS',
-  $rack_dir        = '/usr/share/puppet/rack/puppetmasterd',
-  $puppet_user     = 'puppet',
-  $manage_firewall = undef,
-  $vhost_path      = 'USE_DEFAULTS',
+  $sysconfig_path         = 'USE_DEFAULTS',
+  $rack_dir               = '/usr/share/puppet/rack/puppetmasterd',
+  $puppet_user            = 'puppet',
+  $manage_firewall        = undef,
+  $vhost_path             = 'USE_DEFAULTS',
+  $passenger_max_requests = 1000,
 ) {
 
   case $::osfamily {
@@ -43,6 +44,8 @@ class puppet::master (
     $vhost_path_real = $vhost_path
   }
   validate_absolute_path($vhost_path_real)
+
+  validate_integer($passenger_max_requests)
 
   if $manage_firewall == true {
     firewall { '8140 open port 8140 for Puppet Master':

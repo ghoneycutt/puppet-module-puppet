@@ -664,6 +664,12 @@ Whether to manage the firewall settings on the client
 
 - *Default*: undef
 
+passenger_max_requests
+----------------------
+The number of requests that each puppet master process will handle before being restarted.
+
+- *Default*: 1000
+
 ===
 
 ## Class `puppet::master::maintenance` ##

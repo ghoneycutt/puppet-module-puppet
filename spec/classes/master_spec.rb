@@ -232,5 +232,50 @@ describe 'puppet::master' do
 
       it { should contain_file('puppetmaster_vhost').with_content(/^\s*<Directory \/usr\/share\/puppet\/rack\/puppetmasterd\/>$/) }
     end
+
+    context 'Puppetmaster vhost configuration default PassengerMaxRequests' do
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
+        }
+      end
+
+      it { should contain_class('puppet::master') }
+
+      it { should contain_file('puppetmaster_vhost').with_content(/^\s*PassengerMaxRequests 1000$/) }
+    end
+
+    context 'Puppetmaster vhost configuration of PassengerMaxRequests' do
+      let(:params) { { :passenger_max_requests => 5 } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
+        }
+      end
+
+      it { should contain_file('puppetmaster_vhost').with_content(/^\s*PassengerMaxRequests 5$/) }
+    end
+
+    context 'Puppetmaster vhost configuration parameter error for PassengerMaxRequests' do
+      let(:params) { { :passenger_max_requests => 'Invalid' } }
+      let(:facts) do
+        { :osfamily               => 'RedHat',
+          :operatingsystemrelease => '6.4',
+          :concat_basedir         => '/tmp',
+          :puppet_reportdir       => '/var/lib/puppet/reports',
+        }
+      end
+
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::master')
+        }.to raise_error(Puppet::Error,/Expected first argument to be an Integer/)
+      end
+    end
+
   end
 end

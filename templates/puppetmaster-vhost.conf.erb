@@ -3,8 +3,8 @@
 
 PassengerUseGlobalQueue On
 
-# Recycle master processes after they service 1000 requests
-PassengerMaxRequests 1000
+# Recycle master processes after they service the number of requests specified by PassengerMaxRequests. Default is 1000.
+PassengerMaxRequests <%= @passenger_max_requests %>
 
 # Stop processes if they sit idle for 10 minutes
 PassengerPoolIdleTime 600
