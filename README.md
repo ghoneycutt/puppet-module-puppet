@@ -707,7 +707,7 @@ filebucket_cleanup_command
 --------------------------
 Command used to cleanup the clientbuckets.
 
-- *Default*: /usr/bin/find ${clientbucket_path} -type f -mtime +30 -exec /bin/rm -fr {} \;
+- *Default*: /usr/bin/find ${clientbucket_path} -type f -mtime +30 -exec /bin/rm -f {} \;
 
 filebucket_cleanup_user
 -----------------------
@@ -749,7 +749,7 @@ reportdir_purge_command
 -----------------------
 Command ran by cron to purge old reports.
 
-- *Default*: /usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;'
+- *Default*: /usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -f {} \;'
 
 reportdir_purge_user
 --------------------

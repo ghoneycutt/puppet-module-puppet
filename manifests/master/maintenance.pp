@@ -4,14 +4,14 @@ class puppet::master::maintenance (
   $clientbucket_cleanup_ensure  = 'present',
   $clientbucket_path            = '/var/lib/puppet/clientbucket/',
   $clientbucket_days_to_keep    = '30',
-  $filebucket_cleanup_command   = '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -fr {} \;',
+  $filebucket_cleanup_command   = '/usr/bin/find /var/lib/puppet/clientbucket/ -type f -mtime +30 -exec /bin/rm -f {} \;',
   $filebucket_cleanup_user      = 'root',
   $filebucket_cleanup_hour      = '0',
   $filebucket_cleanup_minute    = '0',
   $reportdir_purge_ensure       = 'present',
   $reportdir                    = $::puppet_reportdir,
   $reportdir_days_to_keep       = '30',
-  $reportdir_purge_command      = '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -fr {} \;',
+  $reportdir_purge_command      = '/usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -f {} \;',
   $reportdir_purge_user         = 'root',
   $reportdir_purge_hour         = '0',
   $reportdir_purge_minute       = '15',
@@ -26,7 +26,7 @@ class puppet::master::maintenance (
   # if not using the defaults, then construct the command with variables, else
   # use the default command
   if ( $clientbucket_days_to_keep != 30 ) or ( $clientbucket_path != '/var/lib/puppet/clientbucket/' ) {
-    $my_filebucket_cleanup_command = "/usr/bin/find ${clientbucket_path} -type f -mtime +${clientbucket_days_to_keep} -exec /bin/rm -fr {} \\;"
+    $my_filebucket_cleanup_command = "/usr/bin/find ${clientbucket_path} -type f -mtime +${clientbucket_days_to_keep} -exec /bin/rm -f {} \\;"
   } else {
     $my_filebucket_cleanup_command = $filebucket_cleanup_command
   }
@@ -44,7 +44,7 @@ class puppet::master::maintenance (
   }
 
   if ( $reportdir_days_to_keep != 30 ) or ( $reportdir != '/var/lib/puppet/reports' ) {
-    $my_reportdir_purge_command = "/usr/bin/find -L ${reportdir} -type f -mtime +${reportdir_days_to_keep} -exec /bin/rm -fr {} \\;"
+    $my_reportdir_purge_command = "/usr/bin/find -L ${reportdir} -type f -mtime +${reportdir_days_to_keep} -exec /bin/rm -f {} \\;"
   } else {
     $my_reportdir_purge_command = $reportdir_purge_command
   }
