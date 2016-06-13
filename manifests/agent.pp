@@ -12,6 +12,8 @@ class puppet::agent (
   $config_group                 = 'root',
   $config_mode                  = '0644',
   $env                          = $::env,
+  $puppet_run_interval          = '1h',
+  $puppet_reports               = 'true',
   $puppet_server                = 'puppet',
   $puppet_masterport            = 'UNSET',
   $puppet_ca_server             = 'UNSET',

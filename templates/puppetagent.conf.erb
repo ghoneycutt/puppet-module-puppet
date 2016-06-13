@@ -53,9 +53,12 @@
 <% if @http_proxy_port != 'UNSET' -%>
     http_proxy_port = <%= @http_proxy_port %>
 <% end -%>
-    report = true
+    report = <%= @puppet_reports %>
     graph = true
     pluginsync = true
+    interval = <%= @puppet_run_interval %>
+    splay = true
+    splay_limit = 60s
 <% if @run_method == 'service' %>
     noop = <%= @run_in_noop %>
 <% end -%>
