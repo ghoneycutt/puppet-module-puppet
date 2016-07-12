@@ -28,7 +28,7 @@ class puppet::dashboard::maintenance (
   $purge_old_db_backups_minute = '0',
 ) {
 
-  require 'puppet::dashboard'
+  require '::puppet::dashboard'
 
   validate_absolute_path($reports_spool_dir)
   validate_absolute_path($dump_dir)
