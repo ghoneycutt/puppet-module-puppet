@@ -9,7 +9,7 @@ end
 gem 'metadata-json-lint'
 gem 'puppetlabs_spec_helper', '>= 1.1.1'
 gem 'facter', '>= 1.7.0'
-gem 'puppet-lint', :git => 'https://github.com/rodjek/puppet-lint.git'
+gem 'puppet-lint', '>= 1.0', '< 3.0'
 gem 'puppet-lint-absolute_classname-check'
 gem 'puppet-lint-alias-check'
 gem 'puppet-lint-empty_string-check'
