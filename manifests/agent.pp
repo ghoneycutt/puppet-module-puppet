@@ -196,7 +196,7 @@ class puppet::agent (
       $cron_user     = 'root'
       $cron_hour     = '*'
 
-      if $run_interval > 30 {
+      if $run_interval > '30' {
         $cron_minute = $cron_run_one
       } else {
         $cron_minute = [$cron_run_one, $cron_run_two]
