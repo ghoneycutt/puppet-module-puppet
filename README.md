@@ -7,6 +7,9 @@ This module handles the various parts of puppet on a given machine.
 
 Dependencies for this module are: apache, common, mysql and passenger
 
+This module is targeted at Puppet v3. It does support the agent on Puppet v4.
+To use the agent, simply `include ::puppet::agent`.
+
 ## Components ##
 
 ### Agent

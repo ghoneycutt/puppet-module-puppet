@@ -1,6 +1,7 @@
 # This file is being maintained by Puppet.
 # DO NOT EDIT
 
+<% if @is_puppet3 == true -%>
 [main]
     # The Puppet log directory.
     # The default value is '$vardir/log'.
@@ -56,9 +57,18 @@
     report = true
     graph = true
     pluginsync = true
-<% if @run_method == 'service' %>
+<% if @run_method_real == 'service' %>
     noop = <%= @run_in_noop %>
 <% end -%>
 <% if @env != 'production' -%>
     environment = <%= @env %>
+<% end -%>
+<% else -%>
+  [main]
+  certname = <%= @certname %>
+  server = <%= @puppet_server %>
+  <% if @puppet_ca_server != 'UNSET' -%>
+  ca_server = <%= @puppet_ca_server %>
+  <% end -%>
+  graph = true
 <% end -%>

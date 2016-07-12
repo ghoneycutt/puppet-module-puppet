@@ -80,13 +80,13 @@
     }
   ],
   "dependencies": [
-    {"name":"ghoneycutt/common","version_requirement":">= 1.0.3 < 2.0.0"},
+    {"name":"ghoneycutt/common","version_requirement":">= 1.6.0 < 2.0.0"},
     {"name":"leinaddm/htpasswd","version_requirement":">= 0.0.1 < 2.0.0"},
     {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 6.0.0"},
     {"name":"puppetlabs/mysql","version_requirement":">= 2.0.0 < 3.0.0"},
-    {"name":"puppetlabs/passenger","version_requirement":">= 0.0.4 < 2.0.0"},
+    {"name":"puppetlabs/passenger","version_requirement":">= 0.4.1 < 2.0.0"},
     {"name":"puppetlabs/apache","version_requirement":">= 0.5.0 < 2.0.0"},
-    {"name":"puppetlabs/firewall","version_requirement":">= 0.2.1 < 2.0.0"},
-    {"name":"puppetlabs/concat","version_requirement":">= 1.0.0 < 2.0.0"}
+    {"name":"puppetlabs/firewall","version_requirement":">= 1.7.1 < 2.0.0"},
+    {"name":"puppetlabs/concat","version_requirement":">= 1.2.5 < 2.0.0"}
   ]
 }
