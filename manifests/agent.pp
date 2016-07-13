@@ -7,7 +7,7 @@
 #
 class puppet::agent (
   $certname                     = $::fqdn,
-  $config_path                  = '/etc/puppet/puppet.conf',
+  $config_path                  = 'USE_DEFAULTS',
   $config_owner                 = 'root',
   $config_group                 = 'root',
   $config_mode                  = '0644',
@@ -18,12 +18,12 @@ class puppet::agent (
   $http_proxy_host              = 'UNSET',
   $http_proxy_port              = 'UNSET',
   $is_puppet_master             = false,
-  $run_method                   = 'service',
+  $run_method                   = 'USE_DEFAULTS',
   $run_interval                 = '30',
   $run_in_noop                  = false,
-  $cron_command                 = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
+  $cron_command                 = 'USE_DEFAULTS',
   $run_at_boot                  = true,
-  $puppet_binary                = '/usr/bin/puppet',
+  $puppet_binary                = 'USE_DEFAULTS',
   $symlink_puppet_binary_target = '/usr/local/bin/puppet',
   $symlink_puppet_binary        = false,
   $agent_sysconfig              = 'USE_DEFAULTS',
@@ -33,6 +33,50 @@ class puppet::agent (
   $stringify_facts              = true,
   $etckeeper_hooks              = false,
 ) {
+
+  if versioncmp($::puppetversion, '3.0') > 0 {
+    # puppet v4
+    $default_config_path   = '/etc/puppetlabs/puppet/puppet.conf'
+    $default_cron_command  = '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
+    $default_puppet_binary = '/opt/puppetlabs/bin/puppet'
+    $default_run_method    = 'cron'
+    $is_puppet3            = false
+  } else {
+    # puppet v3
+    $default_config_path   = '/etc/puppet/puppet.conf'
+    $default_cron_command  = '/usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
+    $default_puppet_binary = '/usr/bin/puppet'
+    $default_run_method    = 'service'
+    $is_puppet3            = true
+  }
+
+  if $config_path == 'USE_DEFAULTS' {
+    $config_path_real = $default_config_path
+  } else {
+    $config_path_real = $config_path
+  }
+  validate_absolute_path($config_path_real)
+
+  if $cron_command == 'USE_DEFAULTS' {
+    $cron_command_real = $default_cron_command
+  } else {
+    $cron_command_real = $cron_command
+  }
+  validate_string($cron_command_real)
+
+  if $puppet_binary == 'USE_DEFAULTS' {
+    $puppet_binary_real = $default_puppet_binary
+  } else {
+    $puppet_binary_real = $puppet_binary
+  }
+  validate_absolute_path($puppet_binary_real)
+
+  if $run_method == 'USE_DEFAULTS' {
+    $run_method_real = $default_run_method
+  } else {
+    $run_method_real = $run_method
+  }
+  validate_string($run_method_real)
 
   if is_string($run_in_noop) {
     $run_in_noop_bool = str2bool($run_in_noop)
@@ -133,7 +177,7 @@ class puppet::agent (
     $config_content = undef
   }
 
-  case $run_method {
+  case $run_method_real {
     'service': {
       $daemon_ensure    = 'running'
       $daemon_enable    = true
@@ -152,16 +196,16 @@ class puppet::agent (
       $cron_user     = 'root'
       $cron_hour     = '*'
 
-      if $run_interval > 30 {
+      if $run_interval > '30' {
         $cron_minute = $cron_run_one
       } else {
         $cron_minute = [$cron_run_one, $cron_run_two]
       }
 
       if $run_in_noop_bool == true {
-        $my_cron_command = "${cron_command} --noop"
+        $my_cron_command = "${cron_command_real} --noop"
       } else {
-        $my_cron_command = $cron_command
+        $my_cron_command = $cron_command_real
       }
     }
     'disable': {
@@ -174,7 +218,7 @@ class puppet::agent (
       $cron_minute      = undef
     }
     default: {
-      fail("puppet::agent::run_method is ${run_method} and must be 'disable', 'service' or 'cron'.")
+      fail("puppet::agent::run_method is ${run_method_real} and must be 'disable', 'service' or 'cron'.")
     }
   }
 
@@ -191,7 +235,6 @@ class puppet::agent (
   }
   validate_bool($symlink_puppet_binary_bool)
 
-  validate_absolute_path($puppet_binary)
   validate_absolute_path($symlink_puppet_binary_target)
 
   # optionally create symlinks to puppet binary
@@ -200,12 +243,12 @@ class puppet::agent (
     file { 'puppet_symlink':
       ensure => link,
       path   => $symlink_puppet_binary_target,
-      target => $puppet_binary,
+      target => $puppet_binary_real,
     }
   }
 
   file { 'puppet_config':
-    path    => $config_path,
+    path    => $config_path_real,
     content => $config_content,
     owner   => $config_owner,
     group   => $config_group,
@@ -258,7 +301,7 @@ class puppet::agent (
     minute  => $cron_minute,
   }
 
-  if $run_method == 'cron' {
+  if $run_method_real == 'cron' {
     cron { 'puppet_agent_once_at_boot':
       ensure  => $at_boot_ensure,
       command => $my_cron_command,
