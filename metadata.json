@@ -1,9 +1,9 @@
 {
   "name": "ghoneycutt-puppet",
-  "version": "2.19.0",
+  "version": "3.0.0",
   "author": "ghoneycutt",
-  "summary": "Manage Puppet",
-  "description": "Manages Puppet, including Master, Agent, Dashboard and maintenance tasks.",
+  "summary": "Manages Puppet agent and puppetserver",
+  "description": "Manages Puppet agent and puppetserver.",
   "license": "Apache-2.0",
   "source": "git://github.com/ghoneycutt/puppet-module-puppet.git",
   "project_page": "https://github.com/ghoneycutt/puppet-module-puppet",
@@ -11,82 +11,41 @@
   "requirements": [
     {
       "name": "pe",
-      "version_requirement": ">= 3.2.0 < 5.0.0"
+      "version_requirement": ">= 4.7.0 < 5.0.0"
     },
     {
       "name": "puppet",
-      "version_requirement": ">= 3.0.0 < 5.0.0"
+      "version_requirement": ">= 4.7.0 < 5.0.0"
     }
   ],
   "operatingsystem_support": [
     {
-      "operatingsystem": "Debian",
-      "operatingsystemrelease": [
-        "6",
-        "7"
-      ]
-    },
-    {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "5",
-        "6",
-        "7"
+        "6"
       ]
     },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "5",
-        "6",
-        "7"
+        "6"
       ]
     },
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
-        "5",
-        "6",
-        "7"
+        "6"
       ]
     },
     {
       "operatingsystem": "Scientific",
       "operatingsystemrelease": [
-        "5",
-        "6",
-        "7"
-      ]
-    },
-    {
-      "operatingsystem": "Solaris",
-      "operatingsystemrelease": [
-        "9",
-        "10",
-        "11"
-      ]
-    },
-    {
-      "operatingsystem": "SLES"
-    },
-    {
-      "operatingsystem": "SLED"
-    },
-    {
-      "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [
-        "12.04"
+        "6"
       ]
     }
   ],
   "dependencies": [
-    {"name":"ghoneycutt/common","version_requirement":">= 1.6.0 < 2.0.0"},
-    {"name":"leinaddm/htpasswd","version_requirement":">= 0.0.1 < 2.0.0"},
-    {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 6.0.0"},
-    {"name":"puppetlabs/mysql","version_requirement":">= 2.0.0 < 3.0.0"},
-    {"name":"puppetlabs/passenger","version_requirement":">= 0.4.1 < 2.0.0"},
-    {"name":"puppetlabs/apache","version_requirement":">= 0.5.0 < 2.0.0"},
-    {"name":"puppetlabs/firewall","version_requirement":">= 1.7.1 < 2.0.0"},
-    {"name":"puppetlabs/concat","version_requirement":">= 1.2.5 < 2.0.0"}
+    {"name":"puppetlabs/inifile","version_requirement":">= 1.6.0 < 2.0.0"},
+    {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 6.0.0"}
   ]
 }
