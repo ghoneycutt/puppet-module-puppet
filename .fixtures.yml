@@ -1,27 +1,10 @@
 fixtures:
   repositories:
-    firewall:
-      repo: 'https://github.com/puppetlabs/puppetlabs-firewall.git'
-      ref: '1.7.1'
+    inifile:
+      repo: 'https://github.com/puppetlabs/puppetlabs-inifile.git'
+      ref: '1.6.0'
     stdlib:
       repo: 'https://github.com/puppetlabs/puppetlabs-stdlib.git'
       ref: '4.6.0'
-    mysql:
-      repo: 'https://github.com/puppetlabs/puppetlabs-mysql.git'
-      ref: '2.0.1-rc1'
-    passenger:
-      repo: 'https://github.com/puppetlabs/puppetlabs-passenger.git'
-      ref: '0.4.1'
-    apache:
-      repo: 'https://github.com/puppetlabs/puppetlabs-apache.git'
-      ref: '0.5.0-rc1'
-    concat:
-      repo: 'https://github.com/puppetlabs/puppetlabs-concat.git'
-      ref: '1.2.5'
-    common:
-      repo: 'https://github.com/ghoneycutt/puppet-module-common.git'
-      ref: 'v1.6.0'
-    htpasswd:
-      repo: 'https://github.com/leinaddm/puppet-htpasswd.git'
   symlinks:
     puppet: "#{source_dir}"

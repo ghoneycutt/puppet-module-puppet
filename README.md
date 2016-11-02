@@ -1,773 +1,198 @@
-# puppet-module-puppet #
-===
+# puppet-module-puppet
 
-[![Build Status](https://travis-ci.org/ghoneycutt/puppet-module-puppet.png?branch=secure_dashboard)](https://travis-ci.org/ghoneycutt/puppet-module-puppet)
+#### Table of Contents
 
-This module handles the various parts of puppet on a given machine.
+1. [Module Description](#module-description)
+1. [Dependencies](#dependencies)
+1. [Compatibility](#compatibility)
+1. [Class Descriptions](#class-descriptions)
+    * [puppet](#class-puppet)
+    * [puppet::server](#class-puppet-server)
 
-Dependencies for this module are: apache, common, mysql and passenger
+# Module description
 
-This module is targeted at Puppet v3. It does support the agent on Puppet v4.
-To use the agent, simply `include ::puppet::agent`.
+[![Build Status](https://travis-ci.org/ghoneycutt/puppet-module-puppet.png?branch=master)](https://travis-ci.org/ghoneycutt/puppet-module-puppet)
 
-## Components ##
+This module handles the various parts of puppet including the agent and
+puppetserver. It is highly opionated and does not seek to manage the
+agent and server in all ways that they can be configured and
+implemented.
 
-### Agent
----------
-- Manages the puppet agent on a client
-- Setup of configuration files
-- Setup of service or crontask to run the agent periodically
-- Ensure puppet agent is run at boottime
+* The agent runs in noop by default. This is the safest way and ensures
+  that changes are known by having to specify that you want to run in
+  enforcing mode.
 
-### Master
-----------
-- Manages apache with passenger
-- Setup of config files needed to run master
-- Calls the `puppet::lint` class
-- Calls the `puppet::master::maintenance` class
-- Manages firewall rule for puppet if needed
-- Maintenance to purge filebucket and reports
+* The agent does not run as a service. There is no good reason for
+  running the service. Instead cron should be used to better manage how
+  and when the agent runs.
 
-### Dashboard
--------------
-- Manages [Puppet Dashboard](https://github.com/sodabrew/puppet-dashboard)
-- This installation is used by puppet systems, that need access to the dashboard
+* By default the agent will run every thirty minutes from cron and the
+  minutes will be randomized using fqdn_rand() so they are consistent
+  per host. If you would like a different schedule, this is easily
+  disabled by setting `run_every_thirty` to `false`, in which case,
+  it is suggested that the schedule by specified in your profile.
 
-### Dashboard Server
---------------------
-- Manages [Puppet Dashboard](https://github.com/sodabrew/puppet-dashboard)
-- This is the actual server running the Dashboard
-- Configures the Dashboard MySQL settings
-- Creates database for puppet with mysql module
-- Calls the `puppet::dashboard::maintenance` class
-- Maintenance to clean up old reports, optimize database and dump database
-- For the maintenance cron jobs, you should have the following line in your `/etc/sudoers` which is not managed with this module.
-<pre>
-Defaults:root !requiretty
-</pre>
+* The trusted_node_data option in puppet.conf is set to true.
 
-### Lint
---------
-- Manages [puppet-lint](http://github.com/rodjek/puppet-lint)
+This module is targeted at Puppet v4. If you need support for Puppet v3,
+please see the puppetv3 branch of this module. Which supports the agent,
+master (with apache/passenger), Puppet Dashboard and puppet-lint.
 
+To use the agent, use `include ::puppet`.  If the system is also a
+puppetserver, use `include ::puppet::server`, which will also manage the
+agent.
 
-## Compatibility ##
--------------------
-Ruby versions 1.8.7, 1.9.3, 2.0.0 and 2.1.0 on Puppet v3.
+It uses puppetlabs/inifile to manage the entries in puppet.conf.
 
-### Puppet Master
------------------
-* Debian 6
-* Debian 7
+# Dependencies
+
+For version ranges, please see metadata.json.
+
+* [puppetlabs/inifile](https://github.com/puppetlabs/puppetlabs-inifile)
+* [puppetlabs/stdlib](https://github.com/puppetlabs/puppetlabs-stdlib)
+
+# Compatibility
+
+Puppet v4 with Ruby versions 2.1.9 and 2.3.1 with the following
+platforms. Please consult the CI testing matrix in .travis.yml for more
+info. If you are looking for Puppet v3, please see the [puppetv3
+branch](https://github.com/ghoneycutt/puppet-module-puppet/tree/puppetv3).
+
 * EL 6
-* Ubuntu 12.04 LTS
-
-### Puppet Agent
-----------------
-* Debian 6
-* Debian 7
-* EL 6
-* EL 7
-* Solaris
-* Suse 11
-* Ubuntu 12.04 LTS
 
 ===
 
-## Class `puppet::agent` ##
+# Class Descriptions
 
-### Parameters ###
+## Class `puppet`
 
-certname
---------
+### Description
+
+Manages the puppet agent.
+
+A note on types, `Variant[Enum['true', 'false'], Boolean]` means that
+boolean `true` and `false` are supported as well as stringified `'true'`
+and `'false'`.
+
+### Parameters
+
+---
+#### certname (type: String)
 The certificate name for the client.
 
 - *Default*: $::fqdn
 
-config_path
------------
-The location of the puppet config file.
-
-- *Default*: /etc/puppet/puppet.conf
-
-config_owner
-------------
-The owner of the config file.
-
-- *Default*: root
-
-config_group
-------------
-The group for the config file.
-
-- *Default*: root
-
-config_mode
------------
-The mode for the config file.
-
-- *Default*: 0644
-
-env
 ---
-The selected environment for the client.
-
-- *Default*: $::env
-
-puppet_server
--------------
-The puppet server the client should connect to.
-
-- *Default*: puppet
-
-puppet_masterport
------------------
-The masterport setting in puppet.conf. By default this line is not set.
-
-- *Default*: UNSET
-
-puppet_ca_server
-----------------
-The puppet CA server the client should use
-
-- *Default*: UNSET
-
-http_proxy_host
----------------
-The http-proxy the client should use
-
-- *Default*: UNSET
-
-http_proxy_port
-----------------
-The http-proxy port the client should use
-
-- *Default*: UNSET
-
-is_puppet_master
-----------------
-Whether the machine is a puppet master or not.
-
-- *Default*: false
-
-run_method
-----------
-Whether to run as a service or in cron mode. Valid values are `disable`, `cron`, and `service`. The value `disable` disables automatic puppet runs and assumes you are running as a service.
-
-- *Default*: service
-
-run_interval
-------------
-The interval, in minutes, with which the client should run. If greater than 30, the agent will only run once per hour.
-
-- *Default*: 30
-
-run_in_noop
------------
-Whether the client should run in noop mode or not.
-
-- *Default*: false
-
-cron_command
-------------
-The command that should be added to the crontab (in cron mode)
-
-- *Default*: /usr/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay
-
-run_at_boot
------------
-Whether the client should run right after boot
+#### run_every_thirty (type: Variant[Enum['true', 'false'], Boolean])
+Determines if a cron job to run the puppet agent every thirty minutes
+should be present.
 
 - *Default*: true
 
-puppet_binary
--------------
-Path to puppet binary to create symlink from
-
-- *Default*: '/usr/bin/puppet'
-
-symlink_puppet_binary_target
-----------------------------
-Path to where the symlink should be created
-
-- *Default*: '/usr/local/bin/puppet'
-
-symlink_puppet_binary
----------------------
-Boolean for ensuring a symlink for puppet_binary to symlink_puppet_binary_target. This is useful if you install puppet in a non-standard location that is not in your $PATH.
-
-- *Default*: false
-
-agent_sysconfig
----------------
-The location of puppet agent sysconfig file.
-
-- *Default*: use defaults based on osfamily
-
-agent_sysconfig_ensure
-----------------------
-String for 'file' or 'present'. Allows you to not manage the sysconfig file.
-
-- *Default*: use defaults based on osfamily
-
-daemon_name
------------
-The name the puppet agent daemon should run as.
-
-- *Default*: puppet
-
-ssldir
-------
-String with absolute path for ssldir in puppet agent's config. Using the default will set it to: '$vardir/ssl'
-
-- *Default*: 'USE_DEFAULTS'
-
-stringify_facts
----------------
-Boolean to set the value of stringify_facts main section of the puppet agent's config. This must be set to true to use structured facts.
-
-- *Default*: true
-
-etckeeper_hooks
----------------
-Boolean to include pre- and postrun hooks for etckeeper in the main section of the puppet agent's config.
-
-- *Default*: false
-
-===
-
-## Class `puppet::dashboard` ##
-
-### Parameters ###
-
-dashboard_package
------------------
-String or Array of the dashboard package(s) name.
-
-- *Default*: 'puppet-dashboard'
-
-dashboard_user
---------------
-The user for dashboard installation.
-
-- *Default*: use defaults based on osfamily
-
-dashboard_group
---------------
-The group for dashboard installation.
-
-- *Default*: use defaults based on osfamily
-
-sysconfig_path
--------------------
-The location of puppet dashboard sysconfig file.
-
-- *Default*: use defaults based on osfamily
-
-external_node_script_path
--------------------------
-The script to call from puppet to get manifests from dashboard.
-
-- *Default*: /usr/share/puppet-dashboard/bin/external_node
-
-dashboard_fqdn
---------------
-The dashboard server FQDN.
-
-- *Default*: puppet.${::domain}
-
-port
-----
-The port the web server will respond to.
-
-- *Default*: 3000
-
-manage_mysql_options
---------------------
-Boolean to use modules default mysql::server settings (mysql_max_packet_size).
-For specific mysql::server settings you can use hiera now:
-<pre>
-puppet::dashboard::server::manage_mysql_options: false
-mysql::server::override_options:
-  mysqld:
-    max_allowed_packet:      '32M'
-    innodb_buffer_pool_size: '64M'
-</pre>
-
-- *Default*: true
-
-===
-
-## Class `puppet::dashboard::server` ##
-
-### Usage ###
-You can optionally specify a hash of htpasswd entries in Hiera.
-
-<pre>
 ---
-puppet::dashboard::htpasswd:
-  admin:
-    cryptpasswd: $apr1$kVPL28B8$1LggacK2dvrOf4SkOCxyO0
-  puppet:
-    cryptpasswd: $apr1$F2redFE9$FCyxK2cJuHXphfeQugXBi1
-</pre>
+#### run_in_noop (type: Variant[Enum['true', 'false'], Boolean])
+Determines if the puppet agent should run in noop mode. This is done by
+appending '--noop' to the `cron_command` parameter.
 
-### Parameters ###
+- *Default*: true
 
-dashboard_workers
------------------
-Number of dashboard workers to start. Only used on osfamily Debian.
+---
+#### cron_command (type: String)
+Command that will be run from cron for the puppet agent.
 
-- *Default*: $::processorcount
+- *Default*: '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache
+  --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
 
-database_config_path
---------------------
-The path to the database config file.
+---
+#### run_at_boot (type: Variant[Enum['true', 'false'], Boolean])
+Determine if a cron job should present that will run the puppet agent at
+boot time.
 
-- *Default*: /usr/share/puppet-dashboard/config/database.yml
+- *Default*: true
 
-database_config_owner
----------------------
-The owner of the database config file.
+---
+#### config_path (type: String)
+The absolute path to the puppet config file.
 
-- *Default*: puppet-dashboard
+- *Default*: /etc/puppetlabs/puppet/puppet.conf
 
-database_config_group
----------------------
-The database config file group.
+---
+#### server (type: String)
+The name of the puppet server.
 
-- *Default*: puppet-dashboard
+- *Default*: 'puppet'
 
-database_config_mode
---------------------
-The database config file mode.
+---
+#### ca_server (type: String)
+The name of the puppet CA server.
 
-- *Default*: 0640
+- *Default*: 'puppet'
 
-htpasswd
---------
-Hash of htpasswd entries. See leinaddm/htpasswd module for more information. Only used if security is set to 'htpasswd'.
+---
+#### graph (type: Variant[Enum['true', 'false'], Boolean])
+Value of the graph option in puppet.conf.
+
+- *Default*: false
+
+---
+#### archive_files (type: Variant[Enum['true', 'false'], Boolean])
+Value of the archive_files option in puppet.conf.
+
+- *Default*: false
+
+---
+#### archive_file_server (type: String)
+Value of the archive_file_server option in puppet.conf.
+
+- *Default*: 'puppet'
+
+---
+#### agent_sysconfig_path (type: String)
+The absolute path to the puppet agent sysconfig file.
+
+- *Default*: '/etc/sysconfig/puppet'
+
+## Class `puppet::server`
+
+Manages the puppetserver.
+
+---
+#### ca (type: Variant[Enum['true', 'false'], Boolean])
+Determines if the system is a puppet CA (certificate authority). There
+should be only one CA per cluster of puppet masters.
+
+- *Default*: false
+
+---
+#### autosign_entries (type: Variant[Array[String, 1], Undef])
+Optional array of entries that will be autosigned.
 
 - *Default*: undef
 
-htpasswd_path
--------------
-String of path to htpasswd file to be used by Dashboard. Only used if security is set to 'htpasswd'.
-
-- *Default*: `/etc/puppet/dashboard.htpasswd`
-
-htpasswd_owner
---------------
-Owner of htpasswd file.
-
-- *Default*: root
-
-htpasswd_group
---------------
-Group of htpasswd file.
-
-- *Default*: use defaults based on osfamily
-
-htpasswd_mode
--------------
-Mode of htpasswd file.
-
-- *Default*: 0640
-
-log_dir
--------
-The location for the puppet log files.
-
-- *Default*: /var/log/puppet
-
-mysql_user
-----------
-The user for the mysql connection.
-
-- *Default*: dashboard
-
-mysql_password
---------------
-The password for the mysql connection.
-
-- *Default*: puppet
-
-mysql_max_packet_size
----------------------
-The mysql max packet size.
-
-- *Default*: 32M
-
-security
---------
-String to indicate security type used. Valid values are 'none' and 'htpasswd'. Using 'htpasswd' will use Apache basic auth with a htpasswd file. See htpasswd and htpasswd_path parameters.
-
-- *Default*: 'none'
-
-vhost_path
-----------
-The location of puppet dashboard vhost file for apache.
-
-- *Default*: use defaults based on osfamily
-
-===
-
-## Class `puppet::dashboard::maintenance` ##
-
-### Parameters ###
-
-db_optimization_command
------------------------
-The command to run to optimize the db.
-
-- *Default*: /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production db:raw:optimize >> /var/log/puppet/dashboard_maintenance.log
-
-db_optimization_user
---------------------
-The user to run db optimization.
-
-- *Default*: root
-
-db_optimization_hour
---------------------
-The hour on which to run db optimization.
-
-- *Default*: 0
-
-db_optimization_minute
-----------------------
-The minute at which to run db optimization.
-
-- *Default*: 0
-
-db_optimization_monthday
-------------------------
-The day of the month on which to run db optimization.
-
-- *Default*: 1
-
-reports_days_to_keep
---------------------
-How many days to keep the reports.
-
-- *Default*: 30
-
-purge_old_reports_command
--------------------------
-Which command to run to purge old reports.
-Defaults to: '/usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production reports:prune upto=${reports_days_to_keep} unit=day >> /var/log/puppet/dashboard_maintenance.log'
-If using a specific command here, please keep in mind you need to align it with $reports_days_to_keep yourself.
-
-- *Default*: 'USE_DEFAULTS'
-
-
-purge_old_reports_user
-----------------------
-User to purge reports as.
-
-- *Default*: root
-
-purge_old_reports_hour
-----------------------
-On which hour to purge old reports.
-
-- *Default*: 0
-
-purge_old_reports_minute
-------------------------
-At which minute to purge old reports.
-
-- *Default*: 30
-
-remove_old_reports_spool
-------------------------
-Whether we should remove old dashboard reports that have not been imported
-
-- *Default*: 'True'
-
-reports_spool_dir
------------------
-Path to reports in dashboard spool
-
-- *Default*: '/usr/share/puppet-dashboard/spool'
-
-reports_spool_days_to_keep
---------------------------
-How many days to keep the unimported reports.
-
-remove_reports_spool_user
--------------------------
-User to remove unimported reports.
-
-- *Default*: root
-
-remove_reports_spool_hour
--------------------------
-On which hour to remove unimported reports.
-
-- *Default*: 0
-
-remove_reports_spool_minute
----------------------------
-At which minute to remove unimported reports
-
-- *Default*: 45
-
-dump_dir
---------
-The directory to use for dumps.
-
-- *Default*: /var/local
-
-dump_database_command
----------------------
-The command to run to dump the database.
-Defaults to: 'cd ~puppet-dashboard && sudo -u ${puppet::dashboard::dashboard_user_real} /usr/bin/rake -f /usr/share/puppet-dashboard/Rakefile RAILS_ENV=production FILE=${dump_dir}/dashboard-`date -I`.sql db:raw:dump >> /var/log/puppet/dashboard_maintenance.log 2>&1 && bzip2 -v9 ${dump_dir}/dashboard-`date -I`.sql >> /var/log/puppet/dashboard_maintenance.log 2>&1'
-If using a specific command here, please keep in mind you need to align it with $puppet::dashboard::dashboard_user & $dump_dir yourself.
-
-- *Default*: 'USE_DEFAULTS'
-
-dump_database_user
-------------------
-User to dump database as.
-
-- *Default*: root
-
-dump_database_hour
-------------------
-On which hour to dump database.
-
-- *Default*: 1
-
-dump_database_minute
---------------------
-At which minute to purge old reports.
-
-- *Default*: 0
-
-days_to_keep_backups
---------------------
-Number of days to keep database backups.
-
-- *Default*: 7
-
-purge_old_db_backups_user
--------------------------
-User to purge old database dumps as.
-
-- *Default*: root
-
-purge_old_db_backups_hour
--------------------------
-On which hour to purge old database dumps.
-
-- *Default*: 2
-
-purge_old_db_backups_minute
----------------------------
-At which minute to purge old database dumps.
-
-- *Default*: 0
-
-===
-
-## Class `puppet::lint` ##
-
-### Parameters ###
-
-ensure
-------
-Whether to install lint.
-
-- *Default*: present
-
-provider
---------
-Which provider should supply lint.
-
-- *Default*: gem
-
-version
--------
-If you do not want to use the default version of lint, specify which version you want to use here.
+---
+#### sysconfig_path (type: String)
+The absolute path to the puppetserver sysconfig file.
+
+- *Default*: '/etc/sysconfig/puppetserver'
+
+---
+#### memory_size (type: String /^\d+(m|g)$/)
+The amount of memory allocated to the puppetserver. This is passed to
+the Xms and Xmx arguments for java. It must be a whole number followed
+by the unit 'm' for MB or 'g' for GB.
+
+- *Default*: '2g'
+
+---
+#### enc (type: Optional[String])
+The absolute path to an ENC. If this is set, it will be the value for the
+external_nodes option in puppet.conf and the node_terminus option will
+be set to 'exec'.
 
 - *Default*: undef
 
-lint_args
----------
-Which args should be added to the .puppet-lint.rc file
-
-- *Default*: --no-80chars-check
-
-lintrc_path
------------
-The full path to the lint config file.
-
-- *Default*: ${::root_home}/.puppet-lint.rc
-
-lintrc_owner
-------------
-The owner of the lint config file.
-
-- *Default*: root
-
-lintrc_group
-------------
-The group of the lint config file.
-
-- *Default*: root
-
-lintrc_mode
------------
-The mode of the lint config file.
-
-- *Default*: 0644
-
-===
-
-## Class `puppet::master` ##
-
-### Usage ###
-
-In Hiera you will need to specify the following.
-
-<pre>
-puppet::agent::is_puppet_master: 'true'
-</pre>
-
-### Parameters ###
-
-sysconfig_path
---------------
-The location of puppet master sysconfig file.
-
-- *Default*: use defaults based on osfamily
-
-vhost_path
-----------
-The location of puppet master vhost file for apache.
-
-- *Default*: use defaults based on osfamily
-
-rack_dir
---------
-The rack directory path.
-
-- *Default*: /usr/share/puppet/rack/puppetmasterd
-
-puppet_user
------------
-The user the puppet master should run as.
-
-- *Default*: puppet
-
-manage_firewall
----------------
-Whether to manage the firewall settings on the client
+---
+#### dns_alt_names (type: Optional[String])
+Value of the dns_alt_names option in puppet.conf.
 
 - *Default*: undef
-
-passenger_max_requests
-----------------------
-The number of requests that each puppet master process will handle before being restarted.
-
-- *Default*: 1000
-
-===
-
-## Class `puppet::master::maintenance` ##
-
-If you have a cluster of puppet masters mounting the same data, you should
-disable these cronjobs on all systems except for one to ensure they are not all
-cleaning up the same data.
-
-```
-puppet::master::maintenance::clientbucket_cleanup_ensure: 'absent'
-puppet::master::maintenance::reportdir_purge_ensure: 'absent'
-```
-
-### Parameters ###
-
-clientbucket_cleanup_ensure
----------------------------
-String for ensure parameter for filebucket_cleanup cron job.
-
-- *Default*: 'present'
-
-clientbucket_path
------------------
-Path to where the clientbucket files are stored.
-
-- *Default*: /var/lib/puppet/clientbucket
-
-clientbucket_days_to_keep
--------------------------
-The number of days to keep clientbuckets
-
-- *Default*: 30
-
-filebucket_cleanup_command
---------------------------
-Command used to cleanup the clientbuckets.
-
-- *Default*: /usr/bin/find ${clientbucket_path} -type f -mtime +30 -exec /bin/rm -f {} \;
-
-filebucket_cleanup_user
------------------------
-User to run the clientbucket cleanup as.
-
-- *Default*: root
-
-filebucket_cleanup_hour
------------------------
-Hour on which to run the filebucket cleanup.
-
-- *Default*: 0
-
-filebucket_cleanup_minute
--------------------------
-Minute at which to run the filebucket cleanup.
-
-- *Default*: 0
-
-reportdir_purge_ensure
-----------------------
-String for ensure parameter for purge_old_puppet_reports cron job.
-
-- *Default*: 'present'
-
-reportdir
----------
-Directory that holds the reports. `$::puppet_reportdir` is a custom fact that reads the `reportdir` setting from Puppet's configuration. This is likely `/var/lib/puppet/reports/`.
-
-- *Default*: $::puppet_reportdir
-
-reportdir_days_to_key
----------------------
-String for number of days of reports to keep. Must be a positive integer > 0.
-
-- *Default*: '30'
-
-reportdir_purge_command
------------------------
-Command ran by cron to purge old reports.
-
-- *Default*: /usr/bin/find -L /var/lib/puppet/reports -type f -mtime +30 -exec /bin/rm -f {} \;'
-
-reportdir_purge_user
---------------------
-User for the crontab entry to run the reportdir_purge_command.
-
-- *Default*: root
-
-reportdir_purge_hour
---------------------
-Hour at which to run the reportdir_purge_command.
-
-- *Default*: 0
-
-reportdir_purge_minute
-----------------------
-Minute past the hour in which to run the reportdir_purge_command.
-
-- *Default*: 15
