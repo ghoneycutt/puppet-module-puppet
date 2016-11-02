@@ -1,5 +1,21 @@
 # Change Log
 
+## [v3.0.1](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.0.1) (2016-11-02)
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.0.0...v3.0.1)
+
+**Merged pull requests:**
+
+- Add rubocop testing and conform to its style recommendations [\#124](https://github.com/ghoneycutt/puppet-module-puppet/pull/124) ([ghoneycutt](https://github.com/ghoneycutt))
+- Add rake task for github\_changelog\_generator [\#123](https://github.com/ghoneycutt/puppet-module-puppet/pull/123) ([ghoneycutt](https://github.com/ghoneycutt))
+- Support puppet v4.8.0 [\#122](https://github.com/ghoneycutt/puppet-module-puppet/pull/122) ([ghoneycutt](https://github.com/ghoneycutt))
+
+## [v3.0.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.0.0) (2016-11-02)
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.19.0...v3.0.0)
+
+**Merged pull requests:**
+
+- Release v3.0.0 - Transition to Puppet v4 [\#121](https://github.com/ghoneycutt/puppet-module-puppet/pull/121) ([ghoneycutt](https://github.com/ghoneycutt))
+
 ## [v2.19.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.19.0) (2016-07-13)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.18.1...v2.19.0)
 
