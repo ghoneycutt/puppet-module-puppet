@@ -28,3 +28,8 @@ gem 'puppet-lint-undef_in_function-check', :require => false
 gem 'puppet-lint-unquoted_string-check', :require => false
 gem 'puppet-lint-variable_contains_upcase', :require => false
 gem 'puppet-lint-version_comparison-check', :require => false
+
+# Rack if a dependency of github_changelog_generator
+gem 'github_changelog_generator', require: false
+gem 'rack', '~> 1.0', :require => false if RUBY_VERSION <= '2.2.2'
+gem 'rack', :require => false if RUBY_VERSION > '2.2.2'
