@@ -188,12 +188,12 @@ describe 'puppet::server' do
       'non-empty array of strings' => {
         :name    => %w(autosign_entries),
         :valid   => [['array with one string'], %w(array with many strings)],
-        :invalid => [%w(), [1,'not_all','string'], true, 'string', { 'ha' => 'sh' }, 3, 2.42],
+        :invalid => [%w(), [1, 'not_all', 'string'], true, 'string', { 'ha' => 'sh' }, 3, 2.42],
         :message => 'Error while evaluating a Resource Statement',
       },
       'memory size regex' => {
         :name    => %w(memory_size),
-        :valid   => ['1g', '1m', '1500m', '3g'],
+        :valid   => %w(1g 1m 1500m 3g),
         :invalid => ['1g1', 'm', '1k', '2t', 'g3', '1.2g'],
         :message => 'must be an integer following by the unit',
       },

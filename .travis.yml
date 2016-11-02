@@ -7,13 +7,14 @@ rvm:
 
 env:
   matrix:
-    - PUPPET_GEM_VERSION="~> 4.7.0"
-    - PUPPET_GEM_VERSION="~> 4.8.0"
-    - PUPPET_GEM_VERSION="~> 4"
+    - PUPPET_GEM_VERSION="~> 4.7.0" CHECK=test
+    - PUPPET_GEM_VERSION="~> 4.8.0" CHECK=test
+    - PUPPET_GEM_VERSION="~> 4" CHECK=test
+    - PUPPET_GEM_VERSION="~> 4" CHECK=rubocop
 
 sudo: false
 
-script: 'SPEC_OPTS="--format documentation" bundle exec rake validate lint spec'
+script: 'SPEC_OPTS="--format documentation" bundle exec rake $CHECK'
 
 matrix:
   fast_finish: true

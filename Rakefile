@@ -29,3 +29,10 @@ task :validate do
     sh "erb -P -x -T '-' #{template} | ruby -c"
   end
 end
+
+desc 'Run tests for CI'
+task :test do
+  [:lint, :validate, :spec].each do |test|
+    Rake::Task[test].invoke
+  end
+end
