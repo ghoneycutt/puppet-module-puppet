@@ -8,11 +8,12 @@ rvm:
 env:
   matrix:
     - PUPPET_GEM_VERSION="~> 4.7.0"
+    - PUPPET_GEM_VERSION="~> 4.8.0"
     - PUPPET_GEM_VERSION="~> 4"
 
 sudo: false
 
-script: 'bundle exec rake validate && bundle exec rake lint && SPEC_OPTS="--format documentation" bundle exec rake spec'
+script: 'SPEC_OPTS="--format documentation" bundle exec rake validate lint spec'
 
 matrix:
   fast_finish: true
