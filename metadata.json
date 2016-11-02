@@ -1,6 +1,6 @@
 {
   "name": "ghoneycutt-puppet",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "ghoneycutt",
   "summary": "Manages Puppet agent and puppetserver",
   "description": "Manages Puppet agent and puppetserver.",
