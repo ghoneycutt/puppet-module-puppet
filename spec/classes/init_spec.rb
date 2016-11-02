@@ -114,11 +114,11 @@ describe 'puppet' do
             cron_minute = nil
           end
 
-          if [true, 'true'].include?(noop_value)
-            cron_command = '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop'
-          else
-            cron_command = '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
-          end
+          cron_command = if [true, 'true'].include?(noop_value)
+                           '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop'
+                         else
+                           '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
+                         end
 
           it do
             should contain_cron('puppet_agent_every_thirty').with({
@@ -165,11 +165,11 @@ describe 'puppet' do
       context "set to #{value} (as #{value.class})" do
         let(:params) { { :run_at_boot => value } }
 
-        if [true, 'true'].include?(value)
-          foo = 'present'
-        else
-          foo = 'absent'
-        end
+        foo = if [true, 'true'].include?(value)
+                'present'
+              else
+                'absent'
+              end
 
         it { should contain_cron('puppet_agent_once_at_boot').with_ensure(foo) }
       end
