@@ -44,6 +44,34 @@ describe 'puppet::agent' do
       it { should_not contain_file('puppet_config').with_content(/^\s*postrun_command=\/etc\/puppet\/etckeeper-commit-post$/) }
     end
 
+    context 'with puppet version 3.x' do
+      let(:facts) {
+        {
+          :osfamily      => 'Debian',
+          :puppetversion => '3.8.7'
+        }
+      }
+      let(:params) { { :env => 'production' } }
+
+      it { should contain_class('puppet::agent') }
+      it { should contain_file('puppet_config').with_content(/\[main\]/) }
+      it { should contain_file('puppet_config').with_content(/\[agent\]/) }
+    end
+
+    context 'with puppet version 4.x' do
+      let(:facts) {
+        {
+          :osfamily      => 'Debian',
+          :puppetversion => '4.1.0'
+        }
+      }
+      let(:params) { { :env => 'production' } }
+
+      it { should contain_class('puppet::agent') }
+      it { should contain_file('puppet_config').with_content(/\[main\]/) }
+      it { should_not contain_file('puppet_config').with_content(/\[agent\]/) }
+    end
+
     ['false',false].each do |value|
       context "with is_puppet_master set to #{value} (default)" do
         let(:facts) do
