@@ -6,6 +6,7 @@ else
   gem 'puppet', :require => false
 end
 
+gem 'activesupport', '~> 4.0', :require => false if RUBY_VERSION < '2.2'
 gem 'facter', '>= 2.0', :require => false
 gem 'hiera', '~> 3.0', :require => false
 gem 'metadata-json-lint', :require => false
@@ -29,7 +30,7 @@ gem 'rspec-puppet', :require => false
 gem 'rspec-puppet-facts', :require => false
 gem 'rubocop', :require => false
 
-# Rack if a dependency of github_changelog_generator
+# Rack is a dependency of github_changelog_generator
 gem 'github_changelog_generator', require: false
 gem 'rack', '~> 1.0', :require => false if RUBY_VERSION <= '2.2.2'
 gem 'rack', :require => false if RUBY_VERSION > '2.2.2'
