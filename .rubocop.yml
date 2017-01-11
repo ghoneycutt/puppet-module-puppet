@@ -40,3 +40,6 @@ Style/HashSyntax:
 
 Style/BracesAroundHashParameters:
   Enabled: false
+
+Bundler/DuplicatedGem:
+  Enabled: false
