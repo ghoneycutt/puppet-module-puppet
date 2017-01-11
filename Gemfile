@@ -6,14 +6,10 @@ else
   gem 'puppet', :require => false
 end
 
-gem 'metadata-json-lint', :require => false
-gem 'rspec-puppet', :require => false
-gem 'rspec-puppet-facts', :require => false
-gem 'rubocop', :require => false
-gem 'puppetlabs_spec_helper', '>= 1.2.0', :require => false
+gem 'activesupport', '~> 4.0', :require => false if RUBY_VERSION < '2.2'
 gem 'facter', '>= 2.0', :require => false
 gem 'hiera', '~> 3.0', :require => false
-gem 'rubocop', :require => false
+gem 'metadata-json-lint', :require => false
 gem 'puppet-lint', '~> 2.0', :require => false
 gem 'puppet-lint-absolute_classname-check', :require => false
 gem 'puppet-lint-alias-check', :require => false
@@ -29,8 +25,12 @@ gem 'puppet-lint-undef_in_function-check', :require => false
 gem 'puppet-lint-unquoted_string-check', :require => false
 gem 'puppet-lint-variable_contains_upcase', :require => false
 gem 'puppet-lint-version_comparison-check', :require => false
+gem 'puppetlabs_spec_helper', '>= 1.2.0', :require => false
+gem 'rspec-puppet', :require => false
+gem 'rspec-puppet-facts', :require => false
+gem 'rubocop', :require => false
 
-# Rack if a dependency of github_changelog_generator
+# Rack is a dependency of github_changelog_generator
 gem 'github_changelog_generator', require: false
 gem 'rack', '~> 1.0', :require => false if RUBY_VERSION <= '2.2.2'
 gem 'rack', :require => false if RUBY_VERSION > '2.2.2'
