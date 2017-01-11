@@ -13,7 +13,6 @@ gem 'rubocop', :require => false
 gem 'puppetlabs_spec_helper', '>= 1.2.0', :require => false
 gem 'facter', '>= 2.0', :require => false
 gem 'hiera', '~> 3.0', :require => false
-gem 'rubocop', :require => false
 gem 'puppet-lint', '~> 2.0', :require => false
 gem 'puppet-lint-absolute_classname-check', :require => false
 gem 'puppet-lint-alias-check', :require => false
