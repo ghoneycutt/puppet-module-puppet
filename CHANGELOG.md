@@ -1,5 +1,13 @@
 # Change Log
 
+## [v3.0.2](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.0.2) (2017-01-11)
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.0.1...v3.0.2)
+
+**Merged pull requests:**
+
+- Puppetserver sysconfig [\#128](https://github.com/ghoneycutt/puppet-module-puppet/pull/128) ([ghoneycutt](https://github.com/ghoneycutt))
+- Fix gem dependencies for testing [\#127](https://github.com/ghoneycutt/puppet-module-puppet/pull/127) ([ghoneycutt](https://github.com/ghoneycutt))
+
 ## [v3.0.1](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.0.1) (2016-11-02)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.0.0...v3.0.1)
 
