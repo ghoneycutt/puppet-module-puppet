@@ -11,6 +11,7 @@ class puppet (
   String                                  $config_path = '/etc/puppetlabs/puppet/puppet.conf',
   String                                  $server = 'puppet',
   String                                  $ca_server = 'puppet',
+  Optional[String]                        $env = undef,
   Variant[Enum['true', 'false'], Boolean] $graph = false, #lint:ignore:quoted_booleans
   Variant[Enum['true', 'false'], Boolean] $archive_files = false, #lint:ignore:quoted_booleans
   String                                  $archive_file_server = 'puppet',
@@ -80,6 +81,12 @@ class puppet (
     special => 'reboot',
   }
 
+  if $env != undef {
+    $environment_real = $env
+  } else {
+    $environment_real = $environment
+  }
+
   $ini_defaults = {
     ensure  => 'present',
     path    => $::puppet::config_path,
@@ -91,7 +98,7 @@ class puppet (
     'server'              => { setting => 'server', value => $server,},
     'ca_server'           => { setting => 'ca_server', value => $ca_server,},
     'certname'            => { setting => 'certname', value => $certname,},
-    'environment'         => { setting => 'environment', value => $environment,},
+    'environment'         => { setting => 'environment', value => $environment_real,},
     'trusted_node_data'   => { setting => 'trusted_node_data', value => true,},
     'graph'               => { setting => 'graph', value => $graph,},
     'archive_files'       => { setting => 'archive_files', value => $archive_files,},
