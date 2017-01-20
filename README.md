@@ -129,6 +129,15 @@ The name of the puppet CA server.
 - *Default*: 'puppet'
 
 ---
+#### env (type: String)
+Value of environment option in puppet.conf which defaults to the
+environment of the current puppet run. By setting this parameter, you
+can specify an environment on the command line (`puppet agent -t
+--environment foo`) and it will not trigger a change to the puppet.conf.
+
+- *Default*: $environment
+
+---
 #### graph (type: Variant[Enum['true', 'false'], Boolean])
 Value of the graph option in puppet.conf.
 
