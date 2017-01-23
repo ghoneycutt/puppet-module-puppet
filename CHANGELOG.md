@@ -1,5 +1,13 @@
 # Change Log
 
+## [v3.1.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.1.0)
+
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.0.2...v3.1.0)
+
+**Merged pull requests:**
+
+- Add parameter env [\#130](https://github.com/ghoneycutt/puppet-module-puppet/pull/130) ([ghoneycutt](https://github.com/ghoneycutt))
+
 ## [v3.0.2](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.0.2) (2017-01-11)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.0.1...v3.0.2)
 
