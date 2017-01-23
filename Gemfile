@@ -32,5 +32,8 @@ gem 'rubocop', :require => false
 
 # Rack is a dependency of github_changelog_generator
 gem 'github_changelog_generator', require: false
-gem 'rack', '~> 1.0', :require => false if RUBY_VERSION <= '2.2.2'
-gem 'rack', :require => false if RUBY_VERSION > '2.2.2'
+if RUBY_VERSION <= '2.2.2'
+  gem 'rack', '~> 1.0', :require => false
+else
+  gem 'rack', :require => false
+end
