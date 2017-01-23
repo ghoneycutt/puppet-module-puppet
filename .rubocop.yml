@@ -43,3 +43,9 @@ Style/BracesAroundHashParameters:
 
 Bundler/DuplicatedGem:
   Enabled: false
+
+Style/NegatedIf:
+  Enabled: false
+
+Style/BlockLength:
+  Enabled: false
