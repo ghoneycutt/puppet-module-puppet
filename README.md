@@ -130,10 +130,10 @@ The name of the puppet CA server.
 
 ---
 #### env (type: Optional[String])
-Environment to configure in puppet.conf. If not specified, the environment
-of the current puppet run will be configured in puppet.conf.
+Environment to configure in puppet.conf, defaults to the environment
+of the current puppet run.
 
-- *Default*: undef
+- *Default*: $environment
 
 ---
 #### graph (type: Variant[Enum['true', 'false'], Boolean])
