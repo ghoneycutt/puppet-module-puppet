@@ -210,6 +210,34 @@ describe 'puppet' do
     end
   end
 
+  describe 'with env specified' do
+    let(:params) { { :env => 'myenv' } }
+
+    it do
+      should contain_ini_setting('environment').with({
+        :ensure  => 'present',
+        :setting => 'environment',
+        :value   => 'myenv',
+        :path    => '/etc/puppetlabs/puppet/puppet.conf',
+        :section => 'main',
+        :require => 'File[puppet_config]',
+      })
+    end
+  end
+
+  describe 'without env specified' do
+    it do
+      should contain_ini_setting('environment').with({
+        :ensure  => 'present',
+        :setting => 'environment',
+        :value   => 'rp_env',
+        :path    => '/etc/puppetlabs/puppet/puppet.conf',
+        :section => 'main',
+        :require => 'File[puppet_config]',
+      })
+    end
+  end
+
   describe 'with server specified' do
     let(:params) { { :server => 'foo' } }
 
