@@ -22,6 +22,8 @@
     # always a string. If set to false, then you can use structured facts which
     # were introduced in Facter v2
     stringify_facts = <%= @stringify_facts_bool %>
+
+    configtimeout = <%= @configtimeout %>
 <% if @etckeeper_hooks_bool == true %>
 
     prerun_command=/etc/puppet/etckeeper-commit-pre

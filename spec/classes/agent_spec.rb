@@ -40,6 +40,7 @@ describe 'puppet::agent' do
       it { should contain_file('puppet_config').with_content(/^\ *noop = false$/) }
       it { should_not contain_file('puppet_config').with_content(/environment = production/) }
       it { should contain_file('puppet_config').with_content(/^\s*stringify_facts = true$/) }
+      it { should contain_file('puppet_config').with_content(/^\s*configtimeout = 2m$/) }
       it { should_not contain_file('puppet_config').with_content(/^\s*prerun_command=\/etc\/puppet\/etckeeper-commit-pre$/) }
       it { should_not contain_file('puppet_config').with_content(/^\s*postrun_command=\/etc\/puppet\/etckeeper-commit-post$/) }
     end
@@ -83,6 +84,7 @@ describe 'puppet::agent' do
         it { should contain_file('puppet_config').with_content(/^\ *noop = false$/) }
         it { should_not contain_file('puppet_config').with_content(/environment = production/) }
         it { should contain_file('puppet_config').with_content(/^\s*stringify_facts = true$/) }
+        it { should contain_file('puppet_config').with_content(/^\s*configtimeout = 2m$/) }
       end
     end
 
@@ -125,6 +127,7 @@ describe 'puppet::agent' do
         it { should_not contain_file('puppet_config').with_content(/^\ *noop = false$/) }
         it { should_not contain_file('puppet_config').with_content(/environment = production/) }
         it { should_not contain_file('puppet_config').with_content(/^\s*stringify_facts = true$/) }
+        it { should_not contain_file('puppet_config').with_content(/^\s*configtimeout = 2m$/) }
       end
     end
   end
@@ -624,6 +627,36 @@ describe 'puppet::agent' do
         expect {
           should contain_class('puppet::agent')
         }.to raise_error(Puppet::Error,/puppet::agent::puppet_masterport is set to <invalidtype>\. It should be an integer\./)
+      end
+    end
+  end
+
+  describe 'with configtimeout' do
+    context 'set to a valid entry (3m)' do
+      let(:params) do
+        {
+          :configtimeout => '3m',
+          :env           => 'production',
+        }
+      end
+      let(:facts) { { :osfamily => 'RedHat' } }
+
+      it { should contain_file('puppet_config').with_content(/^\s*configtimeout = 3m$/) }
+    end
+
+    context 'set to an invalid setting' do
+      let(:params) do
+        {
+          :configtimeout => 'invalid',
+          :env           => 'production',
+        }
+      end
+      let(:facts) { { :osfamily => 'RedHat' } }
+
+      it 'should fail' do
+        expect {
+          should contain_class('puppet::agent')
+        }.to raise_error(Puppet::Error,/and must be a number followed by/)
       end
     end
   end

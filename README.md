@@ -234,6 +234,15 @@ Boolean to include pre- and postrun hooks for etckeeper in the main section of t
 
 - *Default*: false
 
+configtimeout
+-------------
+String to be passed to configtimeout option in puppet.conf. Must be a
+number followed by s, m, h, d or y. See
+[https://docs.puppet.com/puppet/3.8/configuration.html#configtimeout](https://docs.puppet.com/puppet/3.8/configuration.html#configtimeout)
+for more info.
+
+- *Default*: '2m'
+
 ===
 
 ## Class `puppet::dashboard` ##
