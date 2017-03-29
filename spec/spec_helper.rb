@@ -12,6 +12,6 @@ RSpec.configure do |config|
   end
   config.default_facts = {
     :environment   => 'rp_env',
-    :puppetversion => '3.0',
+    :puppetversion => '3.8.7',
   }
 end

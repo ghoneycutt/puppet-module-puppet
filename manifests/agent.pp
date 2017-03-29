@@ -35,7 +35,7 @@ class puppet::agent (
   $configtimeout                = '2m',
 ) {
 
-  if versioncmp($::puppetversion, '3.0') > 0 {
+  if versioncmp($::puppetversion, '3.99') > 0 {
     # puppet v4
     $default_config_path   = '/etc/puppetlabs/puppet/puppet.conf'
     $default_cron_command  = '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
