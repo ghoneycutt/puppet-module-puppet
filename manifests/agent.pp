@@ -32,6 +32,7 @@ class puppet::agent (
   $ssldir                       = 'USE_DEFAULTS',
   $stringify_facts              = true,
   $etckeeper_hooks              = false,
+  $configtimeout                = '2m',
 ) {
 
   if versioncmp($::puppetversion, '3.0') > 0 {
@@ -128,6 +129,9 @@ class puppet::agent (
     $etckeeper_hooks_bool = $etckeeper_hooks
   }
   validate_bool($etckeeper_hooks_bool)
+
+  validate_re($configtimeout, '^[0-9]+(s|m|h|d|y)$',
+    "configtimeout is <${configtimeout}> and must be a number followed by s, m, h, d or y.")
 
   if $http_proxy_host != 'UNSET' and (is_domain_name($http_proxy_host) == false and is_ip_address($http_proxy_host) == false){
     fail("puppet::agent::http_proxy_host is set to <${http_proxy_host}>. It should be a fqdn or an ip-address.")
