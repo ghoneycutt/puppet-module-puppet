@@ -1,6 +1,6 @@
 {
   "name": "ghoneycutt-puppet",
-  "version": "2.19.0",
+  "version": "2.20.0",
   "author": "ghoneycutt",
   "summary": "Manage Puppet",
   "description": "Manages Puppet, including Master, Agent, Dashboard and maintenance tasks.",
