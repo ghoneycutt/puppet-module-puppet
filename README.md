@@ -144,18 +144,6 @@ Value of the graph option in puppet.conf.
 - *Default*: false
 
 ---
-#### archive_files (type: Variant[Enum['true', 'false'], Boolean])
-Value of the archive_files option in puppet.conf.
-
-- *Default*: false
-
----
-#### archive_file_server (type: String)
-Value of the archive_file_server option in puppet.conf.
-
-- *Default*: 'puppet'
-
----
 #### agent_sysconfig_path (type: String)
 The absolute path to the puppet agent sysconfig file.
 

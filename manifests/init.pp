@@ -13,8 +13,6 @@ class puppet (
   String                                  $ca_server = 'puppet',
   String                                  $env = $environment,
   Variant[Enum['true', 'false'], Boolean] $graph = false, #lint:ignore:quoted_booleans
-  Variant[Enum['true', 'false'], Boolean] $archive_files = false, #lint:ignore:quoted_booleans
-  String                                  $archive_file_server = 'puppet',
   String                                  $agent_sysconfig_path = '/etc/sysconfig/puppet',
 ) {
 
@@ -95,8 +93,6 @@ class puppet (
     'environment'         => { setting => 'environment', value => $env,},
     'trusted_node_data'   => { setting => 'trusted_node_data', value => true,},
     'graph'               => { setting => 'graph', value => $graph,},
-    'archive_files'       => { setting => 'archive_files', value => $archive_files,},
-    'archive_file_server' => { setting => 'archive_file_server', value => $archive_file_server,},
   }
   create_resources('ini_setting', $ini_settings, $ini_defaults)
 
