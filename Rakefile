@@ -1,6 +1,5 @@
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet-lint/tasks/puppet-lint'
-require 'rubocop/rake_task'
 require 'github_changelog_generator/task'
 
 GitHubChangelogGenerator::RakeTask.new :changelog do |config|
@@ -9,8 +8,6 @@ GitHubChangelogGenerator::RakeTask.new :changelog do |config|
   config.issues = false
   config.token = ENV['GITHUB_CHANGELOG_TOKEN']
 end
-
-RuboCop::RakeTask.new
 
 PuppetLint.configuration.send('disable_80chars')
 PuppetLint.configuration.send('disable_140chars')

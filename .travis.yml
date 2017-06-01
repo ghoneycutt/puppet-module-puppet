@@ -6,12 +6,11 @@ rvm:
 
 env:
   matrix:
-    - PUPPET_GEM_VERSION="~> 4.7.0" CHECK=test
-    - PUPPET_GEM_VERSION="~> 4.8.0" CHECK=test
-    - PUPPET_GEM_VERSION="~> 4.9.0" CHECK=test
-    - PUPPET_GEM_VERSION="~> 4.10.0" CHECK=test
-    - PUPPET_GEM_VERSION="~> 4" CHECK=test
-    - PUPPET_GEM_VERSION="~> 4" CHECK=rubocop
+    - PUPPET_GEM_VERSION="~> 4.7.0"
+    - PUPPET_GEM_VERSION="~> 4.8.0"
+    - PUPPET_GEM_VERSION="~> 4.9.0"
+    - PUPPET_GEM_VERSION="~> 4.10.0"
+    - PUPPET_GEM_VERSION="~> 4"
 
 sudo: false
 
@@ -22,7 +21,7 @@ before_install:
   - gem --version
   - bundle -v
 
-script: 'SPEC_OPTS="--format documentation" bundle exec rake $CHECK'
+script: 'SPEC_OPTS="--format documentation" bundle exec rake test'
 
 matrix:
   fast_finish: true

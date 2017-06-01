@@ -28,7 +28,6 @@ gem 'puppet-lint-version_comparison-check', :require => false
 gem 'puppetlabs_spec_helper', '>= 1.2.0', :require => false
 gem 'rspec-puppet', :require => false
 gem 'rspec-puppet-facts', :require => false
-gem 'rubocop', :require => false
 
 # Rack is a dependency of github_changelog_generator
 gem 'github_changelog_generator', require: false
