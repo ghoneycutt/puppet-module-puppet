@@ -8,6 +8,8 @@ env:
   matrix:
     - PUPPET_GEM_VERSION="~> 4.7.0" CHECK=test
     - PUPPET_GEM_VERSION="~> 4.8.0" CHECK=test
+    - PUPPET_GEM_VERSION="~> 4.9.0" CHECK=test
+    - PUPPET_GEM_VERSION="~> 4.10.0" CHECK=test
     - PUPPET_GEM_VERSION="~> 4" CHECK=test
     - PUPPET_GEM_VERSION="~> 4" CHECK=rubocop
 
