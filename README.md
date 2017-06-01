@@ -53,9 +53,9 @@ For version ranges, please see metadata.json.
 
 # Compatibility
 
-Puppet v4 with Ruby versions 2.1.9 and 2.3.1 with the following
-platforms. Please consult the CI testing matrix in .travis.yml for more
-info. If you are looking for Puppet v3, please see the [puppetv3
+Puppet v4 with Ruby versions 2.1.9 with the following platforms. Please
+consult the CI testing matrix in .travis.yml for more info. If you are
+looking for Puppet v3, please see the [puppetv3
 branch](https://github.com/ghoneycutt/puppet-module-puppet/tree/puppetv3).
 
 * EL 6
