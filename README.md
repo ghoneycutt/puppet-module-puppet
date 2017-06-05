@@ -53,9 +53,9 @@ For version ranges, please see metadata.json.
 
 # Compatibility
 
-Puppet v4 with Ruby versions 2.1.9 and 2.3.1 with the following
-platforms. Please consult the CI testing matrix in .travis.yml for more
-info. If you are looking for Puppet v3, please see the [puppetv3
+Puppet v4 with Ruby versions 2.1.9 with the following platforms. Please
+consult the CI testing matrix in .travis.yml for more info. If you are
+looking for Puppet v3, please see the [puppetv3
 branch](https://github.com/ghoneycutt/puppet-module-puppet/tree/puppetv3).
 
 * EL 6
@@ -142,18 +142,6 @@ can specify an environment on the command line (`puppet agent -t
 Value of the graph option in puppet.conf.
 
 - *Default*: false
-
----
-#### archive_files (type: Variant[Enum['true', 'false'], Boolean])
-Value of the archive_files option in puppet.conf.
-
-- *Default*: false
-
----
-#### archive_file_server (type: String)
-Value of the archive_file_server option in puppet.conf.
-
-- *Default*: 'puppet'
 
 ---
 #### agent_sysconfig_path (type: String)

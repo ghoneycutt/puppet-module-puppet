@@ -46,8 +46,6 @@ describe 'puppet' do
         'environment'         => 'rp_env',
         'trusted_node_data'   => true,
         'graph'               => false,
-        'archive_files'       => false,
-        'archive_file_server' => 'puppet',
       }
 
       ini_settings.each do |setting, value|
@@ -181,7 +179,7 @@ describe 'puppet' do
 
     it { should contain_file('puppet_config').with_path('/path/to/puppet.conf') }
 
-    ini_settings = %w(server ca_server certname environment trusted_node_data graph archive_files archive_file_server)
+    ini_settings = %w(server ca_server certname environment trusted_node_data graph)
 
     ini_settings.each do |setting|
       it { should contain_ini_setting(setting).with_path('/path/to/puppet.conf') }
@@ -189,7 +187,7 @@ describe 'puppet' do
   end
 
   describe 'with puppet.conf ini setting' do
-    %w(server ca_server certname graph archive_files archive_file_server).each do |setting|
+    %w(server ca_server certname graph).each do |setting|
       context "#{setting} set to a valid entry" do
         # 'true' is used because it is acceptable to all of the above
         # parameters. Some of the settings are strings and some are boolean and
@@ -262,13 +260,13 @@ describe 'puppet' do
         :message => 'is not an absolute path',
       },
       'booleans' => {
-        :name    => %w(run_every_thirty run_in_noop run_at_boot graph archive_files),
+        :name    => %w(run_every_thirty run_in_noop run_at_boot graph),
         :valid   => [true, 'true', false, 'false'],
         :invalid => ['string', %w(array), { 'ha' => 'sh' }, 3, 2.42],
         :message => 'Error while evaluating a Resource Statement',
       },
       'strings' => {
-        :name    => %w(certname cron_command server ca_server archive_file_server env),
+        :name    => %w(certname cron_command server ca_server env),
         :valid   => ['string'],
         :invalid => [true, %w(array), { 'ha' => 'sh' }, 3, 2.42],
         :message => 'Error while evaluating a Resource Statement',
