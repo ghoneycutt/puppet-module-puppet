@@ -1,7 +1,23 @@
 # Change Log
 
-## [v3.1.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.1.0)
+## [v3.2.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.2.0)(2017-06-05)
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.1.0...v3.2.0)
 
+**Merged pull requests:**
+
+- Remove deprecated params [\#132](https://github.com/ghoneycutt/puppet-module-puppet/pull/132) ([ghoneycutt](https://github.com/ghoneycutt))
+
+## [v2.20.1](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.20.1) (2017-03-29)
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.20.0...v2.20.1)
+
+## [v2.20.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.20.0) (2017-03-29)
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.1.0...v2.20.0)
+
+**Merged pull requests:**
+
+- Add ability to specify configtimeout option in the agent config [\#131](https://github.com/ghoneycutt/puppet-module-puppet/pull/131) ([ghoneycutt](https://github.com/ghoneycutt))
+
+## [v3.1.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.1.0) (2017-01-23)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.0.2...v3.1.0)
 
 **Merged pull requests:**
@@ -111,7 +127,7 @@
 
 **Merged pull requests:**
 
-- Follow symlink for reportdir [\#91](https://github.com/ghoneycutt/puppet-module-puppet/pull/91) ([emahags](https://github.com/emahags))
+- Follow symlink for reportdir [\#91](https://github.com/ghoneycutt/puppet-module-puppet/pull/91) ([ghost](https://github.com/ghost))
 
 ## [v2.14.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.14.0) (2014-11-25)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.13.1...v2.14.0)
@@ -178,7 +194,7 @@
 
 **Merged pull requests:**
 
-- Add environment fact [\#64](https://github.com/ghoneycutt/puppet-module-puppet/pull/64) ([emahags](https://github.com/emahags))
+- Add environment fact [\#64](https://github.com/ghoneycutt/puppet-module-puppet/pull/64) ([ghost](https://github.com/ghost))
 - Specify version of apache to use in fixtures [\#61](https://github.com/ghoneycutt/puppet-module-puppet/pull/61) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v2.9.3](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.9.3) (2014-01-31)
