@@ -8,7 +8,7 @@ end
 
 gem 'activesupport', '~> 4.0', :require => false if RUBY_VERSION < '2.2'
 gem 'facter', '>= 2.0', :require => false
-gem 'hiera', '~> 3.0', :require => false
+gem 'hiera', :require => false
 gem 'metadata-json-lint', :require => false
 gem 'puppet-lint', '~> 2.0', :require => false
 gem 'puppet-lint-absolute_classname-check', :require => false
