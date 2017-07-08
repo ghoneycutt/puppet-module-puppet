@@ -144,6 +144,12 @@ Value of the graph option in puppet.conf.
 - *Default*: false
 
 ---
+#### dns_alt_names (type: Optional[String])
+Value of the dns_alt_names option in puppet.conf.
+
+- *Default*: undef
+
+---
 #### agent_sysconfig_path (type: String)
 The absolute path to the puppet agent sysconfig file.
 
@@ -185,11 +191,5 @@ by the unit 'm' for MB or 'g' for GB.
 The absolute path to an ENC. If this is set, it will be the value for the
 external_nodes option in puppet.conf and the node_terminus option will
 be set to 'exec'.
-
-- *Default*: undef
-
----
-#### dns_alt_names (type: Optional[String])
-Value of the dns_alt_names option in puppet.conf.
 
 - *Default*: undef

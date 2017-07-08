@@ -36,7 +36,7 @@ describe 'puppet::server' do
         end
       end
 
-      %w(node_terminus external_nodes dns_alt_names).each do |setting|
+      %w(node_terminus external_nodes).each do |setting|
         it { should_not contain_ini_setting(setting) }
       end
 
@@ -132,24 +132,6 @@ describe 'puppet::server' do
     end
   end
 
-  describe 'with dns_alt_names' do
-    context 'set to a valid path' do
-      let(:params) { { :dns_alt_names => 'foo,foo1,foo1.example.com,foo.example.com' } }
-
-      it do
-        should contain_ini_setting('dns_alt_names').with({
-          :ensure  => 'present',
-          :setting => 'dns_alt_names',
-          :value   => 'foo,foo1,foo1.example.com,foo.example.com',
-          :path    => '/etc/puppetlabs/puppet/puppet.conf',
-          :section => 'master',
-          :require => 'File[puppet_config]',
-          :notify  => 'Service[puppetserver]',
-        })
-      end
-    end
-  end
-
   describe 'with autosign_entries' do
     context 'set to a valid array of strings' do
       let(:params) { { :autosign_entries => ['*.example.org', '*.dev.example.org'] } }
@@ -177,12 +159,6 @@ describe 'puppet::server' do
         :name    => %w(ca),
         :valid   => [true, 'true', false, 'false'],
         :invalid => ['string', %w(array), { 'ha' => 'sh' }, 3, 2.42],
-        :message => 'Error while evaluating a Resource Statement',
-      },
-      'strings' => {
-        :name    => %w(dns_alt_names),
-        :valid   => ['string'],
-        :invalid => [true, %w(array), { 'ha' => 'sh' }, 3, 2.42],
         :message => 'Error while evaluating a Resource Statement',
       },
       'non-empty array of strings' => {
