@@ -12,6 +12,7 @@ class puppet (
   String                                  $server = 'puppet',
   String                                  $ca_server = 'puppet',
   String                                  $env = $environment,
+  Optional[String]                        $dns_alt_names = undef,
   Variant[Enum['true', 'false'], Boolean] $graph = false, #lint:ignore:quoted_booleans
   String                                  $agent_sysconfig_path = '/etc/sysconfig/puppet',
 ) {
@@ -87,14 +88,22 @@ class puppet (
   }
 
   $ini_settings = {
-    'server'              => { setting => 'server', value => $server,},
-    'ca_server'           => { setting => 'ca_server', value => $ca_server,},
-    'certname'            => { setting => 'certname', value => $certname,},
-    'environment'         => { setting => 'environment', value => $env,},
-    'trusted_node_data'   => { setting => 'trusted_node_data', value => true,},
-    'graph'               => { setting => 'graph', value => $graph,},
+    'server'            => { setting => 'server', value => $server,},
+    'ca_server'         => { setting => 'ca_server', value => $ca_server,},
+    'certname'          => { setting => 'certname', value => $certname,},
+    'environment'       => { setting => 'environment', value => $env,},
+    'trusted_node_data' => { setting => 'trusted_node_data', value => true,},
+    'graph'             => { setting => 'graph', value => $graph,},
   }
   create_resources('ini_setting', $ini_settings, $ini_defaults)
+
+  if $dns_alt_names != undef {
+    ini_setting { 'dns_alt_names':
+      setting => 'dns_alt_names',
+      value   => $dns_alt_names,
+      *       => $ini_defaults,
+    }
+  }
 
   file { 'puppet_config':
     ensure => 'file',
