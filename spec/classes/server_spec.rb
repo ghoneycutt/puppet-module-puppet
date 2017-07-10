@@ -1,5 +1,26 @@
 require 'spec_helper'
 describe 'puppet::server' do
+
+  ca_config_if_true = <<-END.gsub(/^\s+\|/, '')
+    |# This file is being maintained by Puppet.
+    |# DO NOT EDIT
+    |
+    |# To enable the CA service, leave the following line uncommented
+    |puppetlabs.services.ca.certificate-authority-service/certificate-authority-service
+    |# To disable the CA service, comment out the above line and uncomment the line below
+    |#puppetlabs.services.ca.certificate-authority-disabled-service/certificate-authority-disabled-service
+  END
+
+  ca_config_if_false = <<-END.gsub(/^\s+\|/, '')
+    |# This file is being maintained by Puppet.
+    |# DO NOT EDIT
+    |
+    |# To enable the CA service, leave the following line uncommented
+    |#puppetlabs.services.ca.certificate-authority-service/certificate-authority-service
+    |# To disable the CA service, comment out the above line and uncomment the line below
+    |puppetlabs.services.ca.certificate-authority-disabled-service/certificate-authority-disabled-service
+  END
+
   # Filter out duplicate platforms
   platforms = on_supported_os.select { |k, _v| !k.to_s.match(/^(RedHat|Scientific|OracleLinux)/i) }
 
@@ -57,6 +78,18 @@ describe 'puppet::server' do
         })
       end
 
+      it do
+        should contain_file('puppetserver_ca_cfg').with({
+          :ensure  => 'file',
+          :path    => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
+          :content => ca_config_if_false,
+          :owner   => 'root',
+          :group   => 'root',
+          :mode    => '0644',
+          :notify  => 'Service[puppetserver]',
+        })
+      end
+
       puppetserver_sysconfig = File.read(fixtures('puppetserver_sysconfig'))
       it do
         should contain_file('puppetserver_sysconfig').with({
@@ -83,19 +116,39 @@ describe 'puppet::server' do
   end
 
   describe 'with ca' do
-    [true, 'true', false, 'false'].each do |value|
+    [true, 'true'].each do |value|
       context "set to #{value} (as #{value.class})" do
         let(:params) { { :ca => value } }
 
         it do
+          should contain_file('puppetserver_ca_cfg').with({
+            :content => ca_config_if_true,
+          })
+        end
+
+        it do
           should contain_ini_setting('ca').with({
-            :ensure  => 'present',
             :setting => 'ca',
-            :value   => value,
-            :path    => '/etc/puppetlabs/puppet/puppet.conf',
-            :section => 'master',
-            :require => 'File[puppet_config]',
-            :notify  => 'Service[puppetserver]',
+            :value   => true,
+          })
+        end
+      end
+    end
+
+    [false, 'false'].each do |value|
+      context "set to #{value} (as #{value.class})" do
+        let(:params) { { :ca => value } }
+
+        it do
+          should contain_file('puppetserver_ca_cfg').with({
+            :content => ca_config_if_false,
+          })
+        end
+
+        it do
+          should contain_ini_setting('ca').with({
+            :setting => 'ca',
+            :value   => false,
           })
         end
       end

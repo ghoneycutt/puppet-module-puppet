@@ -12,6 +12,8 @@ class puppet::server (
 
   include ::puppet
 
+  $_ca = str2bool($ca)
+
   if $sysconfig_path != undef {
     validate_absolute_path($sysconfig_path)
   }
@@ -33,7 +35,7 @@ class puppet::server (
     'rundir'  => { setting => 'rundir', value => '/var/run/puppetlabs/puppetserver',},
     'pidfile' => { setting => 'pidfile', value => '/var/run/puppetlabs/puppetserver/puppetserver.pid',},
     'codedir' => { setting => 'codedir', value =>'/etc/puppetlabs/code',},
-    'ca'      => { setting => 'ca', value => $ca,},
+    'ca'      => { setting => 'ca', value => $_ca,},
   }
 
   if $enc != undef {
@@ -66,6 +68,16 @@ class puppet::server (
     ensure  => 'file',
     path    => '/etc/puppetlabs/puppet/autosign.conf',
     content => template('puppet/autosign.conf.erb'),
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    notify  => Service['puppetserver'],
+  }
+
+  file { 'puppetserver_ca_cfg':
+    ensure  => 'file',
+    path    => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
+    content => template('puppet/ca.cfg.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
