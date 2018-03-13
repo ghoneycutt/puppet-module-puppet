@@ -89,7 +89,7 @@ class puppet (
   $ini_settings = {
     'server'              => { setting => 'server', value => $server,},
     'ca_server'           => { setting => 'ca_server', value => $ca_server,},
-    'certname'            => { setting => 'certname', value => $certname,},
+    'certname'            => { setting => 'certname', value => downcase($certname),},
     'environment'         => { setting => 'environment', value => $env,},
     'trusted_node_data'   => { setting => 'trusted_node_data', value => true,},
     'graph'               => { setting => 'graph', value => $graph,},
