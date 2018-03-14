@@ -89,6 +89,8 @@ class puppet (
   $ini_settings = {
     'server'              => { setting => 'server', value => $server,},
     'ca_server'           => { setting => 'ca_server', value => $ca_server,},
+    # certname must be lower case
+    # see https://puppet.com/docs/puppet/latest/configuration.html#certname and https://tickets.puppetlabs.com/browse/PUP-2551
     'certname'            => { setting => 'certname', value => downcase($certname),},
     'environment'         => { setting => 'environment', value => $env,},
     'trusted_node_data'   => { setting => 'trusted_node_data', value => true,},
