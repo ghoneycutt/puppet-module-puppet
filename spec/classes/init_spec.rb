@@ -22,7 +22,7 @@ describe 'puppet' do
       it do
         should contain_cron('puppet_agent_every_thirty').with({
           :ensure  => 'present',
-          :command => '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop',
+          :command => '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop',
           :user    => 'root',
           :hour    => '*',
           #:minute  => [16,46],
@@ -33,7 +33,7 @@ describe 'puppet' do
       it do
         should contain_cron('puppet_agent_once_at_boot').with({
           :ensure  => 'present',
-          :command => '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop',
+          :command => '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop',
           :user    => 'root',
           :special => 'reboot',
         })
@@ -113,9 +113,9 @@ describe 'puppet' do
           end
 
           cron_command = if [true, 'true'].include?(noop_value)
-                           '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop'
+                           '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop'
                          else
-                           '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
+                           '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
                          end
 
           it do

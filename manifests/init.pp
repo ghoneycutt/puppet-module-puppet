@@ -6,7 +6,7 @@ class puppet (
   String                                  $certname = $::fqdn,
   Variant[Enum['true', 'false'], Boolean] $run_every_thirty = true, #lint:ignore:quoted_booleans
   Variant[Enum['true', 'false'], Boolean] $run_in_noop = true, #lint:ignore:quoted_booleans
-  String                                  $cron_command = '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
+  String                                  $cron_command = '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
   Variant[Enum['true', 'false'], Boolean] $run_at_boot = true, #lint:ignore:quoted_booleans
   String                                  $config_path = '/etc/puppetlabs/puppet/puppet.conf',
   String                                  $server = 'puppet',
