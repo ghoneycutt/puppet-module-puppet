@@ -6,18 +6,21 @@ rvm:
 
 env:
   matrix:
-    - PUPPET_GEM_VERSION="~> 4.7.0"
-    - PUPPET_GEM_VERSION="~> 4.8.0"
-    - PUPPET_GEM_VERSION="~> 4.9.0"
-    - PUPPET_GEM_VERSION="~> 4.10.0"
-    - PUPPET_GEM_VERSION="~> 4"
+    - RUBYGEMS_VERSION=2.0.17 BUNDLER_VERSION=1.17.3 PUPPET_GEM_VERSION="~> 4.7.0"
+    - RUBYGEMS_VERSION=2.0.17 BUNDLER_VERSION=1.17.3 PUPPET_GEM_VERSION="~> 4.8.0"
+    - RUBYGEMS_VERSION=2.0.17 BUNDLER_VERSION=1.17.3 PUPPET_GEM_VERSION="~> 4.9.0"
+    - RUBYGEMS_VERSION=2.0.17 BUNDLER_VERSION=1.17.3 PUPPET_GEM_VERSION="~> 4.10.0"
+    - RUBYGEMS_VERSION=2.0.17 BUNDLER_VERSION=1.17.3 PUPPET_GEM_VERSION="~> 4"
 
 sudo: false
 
 before_install:
+  - if [ $BUNDLER_VERSION ]; then
+      gem install -v $BUNDLER_VERSION bundler --no-rdoc --no-ri;
+    fi
   - bundle -v
-  - gem update --system
-  - gem update bundler
+  - rm -f Gemfile.lock
+  - gem update --system $RUBYGEMS_VERSION
   - gem --version
   - bundle -v
 
