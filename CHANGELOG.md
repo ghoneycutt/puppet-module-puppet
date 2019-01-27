@@ -1,7 +1,21 @@
 # Change Log
 
-## [v3.2.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.2.0)(2017-06-05)
-[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.1.0...v3.2.0)
+## [v3.2.1](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.2.1)
+
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.2.0...v3.2.1)
+
+**Closed issues:**
+
+- ignorecache setting in $cron\_command let newer Puppet agent fail [\#141](https://github.com/ghoneycutt/puppet-module-puppet/issues/141)
+- Is dependency on puppetlabs-inifile still necessary? [\#139](https://github.com/ghoneycutt/puppet-module-puppet/issues/139)
+
+**Merged pull requests:**
+
+- Fix $cron\_command [\#142](https://github.com/ghoneycutt/puppet-module-puppet/pull/142) ([Phil-Friderici](https://github.com/Phil-Friderici))
+- \(Maint\) CI testing - Allow newest hiera gem [\#134](https://github.com/ghoneycutt/puppet-module-puppet/pull/134) ([ghoneycutt](https://github.com/ghoneycutt))
+
+## [v3.2.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.2.0) (2017-06-05)
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.20.1...v3.2.0)
 
 **Merged pull requests:**
 
@@ -27,6 +41,10 @@
 ## [v3.0.2](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.0.2) (2017-01-11)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.0.1...v3.0.2)
 
+**Closed issues:**
+
+- Why is running as a service no longer an option? [\#125](https://github.com/ghoneycutt/puppet-module-puppet/issues/125)
+
 **Merged pull requests:**
 
 - Puppetserver sysconfig [\#128](https://github.com/ghoneycutt/puppet-module-puppet/pull/128) ([ghoneycutt](https://github.com/ghoneycutt))
@@ -43,6 +61,11 @@
 
 ## [v3.0.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.0.0) (2016-11-02)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.19.0...v3.0.0)
+
+**Closed issues:**
+
+- Add support for manifest ordering for agent [\#71](https://github.com/ghoneycutt/puppet-module-puppet/issues/71)
+- Module doesn't seen to ensure service is running [\#46](https://github.com/ghoneycutt/puppet-module-puppet/issues/46)
 
 **Merged pull requests:**
 
@@ -79,6 +102,11 @@
 
 ## [v2.17.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.17.0) (2015-11-25)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.16.0...v2.17.0)
+
+**Closed issues:**
+
+- What's the purpose of $puppet::agent::env? [\#109](https://github.com/ghoneycutt/puppet-module-puppet/issues/109)
+- hardcoded maintenance jobs avoids using specific settings [\#101](https://github.com/ghoneycutt/puppet-module-puppet/issues/101)
 
 **Merged pull requests:**
 
@@ -124,6 +152,14 @@
 
 ## [v2.14.1](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.14.1) (2014-12-10)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.14.0...v2.14.1)
+
+**Closed issues:**
+
+- Default reportdir\_purge\_command does not work [\#73](https://github.com/ghoneycutt/puppet-module-puppet/issues/73)
+- need for specific uid/gid for Puppet user [\#42](https://github.com/ghoneycutt/puppet-module-puppet/issues/42)
+- when changing from NOOP to OP old cronjob is not deleted [\#41](https://github.com/ghoneycutt/puppet-module-puppet/issues/41)
+- hardcoded cron\_command when run\_in\_noop is active [\#40](https://github.com/ghoneycutt/puppet-module-puppet/issues/40)
+- style - puppet::agent has quoted booleans [\#23](https://github.com/ghoneycutt/puppet-module-puppet/issues/23)
 
 **Merged pull requests:**
 
@@ -176,6 +212,10 @@
 
 ## [v2.11.1](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.11.1) (2014-06-10)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.11.0...v2.11.1)
+
+**Closed issues:**
+
+- Dependency on puppet-module-common  [\#66](https://github.com/ghoneycutt/puppet-module-puppet/issues/66)
 
 **Merged pull requests:**
 
@@ -244,6 +284,10 @@
 ## [v2.6.1](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.6.1) (2013-11-11)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.5.3...v2.6.1)
 
+**Closed issues:**
+
+- "-":6: bad command when setting up an agent [\#25](https://github.com/ghoneycutt/puppet-module-puppet/issues/25)
+
 **Merged pull requests:**
 
 - Release v2.6.0 - Debian Support [\#39](https://github.com/ghoneycutt/puppet-module-puppet/pull/39) ([ghoneycutt](https://github.com/ghoneycutt))
@@ -290,6 +334,10 @@
 ## [v2.2.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.2.0) (2013-11-08)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.1.3...v2.2.0)
 
+**Closed issues:**
+
+- Could not find dependency File\[httpd\_vdir\] [\#29](https://github.com/ghoneycutt/puppet-module-puppet/issues/29)
+
 **Merged pull requests:**
 
 - Refactor spec tests [\#31](https://github.com/ghoneycutt/puppet-module-puppet/pull/31) ([ghoneycutt](https://github.com/ghoneycutt))
@@ -300,6 +348,10 @@
 ## [v2.1.2](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.1.2) (2013-09-27)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.1.1...v2.1.2)
 
+**Closed issues:**
+
+- cron job to dump database has permission error [\#17](https://github.com/ghoneycutt/puppet-module-puppet/issues/17)
+
 **Merged pull requests:**
 
 - Update travis to test syntax validation and lint. [\#24](https://github.com/ghoneycutt/puppet-module-puppet/pull/24) ([ghoneycutt](https://github.com/ghoneycutt))
@@ -307,6 +359,11 @@
 
 ## [v2.1.1](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.1.1) (2013-09-22)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v2.1.0...v2.1.1)
+
+**Closed issues:**
+
+- integrate with travis-ci.org [\#11](https://github.com/ghoneycutt/puppet-module-puppet/issues/11)
+- spec tests [\#9](https://github.com/ghoneycutt/puppet-module-puppet/issues/9)
 
 **Merged pull requests:**
 
@@ -316,6 +373,13 @@
 - Differentiate between Dashboard server and not. [\#15](https://github.com/ghoneycutt/puppet-module-puppet/pull/15) ([ghoneycutt](https://github.com/ghoneycutt))
 
 ## [v2.1.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v2.1.0) (2013-06-14)
+**Closed issues:**
+
+- documentation is incomplete [\#10](https://github.com/ghoneycutt/puppet-module-puppet/issues/10)
+- puppetmaster service [\#4](https://github.com/ghoneycutt/puppet-module-puppet/issues/4)
+- documentation is incomplete [\#3](https://github.com/ghoneycutt/puppet-module-puppet/issues/3)
+- is it possible to use git to store puppet conf? [\#1](https://github.com/ghoneycutt/puppet-module-puppet/issues/1)
+
 **Merged pull requests:**
 
 - Add option to use htpasswd for Dashboard. [\#14](https://github.com/ghoneycutt/puppet-module-puppet/pull/14) ([ghoneycutt](https://github.com/ghoneycutt))
