@@ -14,6 +14,7 @@ class puppet (
   String                                  $env = $environment,
   Variant[Enum['true', 'false'], Boolean] $graph = false, #lint:ignore:quoted_booleans
   String                                  $agent_sysconfig_path = '/etc/sysconfig/puppet',
+  Hash                                    $custom_settings = {},
 ) {
 
   if $config_path != undef {
@@ -95,6 +96,7 @@ class puppet (
     'graph'               => { setting => 'graph', value => $graph,},
   }
   create_resources('ini_setting', $ini_settings, $ini_defaults)
+  create_resources('ini_setting', $custom_settings, $ini_defaults)
 
   file { 'puppet_config':
     ensure => 'file',

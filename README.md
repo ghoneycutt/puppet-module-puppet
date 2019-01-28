@@ -100,8 +100,8 @@ appending '--noop' to the `cron_command` parameter.
 #### cron_command (type: String)
 Command that will be run from cron for the puppet agent.
 
-- *Default*: '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache
-  --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
+- *Default*: '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize
+  --no-usecacheonfailure --detailed-exitcodes --no-splay'
 
 ---
 #### run_at_boot (type: Variant[Enum['true', 'false'], Boolean])
@@ -148,6 +148,22 @@ Value of the graph option in puppet.conf.
 The absolute path to the puppet agent sysconfig file.
 
 - *Default*: '/etc/sysconfig/puppet'
+
+---
+#### custom_settings (type: Hash)
+A hash that allows you to define and set any settings in puppet.conf.
+For each setting use a nested hash and provide the section and the name
+and value of the setting.
+
+- *Default*: {}
+
+##### Example:
+```
+$custom_settings = {
+  'name'  => { 'section' => 'master', 'setting' => 'codedir', 'value' => '/specific/path' },
+  'other' => { 'section' => 'agent',  'setting' => 'server',  'value' => 'specific.server.local' },
+}
+```
 
 ## Class `puppet::server`
 
