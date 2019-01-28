@@ -60,8 +60,6 @@ the [puppetv3 branch](https://github.com/ghoneycutt/puppet-module-puppet/tree/pu
 
 * EL 6
 
-===
-
 # Class Descriptions
 
 ## Class `puppet`
