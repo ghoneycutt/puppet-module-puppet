@@ -100,8 +100,8 @@ appending '--noop' to the `cron_command` parameter.
 #### cron_command (type: String)
 Command that will be run from cron for the puppet agent.
 
-- *Default*: '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache
-  --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
+- *Default*: '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize
+  --no-usecacheonfailure --detailed-exitcodes --no-splay'
 
 ---
 #### run_at_boot (type: Variant[Enum['true', 'false'], Boolean])
