@@ -1,7 +1,15 @@
 # Change Log
 
-## [v3.2.1](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.2.1)
+## [v3.3.0](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.3.0)
 
+[Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.2.1...v3.3.0)
+
+**Merged pull requests:**
+
+- Support Puppet 5 & 6 [\#144](https://github.com/ghoneycutt/puppet-module-puppet/pull/144) ([Phil-Friderici](https://github.com/Phil-Friderici))
+- Add possibility to manage any additional puppet.conf settings [\#143](https://github.com/ghoneycutt/puppet-module-puppet/pull/143) ([Phil-Friderici](https://github.com/Phil-Friderici))
+
+## [v3.2.1](https://github.com/ghoneycutt/puppet-module-puppet/tree/v3.2.1) (2019-01-27)
 [Full Changelog](https://github.com/ghoneycutt/puppet-module-puppet/compare/v3.2.0...v3.2.1)
 
 **Closed issues:**
