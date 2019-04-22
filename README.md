@@ -53,14 +53,12 @@ For version ranges, please see metadata.json.
 
 # Compatibility
 
-Puppet v4 with Ruby versions 2.1.9 with the following platforms. Please
-consult the CI testing matrix in .travis.yml for more info. If you are
-looking for Puppet v3, please see the [puppetv3
-branch](https://github.com/ghoneycutt/puppet-module-puppet/tree/puppetv3).
+Puppet v4 (Ruby 2.1.9), Puppet v5 (Ruby 2.4.1), and Puppet v6 (Ruby 2.5.1)
+with the following platforms. Please consult the CI testing matrix in
+`.travis.yml` for more info. If you are looking for Puppet v3, please see
+the [puppetv3 branch](https://github.com/ghoneycutt/puppet-module-puppet/tree/puppetv3).
 
 * EL 6
-
-===
 
 # Class Descriptions
 
@@ -100,8 +98,8 @@ appending '--noop' to the `cron_command` parameter.
 #### cron_command (type: String)
 Command that will be run from cron for the puppet agent.
 
-- *Default*: '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache
-  --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
+- *Default*: '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize
+  --no-usecacheonfailure --detailed-exitcodes --no-splay'
 
 ---
 #### run_at_boot (type: Variant[Enum['true', 'false'], Boolean])
@@ -148,6 +146,22 @@ Value of the graph option in puppet.conf.
 The absolute path to the puppet agent sysconfig file.
 
 - *Default*: '/etc/sysconfig/puppet'
+
+---
+#### custom_settings (type: Hash)
+A hash that allows you to define and set any settings in puppet.conf.
+For each setting use a nested hash and provide the section and the name
+and value of the setting.
+
+- *Default*: {}
+
+##### Example:
+```
+$custom_settings = {
+  'name'  => { 'section' => 'master', 'setting' => 'codedir', 'value' => '/specific/path' },
+  'other' => { 'section' => 'agent',  'setting' => 'server',  'value' => 'specific.server.local' },
+}
+```
 
 ## Class `puppet::server`
 

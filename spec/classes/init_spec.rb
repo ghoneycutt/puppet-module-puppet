@@ -22,7 +22,7 @@ describe 'puppet' do
       it do
         should contain_cron('puppet_agent_every_thirty').with({
           :ensure  => 'present',
-          :command => '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop',
+          :command => '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop',
           :user    => 'root',
           :hour    => '*',
           #:minute  => [16,46],
@@ -33,7 +33,7 @@ describe 'puppet' do
       it do
         should contain_cron('puppet_agent_once_at_boot').with({
           :ensure  => 'present',
-          :command => '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop',
+          :command => '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop',
           :user    => 'root',
           :special => 'reboot',
         })
@@ -113,9 +113,9 @@ describe 'puppet' do
           end
 
           cron_command = if [true, 'true'].include?(noop_value)
-                           '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop'
+                           '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop'
                          else
-                           '/opt/puppetlabs/bin/puppet agent --onetime --ignorecache --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
+                           '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
                          end
 
           it do
@@ -266,6 +266,37 @@ describe 'puppet' do
     end
   end
 
+  describe 'with custom_settings specified' do
+    let(:params) { {
+      :custom_settings => {
+        'codedir' => { 'section' => 'master', 'setting' => 'codedir', 'value' => '/spec/testing' },
+        'testing' => { 'section' => 'agent',  'setting' => 'server',  'value' => 'spec.test.ing' },
+      }
+    } }
+
+    it do
+      should contain_ini_setting('codedir').with({
+        :ensure  => 'present',
+        :path    => '/etc/puppetlabs/puppet/puppet.conf',
+        :section => 'master',
+        :setting => 'codedir',
+        :value   => '/spec/testing',
+        :require => 'File[puppet_config]',
+      })
+    end
+
+    it do
+      should contain_ini_setting('testing').with({
+        :ensure  => 'present',
+        :path    => '/etc/puppetlabs/puppet/puppet.conf',
+        :section => 'agent',
+        :setting => 'server',
+        :value   => 'spec.test.ing',
+        :require => 'File[puppet_config]',
+      })
+    end
+  end
+
   describe 'parameter type and content validations' do
     validations = {
       'absolute paths' => {
@@ -279,6 +310,12 @@ describe 'puppet' do
         :valid   => [true, 'true', false, 'false'],
         :invalid => ['string', %w(array), { 'ha' => 'sh' }, 3, 2.42],
         :message => 'Error while evaluating a Resource Statement',
+      },
+      'hash' => {
+        :name    => %w(custom_settings),
+        :valid   => [], # valid hashes are to complex to block test them here
+        :invalid => ['string', %w(array), 3, 2.42, true, nil],
+        :message => 'expects a Hash value',
       },
       'strings' => {
         :name    => %w(certname cron_command server ca_server env),
