@@ -251,6 +251,21 @@ describe 'puppet' do
     end
   end
 
+  describe 'with certname containing capitalization' do
+    let(:params) { { :certname => 'puppet.example.COM' } }
+
+    it do
+      should contain_ini_setting('certname').with({
+        :ensure  => 'present',
+        :setting => 'certname',
+        :value   => 'puppet.example.com',
+        :path    => '/etc/puppetlabs/puppet/puppet.conf',
+        :section => 'main',
+        :require => 'File[puppet_config]',
+      })
+    end
+  end
+
   describe 'with custom_settings specified' do
     let(:params) { {
       :custom_settings => {
