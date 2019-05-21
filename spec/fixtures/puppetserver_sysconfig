@@ -9,7 +9,7 @@
 JAVA_BIN="/usr/bin/java"
 
 # Modify this if you'd like to change the memory allocation, enable JMX, etc
-JAVA_ARGS="-Xms2g -Xmx2g -XX:MaxPermSize=256m"
+JAVA_ARGS="-Xms2g -Xmx2g"
 
 # These normally shouldn't need to be edited if using OS packages
 USER="puppet"

@@ -1,5 +1,26 @@
 require 'spec_helper'
 describe 'puppet::server' do
+
+  ca_config_if_true = <<-END.gsub(/^\s+\|/, '')
+    |# This file is being maintained by Puppet.
+    |# DO NOT EDIT
+    |
+    |# To enable the CA service, leave the following line uncommented
+    |puppetlabs.services.ca.certificate-authority-service/certificate-authority-service
+    |# To disable the CA service, comment out the above line and uncomment the line below
+    |#puppetlabs.services.ca.certificate-authority-disabled-service/certificate-authority-disabled-service
+  END
+
+  ca_config_if_false = <<-END.gsub(/^\s+\|/, '')
+    |# This file is being maintained by Puppet.
+    |# DO NOT EDIT
+    |
+    |# To enable the CA service, leave the following line uncommented
+    |#puppetlabs.services.ca.certificate-authority-service/certificate-authority-service
+    |# To disable the CA service, comment out the above line and uncomment the line below
+    |puppetlabs.services.ca.certificate-authority-disabled-service/certificate-authority-disabled-service
+  END
+
   # Filter out duplicate platforms
   platforms = on_supported_os.select { |k, _v| !k.to_s.match(/^(RedHat|Scientific|OracleLinux)/i) }
 
@@ -36,7 +57,7 @@ describe 'puppet::server' do
         end
       end
 
-      %w(node_terminus external_nodes dns_alt_names).each do |setting|
+      %w(node_terminus external_nodes).each do |setting|
         it { should_not contain_ini_setting(setting) }
       end
 
@@ -50,6 +71,18 @@ describe 'puppet::server' do
           :ensure  => 'file',
           :path    => '/etc/puppetlabs/puppet/autosign.conf',
           :content => empty_autosign_content,
+          :owner   => 'root',
+          :group   => 'root',
+          :mode    => '0644',
+          :notify  => 'Service[puppetserver]',
+        })
+      end
+
+      it do
+        should contain_file('puppetserver_ca_cfg').with({
+          :ensure  => 'file',
+          :path    => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
+          :content => ca_config_if_false,
           :owner   => 'root',
           :group   => 'root',
           :mode    => '0644',
@@ -83,19 +116,39 @@ describe 'puppet::server' do
   end
 
   describe 'with ca' do
-    [true, 'true', false, 'false'].each do |value|
+    [true, 'true'].each do |value|
       context "set to #{value} (as #{value.class})" do
         let(:params) { { :ca => value } }
 
         it do
+          should contain_file('puppetserver_ca_cfg').with({
+            :content => ca_config_if_true,
+          })
+        end
+
+        it do
           should contain_ini_setting('ca').with({
-            :ensure  => 'present',
             :setting => 'ca',
-            :value   => value,
-            :path    => '/etc/puppetlabs/puppet/puppet.conf',
-            :section => 'master',
-            :require => 'File[puppet_config]',
-            :notify  => 'Service[puppetserver]',
+            :value   => true,
+          })
+        end
+      end
+    end
+
+    [false, 'false'].each do |value|
+      context "set to #{value} (as #{value.class})" do
+        let(:params) { { :ca => value } }
+
+        it do
+          should contain_file('puppetserver_ca_cfg').with({
+            :content => ca_config_if_false,
+          })
+        end
+
+        it do
+          should contain_ini_setting('ca').with({
+            :setting => 'ca',
+            :value   => false,
           })
         end
       end
@@ -132,24 +185,6 @@ describe 'puppet::server' do
     end
   end
 
-  describe 'with dns_alt_names' do
-    context 'set to a valid path' do
-      let(:params) { { :dns_alt_names => 'foo,foo1,foo1.example.com,foo.example.com' } }
-
-      it do
-        should contain_ini_setting('dns_alt_names').with({
-          :ensure  => 'present',
-          :setting => 'dns_alt_names',
-          :value   => 'foo,foo1,foo1.example.com,foo.example.com',
-          :path    => '/etc/puppetlabs/puppet/puppet.conf',
-          :section => 'master',
-          :require => 'File[puppet_config]',
-          :notify  => 'Service[puppetserver]',
-        })
-      end
-    end
-  end
-
   describe 'with autosign_entries' do
     context 'set to a valid array of strings' do
       let(:params) { { :autosign_entries => ['*.example.org', '*.dev.example.org'] } }
@@ -177,12 +212,6 @@ describe 'puppet::server' do
         :name    => %w(ca),
         :valid   => [true, 'true', false, 'false'],
         :invalid => ['string', %w(array), { 'ha' => 'sh' }, 3, 2.42],
-        :message => 'Error while evaluating a Resource Statement',
-      },
-      'strings' => {
-        :name    => %w(dns_alt_names),
-        :valid   => ['string'],
-        :invalid => [true, %w(array), { 'ha' => 'sh' }, 3, 2.42],
         :message => 'Error while evaluating a Resource Statement',
       },
       'non-empty array of strings' => {

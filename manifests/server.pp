@@ -2,16 +2,17 @@
 #
 # Manages puppetserver
 #
-class puppet::server(
+class puppet::server (
   Variant[Enum['true', 'false'], Boolean] $ca = false, #lint:ignore:quoted_booleans
   Variant[Array[String, 1], Undef]        $autosign_entries = undef,
   String                                  $sysconfig_path = '/etc/sysconfig/puppetserver',
   String                                  $memory_size = '2g', # only m and g are appropriate for unit
   Optional[String]                        $enc = undef,
-  Optional[String]                        $dns_alt_names = undef,
 ) {
 
   include ::puppet
+
+  $_ca = str2bool($ca)
 
   if $sysconfig_path != undef {
     validate_absolute_path($sysconfig_path)
@@ -34,7 +35,7 @@ class puppet::server(
     'rundir'  => { setting => 'rundir', value => '/var/run/puppetlabs/puppetserver',},
     'pidfile' => { setting => 'pidfile', value => '/var/run/puppetlabs/puppetserver/puppetserver.pid',},
     'codedir' => { setting => 'codedir', value =>'/etc/puppetlabs/code',},
-    'ca'      => { setting => 'ca', value => $ca,},
+    'ca'      => { setting => 'ca', value => $_ca,},
   }
 
   if $enc != undef {
@@ -47,15 +48,7 @@ class puppet::server(
     $ini_enc_settings = {}
   }
 
-  if $dns_alt_names != undef {
-    $ini_dns_alt_names_settings = {
-      'dns_alt_names' => { setting => 'dns_alt_names', value => $dns_alt_names },
-    }
-  } else {
-    $ini_dns_alt_names_settings = {}
-  }
-
-  $ini_settings_merged = $non_conditional_ini_settings + $ini_enc_settings + $ini_dns_alt_names_settings
+  $ini_settings_merged = $non_conditional_ini_settings + $ini_enc_settings
   create_resources('ini_setting', $ini_settings_merged, $ini_defaults)
 
   # Ensure that puppet.conf settings in [main] also trigger a restart of
@@ -75,6 +68,16 @@ class puppet::server(
     ensure  => 'file',
     path    => '/etc/puppetlabs/puppet/autosign.conf',
     content => template('puppet/autosign.conf.erb'),
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    notify  => Service['puppetserver'],
+  }
+
+  file { 'puppetserver_ca_cfg':
+    ensure  => 'file',
+    path    => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
+    content => template('puppet/ca.cfg.erb'),
     owner   => 'root',
     group   => 'root',
     mode    => '0644',

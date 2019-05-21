@@ -61,6 +61,8 @@ describe 'puppet' do
         end
       end
 
+      it { should_not contain_ini_setting('dns_alt_names') }
+
       it do
         should contain_file('puppet_config').with({
           :ensure  => 'file',
@@ -187,7 +189,7 @@ describe 'puppet' do
   end
 
   describe 'with puppet.conf ini setting' do
-    %w(server ca_server certname graph).each do |setting|
+    %w(server ca_server certname graph dns_alt_names).each do |setting|
       context "#{setting} set to a valid entry" do
         # 'true' is used because it is acceptable to all of the above
         # parameters. Some of the settings are strings and some are boolean and
@@ -303,7 +305,7 @@ describe 'puppet' do
         :message => 'expects a Hash value',
       },
       'strings' => {
-        :name    => %w(certname cron_command server ca_server env),
+        :name    => %w(certname cron_command server ca_server dns_alt_names env),
         :valid   => ['string'],
         :invalid => [true, %w(array), { 'ha' => 'sh' }, 3, 2.42],
         :message => 'Error while evaluating a Resource Statement',

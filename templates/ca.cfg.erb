@@ -1,0 +1,15 @@
+# This file is being maintained by Puppet.
+# DO NOT EDIT
+
+# To enable the CA service, leave the following line uncommented
+<% if @_ca == true -%>
+puppetlabs.services.ca.certificate-authority-service/certificate-authority-service
+<% else -%>
+#puppetlabs.services.ca.certificate-authority-service/certificate-authority-service
+<% end -%>
+# To disable the CA service, comment out the above line and uncomment the line below
+<% if @_ca == true -%>
+#puppetlabs.services.ca.certificate-authority-disabled-service/certificate-authority-disabled-service
+<% else -%>
+puppetlabs.services.ca.certificate-authority-disabled-service/certificate-authority-disabled-service
+<% end -%>
