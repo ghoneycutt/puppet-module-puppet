@@ -3,7 +3,7 @@
 # Manages puppet agent
 #
 class puppet (
-  String                                  $certname = $::fqdn,
+  String                                  $certname = $facts['networking']['fqdn'],
   Variant[Enum['true', 'false'], Boolean] $run_every_thirty = true, #lint:ignore:quoted_booleans
   Variant[Enum['true', 'false'], Boolean] $run_in_noop = true, #lint:ignore:quoted_booleans
   String                                  $cron_command = '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
