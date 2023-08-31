@@ -106,8 +106,8 @@ describe 'puppet' do
   end
 
   describe 'with run_every_thirty' do
-    [true, 'true', false, 'false'].each do |value|
-      [true, 'true', false, 'false'].each do |noop_value|
+    [true, false].each do |value|
+      [true, false].each do |noop_value|
         context "set to #{value} (as #{value.class}) and run_in_noop set to #{noop_value} (as #{noop_value.class})" do
           let(:params) do
             {
@@ -116,7 +116,7 @@ describe 'puppet' do
             }
           end
 
-          if [true, 'true'].include?(value)
+          if value == true
             cron_ensure = 'present'
             cron_minute = minute
           else
@@ -124,7 +124,7 @@ describe 'puppet' do
             cron_minute = nil
           end
 
-          cron_command = if [true, 'true'].include?(noop_value)
+          cron_command = if noop_value == true
                            '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay --noop'
                          else
                            '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay'
@@ -173,11 +173,11 @@ describe 'puppet' do
   end
 
   describe 'with run_at_boot' do
-    [true, 'true', false, 'false'].each do |value|
+    [true, false].each do |value|
       context "set to #{value} (as #{value.class})" do
         let(:params) { { run_at_boot: value } }
 
-        foo = if [true, 'true'].include?(value)
+        foo = if value == true
                 'present'
               else
                 'absent'
@@ -201,26 +201,40 @@ describe 'puppet' do
   end
 
   describe 'with puppet.conf ini setting' do
-    ['server', 'ca_server', 'certname', 'graph'].each do |setting|
+    ['server', 'ca_server', 'certname'].each do |setting|
       context "#{setting} set to a valid entry" do
-        # 'true' is used because it is acceptable to all of the above
-        # parameters. Some of the settings are strings and some are boolean and
-        # stringified booleans.
-        let(:params) { { setting => 'true' } }
+        let(:params) { { setting => 'testing' } }
 
         it do
           is_expected.to contain_ini_setting(setting).with(
             {
-              ensure: 'present',
+              ensure:  'present',
               setting: setting,
-              value: 'true',
-              path: '/etc/puppetlabs/puppet/puppet.conf',
+              value:   'testing',
+              path:    '/etc/puppetlabs/puppet/puppet.conf',
               section: 'main',
               require: 'File[puppet_config]',
             },
           )
         end
       end
+    end
+  end
+
+  context 'with graph set to a valid entry' do
+    let(:params) { { graph: true } }
+
+    it do
+      is_expected.to contain_ini_setting('graph').with(
+        {
+          ensure:  'present',
+          setting: 'graph',
+          value:   'true',
+          path:    '/etc/puppetlabs/puppet/puppet.conf',
+          section: 'main',
+          require: 'File[puppet_config]',
+        },
+      )
     end
   end
 
@@ -315,25 +329,25 @@ describe 'puppet' do
       'Stdlib::Absolutepath' => {
         name:    ['config_path', 'agent_sysconfig_path'],
         valid:   ['/absolute/path'],
-        invalid: ['not/an/absolute/path'],
+        invalid: ['not/an/absolute/path', ['array'], { 'ha' => 'sh' }, 3, 2.42, false],
         message: 'expects a Stdlib::Absolutepath',
       },
-      'booleans' => {
+      'Boolean' => {
         name:    ['run_every_thirty', 'run_in_noop', 'run_at_boot', 'graph'],
-        valid:   [true, 'true', false, 'false'],
+        valid:   [true, false],
         invalid: ['string', ['array'], { 'ha' => 'sh' }, 3, 2.42],
-        message: 'Error while evaluating a Resource Statement',
+        message: 'expects a Boolean',
       },
       'hash' => {
         name:    ['custom_settings'],
         valid:   [], # valid hashes are to complex to block test them here
-        invalid: ['string', ['array'], 3, 2.42, true, nil],
+        invalid: ['string', ['array'], 3, 2.42, false, nil],
         message: 'expects a Hash value',
       },
       'strings' => {
         name:    ['certname', 'cron_command', 'server', 'ca_server', 'env'],
         valid:   ['string'],
-        invalid: [true, ['array'], { 'ha' => 'sh' }, 3, 2.42],
+        invalid: [true, ['array'], { 'ha' => 'sh' }, 3, 2.42, false],
         message: 'Error while evaluating a Resource Statement',
       },
     }

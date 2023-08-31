@@ -55,38 +55,20 @@
 #   The name of the puppet server.
 #
 class puppet (
-  String                                  $certname = $facts['networking']['fqdn'],
-  Variant[Enum['true', 'false'], Boolean] $run_every_thirty = true, #lint:ignore:quoted_booleans
-  Variant[Enum['true', 'false'], Boolean] $run_in_noop = true, #lint:ignore:quoted_booleans
-  String                                  $cron_command = '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay', #lint:ignore:140chars
-  Variant[Enum['true', 'false'], Boolean] $run_at_boot = true, #lint:ignore:quoted_booleans
-  Stdlib::Absolutepath                    $config_path = '/etc/puppetlabs/puppet/puppet.conf',
-  String                                  $server = 'puppet',
-  String                                  $ca_server = 'puppet',
-  String                                  $env = $environment,
-  Variant[Enum['true', 'false'], Boolean] $graph = false, #lint:ignore:quoted_booleans
-  Stdlib::Absolutepath                    $agent_sysconfig_path = '/etc/sysconfig/puppet',
-  Hash                                    $custom_settings = {},
+  String               $certname             = $facts['networking']['fqdn'],
+  Boolean              $run_every_thirty     = true,
+  Boolean              $run_in_noop          = true,
+  String               $cron_command         = '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay', #lint:ignore:140chars
+  Boolean              $run_at_boot          = true,
+  Stdlib::Absolutepath $config_path          = '/etc/puppetlabs/puppet/puppet.conf',
+  String               $server               = 'puppet',
+  String               $ca_server            = 'puppet',
+  String               $env                  = $environment,
+  Boolean              $graph                = false,
+  Stdlib::Absolutepath $agent_sysconfig_path = '/etc/sysconfig/puppet',
+  Hash                 $custom_settings      = {},
 ) {
-  if is_string($run_every_thirty) == true {
-    $run_every_thirty_bool = str2bool($run_every_thirty)
-  } else {
-    $run_every_thirty_bool = $run_every_thirty
-  }
-
-  if is_string($run_in_noop) == true {
-    $run_in_noop_bool = str2bool($run_in_noop)
-  } else {
-    $run_in_noop_bool = $run_in_noop
-  }
-
-  if is_string($run_at_boot) == true {
-    $run_at_boot_bool = str2bool($run_at_boot)
-  } else {
-    $run_at_boot_bool = $run_at_boot
-  }
-
-  if $run_every_thirty_bool == true {
+  if $run_every_thirty == true {
     $cron_run_one = fqdn_rand(30)
     $cron_run_two = fqdn_rand(30) + 30
     $cron_minute  = [$cron_run_one, $cron_run_two]
@@ -96,7 +78,7 @@ class puppet (
     $cron_minute = undef
   }
 
-  if $run_in_noop_bool == true {
+  if $run_in_noop == true {
     $cron_command_real = "${cron_command} --noop"
   } else {
     $cron_command_real = $cron_command
@@ -110,7 +92,7 @@ class puppet (
     minute  => $cron_minute,
   }
 
-  if $run_at_boot_bool == true {
+  if $run_at_boot == true {
     $at_boot_ensure = 'present'
   } else {
     $at_boot_ensure = 'absent'

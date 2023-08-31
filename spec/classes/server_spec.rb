@@ -91,7 +91,7 @@ describe 'puppet::server' do
   end
 
   describe 'with ca' do
-    [true, 'true', false, 'false'].each do |value|
+    [true, false].each do |value|
       context "set to #{value} (as #{value.class})" do
         let(:params) { { ca: value } }
 
@@ -189,11 +189,11 @@ describe 'puppet::server' do
         invalid: ['not/an/absolute/path'],
         message: 'expects a Stdlib::Absolutepath',
       },
-      'booleans' => {
+      'Boolean' => {
         name:    ['ca'],
-        valid:   [true, 'true', false, 'false'],
+        valid:   [true, false],
         invalid: ['string', ['array'], { 'ha' => 'sh' }, 3, 2.42],
-        message: 'Error while evaluating a Resource Statement',
+        message: 'expects a Boolean',
       },
       'strings' => {
         name:    ['dns_alt_names'],
