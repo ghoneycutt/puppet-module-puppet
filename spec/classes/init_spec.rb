@@ -312,11 +312,11 @@ describe 'puppet' do
 
   describe 'parameter type and content validations' do
     validations = {
-      'absolute paths' => {
+      'Stdlib::Absolutepath' => {
         name:    ['config_path', 'agent_sysconfig_path'],
         valid:   ['/absolute/path'],
         invalid: ['not/an/absolute/path'],
-        message: 'is not an absolute path',
+        message: 'expects a Stdlib::Absolutepath',
       },
       'booleans' => {
         name:    ['run_every_thirty', 'run_in_noop', 'run_at_boot', 'graph'],

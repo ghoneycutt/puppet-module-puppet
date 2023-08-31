@@ -28,18 +28,12 @@
 class puppet::server (
   Variant[Enum['true', 'false'], Boolean] $ca = false, #lint:ignore:quoted_booleans
   Variant[Array[String, 1], Undef]        $autosign_entries = undef,
-  String                                  $sysconfig_path = '/etc/sysconfig/puppetserver',
-  String                                  $memory_size = '2g', # only m and g are appropriate for unit
-  Optional[String]                        $enc = undef,
+  Stdlib::Absolutepath                    $sysconfig_path = '/etc/sysconfig/puppetserver',
+  Pattern[/^\d+(m|g)$/]                   $memory_size = '2g', # only m and g are appropriate for unit
+  Optional[Stdlib::Absolutepath]          $enc = undef,
   Optional[String]                        $dns_alt_names = undef,
 ) {
   include puppet
-
-  if $sysconfig_path != undef {
-    validate_absolute_path($sysconfig_path)
-  }
-
-  validate_re($memory_size, '^\d+(m|g)$', "puppet::memory_size is <${memory_size}> and must be an integer following by the unit 'm' or 'g'.") #lint:ignore:140chars
 
   $ini_defaults = {
     ensure  => 'present',
@@ -59,7 +53,6 @@ class puppet::server (
   }
 
   if $enc != undef {
-    validate_absolute_path($enc)
     $ini_enc_settings = {
       'node_terminus'  => { setting => 'node_terminus', value => 'exec' },
       'external_nodes' => { setting => 'external_nodes', value => $enc },
