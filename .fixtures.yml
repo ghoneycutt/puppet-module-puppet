@@ -1,13 +1,13 @@
 fixtures:
   repositories:
     cron:
-      repo: 'git://github.com/puppetlabs/puppetlabs-cron_core.git'
-      ref: '1.0.0'
+      repo: 'https://github.com/puppetlabs/puppetlabs-cron_core.git'
+      ref: 'v1.2.0'
     inifile:
       repo: 'https://github.com/puppetlabs/puppetlabs-inifile.git'
       ref: '1.6.0'
     stdlib:
       repo: 'https://github.com/puppetlabs/puppetlabs-stdlib.git'
-      ref: '4.6.0'
+      ref: '5.0.0'
   symlinks:
     puppet: "#{source_dir}"

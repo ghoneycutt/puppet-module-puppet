@@ -2,43 +2,57 @@
 #
 # Manages puppetserver
 #
-class puppet::server(
-  Variant[Enum['true', 'false'], Boolean] $ca = false, #lint:ignore:quoted_booleans
-  Variant[Array[String, 1], Undef]        $autosign_entries = undef,
-  String                                  $sysconfig_path = '/etc/sysconfig/puppetserver',
-  String                                  $memory_size = '2g', # only m and g are appropriate for unit
-  Optional[String]                        $enc = undef,
-  Optional[String]                        $dns_alt_names = undef,
+# @param autosign_entries
+#   Optional array of entries that will be autosigned.
+#
+# @param ca
+#   Determines if the system is a puppet CA (certificate authority).
+#   There should be only one CA per cluster of puppet masters.
+#
+# @param dns_alt_names
+#   Value of the dns_alt_names option in puppet.conf.
+#
+# @param enc
+#   The absolute path to an ENC. If this is set, it will be the value
+#   for the external_nodes option in puppet.conf and the node_terminus
+#   option will be set to 'exec'.
+#
+# @param memory_size
+#   The amount of memory allocated to the puppetserver. This is passed
+#   to the Xms and Xmx arguments for java. It must be a whole number
+#   followed by the unit 'm' for MB or 'g' for GB.
+#
+# @param sysconfig_path
+#   The absolute path to the puppetserver sysconfig file.
+#
+class puppet::server (
+  Boolean                          $ca = false,
+  Variant[Array[String, 1], Undef] $autosign_entries = undef,
+  Stdlib::Absolutepath             $sysconfig_path = '/etc/sysconfig/puppetserver',
+  Pattern[/^\d+(m|g)$/]            $memory_size = '2g', # only m and g are appropriate for unit
+  Optional[Stdlib::Absolutepath]   $enc = undef,
+  Optional[String]                 $dns_alt_names = undef,
 ) {
-
-  include ::puppet
-
-  if $sysconfig_path != undef {
-    validate_absolute_path($sysconfig_path)
-  }
-
-  validate_re($memory_size, '^\d+(m|g)$',
-    "puppet::memory_size is <${memory_size}> and must be an integer following by the unit 'm' or 'g'.")
+  include puppet
 
   $ini_defaults = {
     ensure  => 'present',
-    path    => $::puppet::config_path,
+    path    => $puppet::config_path,
     section => 'master',
     require => File['puppet_config'],
     notify  => Service['puppetserver'],
   }
 
   $non_conditional_ini_settings = {
-    'vardir'  => { setting => 'vardir', value => '/opt/puppetlabs/server/data/puppetserver',},
-    'logdir'  => { setting => 'logdir', value => '/var/log/puppetlabs/puppetserver',},
-    'rundir'  => { setting => 'rundir', value => '/var/run/puppetlabs/puppetserver',},
-    'pidfile' => { setting => 'pidfile', value => '/var/run/puppetlabs/puppetserver/puppetserver.pid',},
-    'codedir' => { setting => 'codedir', value =>'/etc/puppetlabs/code',},
-    'ca'      => { setting => 'ca', value => $ca,},
+    'vardir'  => { setting => 'vardir', value => '/opt/puppetlabs/server/data/puppetserver' },
+    'logdir'  => { setting => 'logdir', value => '/var/log/puppetlabs/puppetserver' },
+    'rundir'  => { setting => 'rundir', value => '/var/run/puppetlabs/puppetserver' },
+    'pidfile' => { setting => 'pidfile', value => '/var/run/puppetlabs/puppetserver/puppetserver.pid' },
+    'codedir' => { setting => 'codedir', value => '/etc/puppetlabs/code' },
+    'ca'      => { setting => 'ca', value => $ca },
   }
 
   if $enc != undef {
-    validate_absolute_path($enc)
     $ini_enc_settings = {
       'node_terminus'  => { setting => 'node_terminus', value => 'exec' },
       'external_nodes' => { setting => 'external_nodes', value => $enc },

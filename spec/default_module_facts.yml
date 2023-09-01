@@ -1,0 +1,6 @@
+---
+# ensure fqdn matches when using rspec-puppet-facts so that fqdn_rand()
+# gives consistent output
+fqdn: "puppet.example.com"
+networking:
+  fqdn: "puppet.example.com"
