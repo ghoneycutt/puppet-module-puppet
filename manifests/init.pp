@@ -8,23 +8,14 @@ class puppet (
   Variant[Enum['true', 'false'], Boolean] $run_in_noop = true, #lint:ignore:quoted_booleans
   String                                  $cron_command = '/opt/puppetlabs/bin/puppet agent --onetime --no-daemonize --no-usecacheonfailure --detailed-exitcodes --no-splay',
   Variant[Enum['true', 'false'], Boolean] $run_at_boot = true, #lint:ignore:quoted_booleans
-  String                                  $config_path = '/etc/puppetlabs/puppet/puppet.conf',
+  Stdlib::Absolutepath                    $config_path = '/etc/puppetlabs/puppet/puppet.conf',
   String                                  $server = 'puppet',
   String                                  $ca_server = 'puppet',
   String                                  $env = $environment,
   Variant[Enum['true', 'false'], Boolean] $graph = false, #lint:ignore:quoted_booleans
-  String                                  $agent_sysconfig_path = '/etc/sysconfig/puppet',
+  Stdlib::Absolutepath                    $agent_sysconfig_path = '/etc/sysconfig/puppet',
   Hash                                    $custom_settings = {},
 ) {
-
-  if $config_path != undef {
-    validate_absolute_path($config_path)
-  }
-
-  if $agent_sysconfig_path != undef {
-    validate_absolute_path($agent_sysconfig_path)
-  }
-
   if is_string($run_every_thirty) == true {
     $run_every_thirty_bool = str2bool($run_every_thirty)
   } else {
@@ -46,7 +37,7 @@ class puppet (
   if $run_every_thirty_bool == true {
     $cron_run_one = fqdn_rand(30)
     $cron_run_two = fqdn_rand(30) + 30
-    $cron_minute  = [ $cron_run_one, $cron_run_two]
+    $cron_minute  = [$cron_run_one, $cron_run_two]
     $cron_ensure  = 'present'
   } else {
     $cron_ensure = 'absent'
@@ -82,18 +73,18 @@ class puppet (
 
   $ini_defaults = {
     ensure  => 'present',
-    path    => $::puppet::config_path,
+    path    => $puppet::config_path,
     section => 'main',
     require => File['puppet_config'],
   }
 
   $ini_settings = {
-    'server'              => { setting => 'server', value => $server,},
-    'ca_server'           => { setting => 'ca_server', value => $ca_server,},
-    'certname'            => { setting => 'certname', value => $certname,},
-    'environment'         => { setting => 'environment', value => $env,},
-    'trusted_node_data'   => { setting => 'trusted_node_data', value => true,},
-    'graph'               => { setting => 'graph', value => $graph,},
+    'server'              => { setting => 'server', value => $server, },
+    'ca_server'           => { setting => 'ca_server', value => $ca_server, },
+    'certname'            => { setting => 'certname', value => $certname, },
+    'environment'         => { setting => 'environment', value => $env, },
+    'trusted_node_data'   => { setting => 'trusted_node_data', value => true, },
+    'graph'               => { setting => 'graph', value => $graph, },
   }
   create_resources('ini_setting', $ini_settings, $ini_defaults)
   create_resources('ini_setting', $custom_settings, $ini_defaults)
